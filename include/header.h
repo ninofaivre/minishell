@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/24 10:56:06 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/24 11:15:45 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 int		pwd(void);
 
 char	*get_command(char *input);
+void	command_not_found(char *command_input);
 
 char	*skip_whitespace(char *str);
 char	*skip_word(char *str);

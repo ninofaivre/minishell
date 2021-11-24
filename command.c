@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 10:36:05 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/24 11:00:43 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/24 11:18:29 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,14 @@ int	pwd(void)
 	printf("%s\n", buffer);
 	free(buffer);
 	return (0);
+}
+
+void	command_not_found(char *command_input)
+{
+	if (!command_input)
+		return;
+	write(2, "minishell: command not found: ", 30);
+	while (*command_input && *command_input != ' ')
+		write(2, command_input++, 1);
+	write(2, "\n", 1);
 }
