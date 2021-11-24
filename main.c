@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/24 10:51:29 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/24 11:03:35 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ static int	parsing(char *input)
 	if (comp_one_word(get_command(input), "exit") == true)
 		return (1);
 	else if (comp_one_word(get_command(input), "pwd") == true)
-		pwd();
+		if (pwd() == -1)
+			return (-1);
 	return (0);
 }
 
@@ -48,7 +49,10 @@ int	main(void)
 		if (parsing_status)
 		{
 			if (parsing_status == -1)
+			{
+				write(2, "Error\n", 7);
 				exit(EXIT_FAILURE);
+			}
 			else if (parsing_status == 1)
 				exit(EXIT_SUCCESS);
 		}

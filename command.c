@@ -6,19 +6,33 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 10:36:05 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/24 10:40:31 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/24 11:00:43 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 #include <stdlib.h>
 
-void	pwd(void)
+int	pwd(void)
 {
-	char	*test;
+	int		to_malloc;
+	char	*buffer;
 
-	test = (char *)malloc(sizeof(char) * 150);
-	test = getcwd(test, 149);
-	printf("%s\n", test);
-	free(test);
+	to_malloc = 0;
+	buffer = NULL;
+	while (!buffer)
+	{
+		to_malloc++;
+		buffer = (char *)malloc(sizeof(char) * (to_malloc + 1));
+		if (!buffer)
+			return (-1);
+		else if (!getcwd(buffer, to_malloc))
+		{
+			free (buffer);
+			buffer = NULL;
+		}
+	}
+	printf("%s\n", buffer);
+	free(buffer);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/24 10:39:48 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/24 10:56:06 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 # define PROMPT "NINO BG du 78 $> "
 
-void	pwd(void);
+int		pwd(void);
 
 char	*get_command(char *input);
 
