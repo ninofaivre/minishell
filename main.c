@@ -6,15 +6,13 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/24 09:44:30 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/24 10:23:35 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 #include <signal.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <stdbool.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <stdlib.h>
@@ -28,6 +26,8 @@ static void	handle_ctrl_c(int sig)
 
 static int	parsing(char *input)
 {
+	if (comp_one_word(get_command(input), "exit") == true)
+		return (1);
 	return (0);
 }
 

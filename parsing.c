@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   header.h                                           :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/24 10:18:10 by nfaivre          ###   ########.fr       */
+/*   Created: 2021/11/24 09:55:48 by nfaivre           #+#    #+#             */
+/*   Updated: 2021/11/24 10:12:08 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef HEADER_H
-# define HEADER_H
+#include "header.h"
 
-# include <stdbool.h>
-# include <unistd.h>
-
-# define PROMPT "NINO BG du 78 $> "
-
-char	*get_command(char *input);
-
-char	*skip_whitespace(char *str);
-char	*skip_word(char *str);
-bool	comp_one_word(char *str1, char *str2);
-
-#endif
+char	*get_command(char *input)
+{
+	input = skip_whitespace(input);
+	if (*input == '<' || *input == '>')
+	{
+		input = skip_whitespace(input);
+		input = skip_word(input);
+		input = skip_whitespace(input);
+	}
+	if (!input)
+		return (NULL);
+	return (input);
+}
