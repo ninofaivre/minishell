@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/24 10:24:12 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/24 10:44:39 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ char	*skip_word(char *str)
 
 bool	comp_one_word(char *str1, char *str2)
 {
+	if (!str1 || !str2)
+		return (false);
 	while (*str1 != ' ' && *str1 == *str2 && *str1 && *str2)
 	{
 		str1++;

@@ -1,30 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   header.h                                           :+:      :+:    :+:   */
+/*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/24 10:39:48 by nfaivre          ###   ########.fr       */
+/*   Created: 2021/11/24 10:36:05 by nfaivre           #+#    #+#             */
+/*   Updated: 2021/11/24 10:40:31 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef HEADER_H
-# define HEADER_H
+#include "header.h"
+#include <stdlib.h>
 
-# include <stdbool.h>
-# include <unistd.h>
-# include <stdio.h>
+void	pwd(void)
+{
+	char	*test;
 
-# define PROMPT "NINO BG du 78 $> "
-
-void	pwd(void);
-
-char	*get_command(char *input);
-
-char	*skip_whitespace(char *str);
-char	*skip_word(char *str);
-bool	comp_one_word(char *str1, char *str2);
-
-#endif
+	test = (char *)malloc(sizeof(char) * 150);
+	test = getcwd(test, 149);
+	printf("%s\n", test);
+	free(test);
+}
