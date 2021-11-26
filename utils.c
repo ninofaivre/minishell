@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/24 10:44:39 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/24 15:54:06 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,16 @@ bool	comp_one_word(char *str1, char *str2)
 		return (false);
 	else
 		return (true);
+}
+
+int	word_len(char *str)
+{
+	int	len;
+
+	len = 0;
+	if (!str)
+		return (0);
+	while (str[len] && str[len] != ' ')
+		len++;
+	return (len);
 }

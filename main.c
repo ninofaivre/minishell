@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/24 11:16:20 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/24 17:03:47 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,25 @@
 #include <readline/history.h>
 #include <stdlib.h>
 
-static void	handle_ctrl_c(int sig)
+static void	sig_handler(int sig)
 {
-	(void)sig;
-	write(1, "\n", 1);
+	if (sig == SIGINT)
+		write(1, "\n", 1);
 	write(1, PROMPT, 17);
+	if (sig == SIGQUIT)
+		write(1, "pwd", 3);
 }
 
 static int	parsing(char *input)
 {
-	if (comp_one_word(get_command(input), "exit") == true)
+	if (!input)
+		return (1);
+	else if (comp_one_word(get_command(input), "exit") == true)
 		return (1);
 	else if (comp_one_word(get_command(input), "pwd") == true)
-	{
-		if (pwd() == -1)
-			return (-1);
-	}
+		return (pwd());
+	else if (comp_one_word(get_command(input), "cd") == true)
+		return (cd(get_arg(input)));
 	else
 		command_not_found(get_command(input));
 	return (0);
@@ -44,9 +47,10 @@ int	main(void)
 
 	parsing_status = 0;
 	input = NULL;
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, sig_handler);
 	while (true)
 	{
-		signal(SIGINT, handle_ctrl_c);
 		input = readline(PROMPT);
 		parsing_status = parsing(input);
 		free(input);
