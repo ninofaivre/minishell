@@ -6,7 +6,7 @@
 #    By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/24 10:25:16 by nfaivre           #+#    #+#              #
-#    Updated: 2021/12/01 00:08:05 by nfaivre          ###   ########.fr        #
+#    Updated: 2021/12/01 00:10:54 by nfaivre          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ mkdir_DIR_OBJ:
 $(DIR_OBJ)/%.o : $(DIR_SRC)/%.c ./include/header.h
 	$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDE)
 
-$(NAME): $(OBJ)
+$(NAME):
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -lreadline
 
 all: mkdir_DIR_OBJ $(OBJ) $(NAME)
