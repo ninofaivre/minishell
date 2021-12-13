@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/13 11:36:09 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/13 14:02:09 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ t_lists	*free_lists(t_lists *lists)
 	t_lists	*ptr_lists;
 	t_list	*ptr_list;
 
-	//ptr_lists = (t_lists *) NULL;
-	//ptr_list = (t_list *) NULL;
 	while (lists)
 	{
 		while (lists->list)
@@ -108,10 +106,10 @@ char	*init_output(char *input)
 }
 */
 
-//renvoie le nombre de lists (séparées par des ';')
-//0 s'il n'y a rien ou que des whitespaces et
-//-1 s'il y a des erreurs de ; (rien ou seulement des whitespaces avant un ';')
-static int	count_lists(char *input)
+// renvoie le nombre de lists (séparées par des ';')
+// 0 s'il n'y a rien ou que des whitespaces et
+// -1 s'il y a des erreurs de ';' (rien ou seulement des whitespaces avant un ';')
+static int	size_lists(char *input)
 {
 	int	n_lists;
 
@@ -140,13 +138,65 @@ static int	count_lists(char *input)
 	return (n_lists);
 }
 
+// renvoie le nombre de list (séparés par des '|')
+// -1 s'il y a des erreurs de '|' avec aucune commande
+// avant le prochain '|' ou ';'
+static int	size_list(char *input)
+{
+	int	n_list;
+
+	n_list = 0;
+	while (*input && *input == ' ')
+		input++;
+	if (*input == '|')
+		return (-1);
+	if (*input)
+		n_list++;
+	while (*input && *input != '|' && *input != ';')
+		input++;
+	if (*input == '|' && !*(input + 1))
+		return (-1);
+	while (*input && *input != ';')
+	{
+		if (*input == '|')
+			input++;
+		while (*input && *input == ' ')
+			input++;
+		if (*input && *input != ';' && *input != '|')
+			n_list++;
+		if (*input == ';' || *input == '|' || !input)
+			return (-1);
+		while (*input && *input != ';' && *input != '|')
+			input++;
+	}
+	return (n_list);
+}
+
 t_lists	*build_lists(char *input)
 {
+	int		j;
+	int		i;
 	t_lists	*lists;
-	if (count_lists(input) == -1)
+
+	j = size_lists(input);
+	i = 0;
+	if (j == -1)
 		write(2, "syntax error after unexpected symbol \";\" \n", 42);
-	if (count_lists(input) <= 0)
+	if (j <= 0)
 		return ((t_lists *) NULL);
-	lists = init_lists(count_lists(input));
+	while (i < j)
+	{
+		if (size_list(input) == -1)
+			write(2, "syntax error after unexpected symbol \"|\" \n", 42);
+		if (size_list(input) <= 0)
+			return ((t_lists *) NULL);
+		printf("Il y a %i command dans la list %i.\n", size_list(input), i);
+		while (*input && *input != ';')
+			input++;
+		if (*input)
+			input++;
+		i++;
+	}
+	lists = init_lists(j);
 	return (lists);
 }
