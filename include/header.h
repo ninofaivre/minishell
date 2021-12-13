@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/24 14:29:48 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/13 11:20:16 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,32 @@
 # include <unistd.h>
 # include <stdio.h>
 
-# define PROMPT "NINO BG du 78 $> "
+# ifndef PROMPT
+#  define PROMPT "minishell$> "
+# endif
+
+typedef struct s_lists
+{
+	struct s_list	*list;
+	struct s_lists	*next;
+}	t_lists;
+
+typedef struct s_list
+{
+	char			*input;
+	char			*output;
+	char			*command;
+	char			*arg;
+	struct s_list	*next;
+}	t_list;
+
+t_lists	*build_lists(char *input);
+t_lists	*free_lists(t_lists *lists);
 
 int		pwd(void);
 int		cd(char *arg_input);
 void	command_not_found(char *command_input);
 
-char	*get_command(char *input);
-char	*get_arg(char *input);
-
-char	*skip_whitespace(char *str);
-char	*skip_word(char *str);
 bool	comp_one_word(char *str1, char *str2);
 int		word_len(char *str);
 

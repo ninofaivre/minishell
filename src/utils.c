@@ -6,35 +6,11 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/24 15:54:06 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/13 11:17:19 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
-
-char	*skip_whitespace(char *str)
-{
-	if (!str)
-		return (NULL);
-	while (*str && *str == ' ')
-		str++;
-	if (!*str)
-		return (NULL);
-	else
-		return (str);
-}
-
-char	*skip_word(char *str)
-{
-	if (!str)
-		return (NULL);
-	while (*str && *str != ' ')
-		str++;
-	if (!*str)
-		return (NULL);
-	else
-		return (str);
-}
 
 bool	comp_one_word(char *str1, char *str2)
 {
