@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/13 14:02:09 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/13 19:50:25 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ static int	size_lists(char *input)
 	return (n_lists);
 }
 
-// renvoie le nombre de list (séparés par des '|')
+// renvoie le nombre de maillons de list (séparés par des '|')
 // -1 s'il y a des erreurs de '|' avec aucune commande
 // avant le prochain '|' ou ';'
 static int	size_list(char *input)
@@ -154,8 +154,6 @@ static int	size_list(char *input)
 		n_list++;
 	while (*input && *input != '|' && *input != ';')
 		input++;
-	if (*input == '|' && !*(input + 1))
-		return (-1);
 	while (*input && *input != ';')
 	{
 		if (*input == '|')
@@ -164,7 +162,7 @@ static int	size_list(char *input)
 			input++;
 		if (*input && *input != ';' && *input != '|')
 			n_list++;
-		if (*input == ';' || *input == '|' || !input)
+		if (*input == ';' || *input == '|' || !*input)
 			return (-1);
 		while (*input && *input != ';' && *input != '|')
 			input++;
