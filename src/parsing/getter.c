@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/15 13:03:02 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/15 15:44:55 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ static char	*get_one_word(char *input)
 		return ((char *) NULL);
 	}
 	word[i] = '\0';
+	if (*input == '\'' || *input == '"')
+		input++;
 	while (i--)
 		word[i] = input[i];
 	return (word);
@@ -34,17 +36,17 @@ static char	*get_one_word(char *input)
 
 char	*get_output(char *input)
 {
-	bool	simplecote;
-	bool	doublecote;
+	bool	single_quote;
+	bool	double_quote;
 	bool	append;
 
-	simplecote = false;
-	doublecote = false;
+	single_quote = false;
+	double_quote = false;
 	append = false;
-	while (*input && *input != '|' && *input != ';' && (*input != '>' || simplecote == true || doublecote == true))
+	while (*input && *input != '|' && *input != ';' && (*input != '>' || single_quote == true || double_quote == true))
 	{
 		input++;
-		update_cote_status(&simplecote, &doublecote, *input);
+		update_cote_status(&single_quote, &double_quote, *input);
 	}
 	if (*input == '>')
 		input++;
