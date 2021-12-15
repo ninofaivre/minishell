@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/15 13:12:00 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/15 15:21:10 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_list
 	char			*input;
 	char			*output;
 	char			*command;
-	char			*arg;
+	char			**arg;
 	struct s_list	*next;
 }	t_list;
 
