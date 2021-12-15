@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/15 15:42:47 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/15 16:03:53 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,14 @@ int	word_len(char *str)
 	if (!str)
 		return (0);
 	str = skip_space(str);
+	update_cote_status(&single_quote, &double_quote, str[len]);
 	if (*str == '\'' || *str == '"')
 		str++;
-	while (str[len] && str[len] != ';' && str[len] != '|' && (str[len] != ' ' || single_quote == true || double_quote == true))
+	update_cote_status(&single_quote, &double_quote, str[len]);
+	while (str[len] && ((str[len] != ';' && str[len] != '|' && str[len] != ' ' && str[len] != '\'' && str[len] != '"') || (single_quote == true || double_quote == true)))
 	{
-		update_cote_status(&single_quote, &double_quote, str[len]);
 		len++;
+		update_cote_status(&single_quote, &double_quote, str[len]);
 	}
 	return (len);
 }
@@ -50,7 +52,7 @@ void	update_cote_status(bool *single_quote, bool *double_quote, char c)
 		else if (*single_quote == false)
 			*double_quote = true;
 	}
-	if (c == '\'')
+	else if (c == '\'')
 	{
 		if (*single_quote == true)
 			*single_quote = false;

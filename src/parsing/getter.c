@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/15 15:44:55 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/15 16:07:54 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,14 @@
 
 static char	*get_one_word(char *input)
 {
-	char	*word;
 	int		i;
+	char	*word;
 
 	input = skip_space(input);
-	word = (char *)malloc(sizeof(char) * (word_len(input) +1));
 	i = word_len(input);
+	if (!i)
+		return ((char *) NULL);
+	word = (char *)malloc(sizeof(char) * (i +1));
 	if (!word)
 	{
 		write(2, "A malloc failed !\n", 18);
@@ -59,7 +61,7 @@ char	*get_output(char *input)
 	}
 	(void)append;
 	input = skip_space(input);
-	if (!*input || *input == ';' || *input == '|')
+	if (!word_len(input))
 	{
 		write(2, "output vide\n", 12);
 		return (NULL);
