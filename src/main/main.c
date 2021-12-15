@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/15 12:53:15 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/15 16:25:25 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ static int	parsing(char *input)
 	if (*input == 'e' && *(input + 1) == 'x' && *(input + 2) == 'i' && *(input + 3) == 't')
 		return (1);
 	lists = build_lists(input);
-	if (lists->list)
-		printf("output de la première commande de la première liste : %s\n", lists->list->output);
 	ptr_lists = lists;
 	while (lists)
 	{
@@ -49,6 +47,7 @@ static int	parsing(char *input)
 		ptr_list = lists->list;
 		while (lists->list)
 		{
+			printf("output de la commande %i de la list %i : %s\n", j, i, lists->list->output);
 			lists->list = lists->list->next;
 			j++;
 		}

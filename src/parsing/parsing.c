@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/15 13:09:51 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/15 16:29:01 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,36 @@ t_lists	*free_lists(t_lists *lists)
 	return ((t_lists *) NULL);
 }
 
+static void	feel_data_list(char *input, t_lists *lists)
+{
+	t_lists	*ptr_lists;
+	t_list	*ptr_list;
+
+	ptr_lists = lists;
+	while (lists)
+	{
+		if (*input == ';')
+			input++;
+		ptr_list = lists->list;
+		while (lists->list)
+		{
+			if (*input == '|')
+				input++;
+			lists->list->output = get_output(input);
+			if (lists->list->next)
+				while (*input && *input != '|')
+					input++;
+			lists->list = lists->list->next;
+		}
+		lists->list = ptr_list;
+		if (lists->next)
+			while (*input && *input != ';')
+				input++;
+		lists = lists->next;
+	}
+	lists = ptr_lists;
+}
+
 t_lists	*build_lists(char *input)
 {
 	int		j;
@@ -60,6 +90,6 @@ t_lists	*build_lists(char *input)
 		write(2, "syntax error after unexpected symbol \"|\" \n", 42);
 		return ((t_lists *) NULL);
 	}
-	lists->list->output = get_output(input);
+	feel_data_list(input, lists);
 	return (lists);
 }
