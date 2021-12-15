@@ -1,52 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   list_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/13 19:50:25 by nfaivre          ###   ########.fr       */
+/*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
+/*   Updated: 2021/12/15 13:08:04 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 #include <stdlib.h>
 
-// free toutes les lists y compris list et le contenu (input/output/command/arg)
-// renvoie (t_lists *) NULL
-t_lists	*free_lists(t_lists *lists)
+static void	init_data_one_list(t_list *list)
 {
-	t_lists	*ptr_lists;
-	t_list	*ptr_list;
-
-	while (lists)
-	{
-		while (lists->list)
-		{
-			if (lists->list->input)
-				free(lists->list->input);
-			if (lists->list->output)
-				free(lists->list->output);
-			if (lists->list->command)
-				free(lists->list->command);
-			if (lists->list->arg)
-				free(lists->list->arg);
-			ptr_list = lists->list;
-			lists->list = lists->list->next;
-			free(ptr_list);
-		}
-		ptr_lists = lists;
-		lists = lists->next;
-		free(ptr_lists);
-	}
-	return ((t_lists *) NULL);
+	list->input = (char *) NULL;
+	list->output = (char *) NULL;
+	list->command = (char *) NULL;
+	list->arg = (char *) NULL;
 }
 
 // malloc toutes les lists et set list à NULL par défaut
 // renvoie un pointeur sur le début de list résultant ou
 // renvoie le résultat de free_list s'il y a une erreur de malloc
-static t_lists	*init_lists(int n_lists)
+t_lists	*init_lists(int n_lists)
 {
 	t_lists	*ptr_lists;
 	t_lists	*lists;
@@ -72,44 +50,47 @@ static t_lists	*init_lists(int n_lists)
 	return (ptr_lists);
 }
 
-/*
-char	*init_output(char *input)
+int	init_list(t_lists *lists, char *input)
 {
-	char	*output;
-	int		to_malloc;
+	t_lists	*ptr_lists;
+	t_list	*ptr_list;
+	int		n_list;
 
-	output = (char *) NULL;
-	to_malloc = 0;
-	while (*input && *input != ';' && *input != '|')
+	ptr_lists = lists;
+	while (lists)
 	{
-		if (*input == '>')
+		n_list = size_list(input);
+		lists->list = (t_list *)malloc(sizeof(t_list));
+		if (!lists->list || n_list == -1)
+			return (-1);
+		n_list--;
+		ptr_list = lists->list;
+		init_data_one_list(lists->list);
+		lists->list->next = (t_list *) NULL;
+		while (n_list--)
 		{
-			input++;
-			if (*input == '>')
-				input++;
-			while (*input == ' ')
-				input++;
-			while (*(input + to_malloc) && *(input + to_malloc) != ';' && *(input + to_malloc) != '|' && *(input + to_malloc) != ' ')
-				to_malloc++;
-			break ;
+			lists->list->next = (t_list *)malloc(sizeof(t_list));
+			if (!lists->list)
+				return (-1);
+			lists->list = lists->list->next;
+			init_data_one_list(lists->list);
+			lists->list->next = (t_list *) NULL;
 		}
-		input++;
+		lists->list = ptr_list;
+		lists = lists->next;
+		while (*input && *input != ';')
+			input++;
+		if (*input == ';')
+			input++;
 	}
-	if (to_malloc)
-	{
-		output = (char *)malloc(sizeof(char) * (to_malloc + 1));
-		if (!output)
-			return ((char *)-1);
-		cpy(output, input, to_malloc);
-	}
-	return (output);
+	lists = ptr_lists;
+	return (0);
 }
-*/
 
 // renvoie le nombre de lists (séparées par des ';')
 // 0 s'il n'y a rien ou que des whitespaces et
 // -1 s'il y a des erreurs de ';' (rien ou seulement des whitespaces avant un ';')
-static int	size_lists(char *input)
+int	size_lists(char *input)
 {
 	int	n_lists;
 
@@ -126,8 +107,7 @@ static int	size_lists(char *input)
 	{
 		if (*input == ';')
 			input++;
-		while (*input && *input == ' ')
-			input++;
+		input = skip_space(input);
 		if (*input && *input != ';')
 			n_lists++;
 		if (*input == ';')
@@ -141,13 +121,12 @@ static int	size_lists(char *input)
 // renvoie le nombre de maillons de list (séparés par des '|')
 // -1 s'il y a des erreurs de '|' avec aucune commande
 // avant le prochain '|' ou ';'
-static int	size_list(char *input)
+int	size_list(char *input)
 {
 	int	n_list;
 
 	n_list = 0;
-	while (*input && *input == ' ')
-		input++;
+	input = skip_space(input);
 	if (*input == '|')
 		return (-1);
 	if (*input)
@@ -158,8 +137,7 @@ static int	size_list(char *input)
 	{
 		if (*input == '|')
 			input++;
-		while (*input && *input == ' ')
-			input++;
+		input = skip_space(input);
 		if (*input && *input != ';' && *input != '|')
 			n_list++;
 		if (*input == ';' || *input == '|' || !*input)
@@ -168,33 +146,4 @@ static int	size_list(char *input)
 			input++;
 	}
 	return (n_list);
-}
-
-t_lists	*build_lists(char *input)
-{
-	int		j;
-	int		i;
-	t_lists	*lists;
-
-	j = size_lists(input);
-	i = 0;
-	if (j == -1)
-		write(2, "syntax error after unexpected symbol \";\" \n", 42);
-	if (j <= 0)
-		return ((t_lists *) NULL);
-	while (i < j)
-	{
-		if (size_list(input) == -1)
-			write(2, "syntax error after unexpected symbol \"|\" \n", 42);
-		if (size_list(input) <= 0)
-			return ((t_lists *) NULL);
-		printf("Il y a %i command dans la list %i.\n", size_list(input), i);
-		while (*input && *input != ';')
-			input++;
-		if (*input)
-			input++;
-		i++;
-	}
-	lists = init_lists(j);
-	return (lists);
 }

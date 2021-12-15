@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/13 11:28:49 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/15 12:53:15 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,12 @@ static int	parsing(char *input)
 {
 	t_lists	*lists;
 	t_lists	*ptr_lists;
+	t_list	*ptr_list;
 	int		i;
+	int		j;
 
 	i = 0;
+	j = 0;
 	/*
 	else if (comp_one_word(get_command(input), "exit") == true)
 		return (1);
@@ -37,9 +40,20 @@ static int	parsing(char *input)
 	if (*input == 'e' && *(input + 1) == 'x' && *(input + 2) == 'i' && *(input + 3) == 't')
 		return (1);
 	lists = build_lists(input);
+	if (lists->list)
+		printf("output de la première commande de la première liste : %s\n", lists->list->output);
 	ptr_lists = lists;
 	while (lists)
 	{
+		j = 0;
+		ptr_list = lists->list;
+		while (lists->list)
+		{
+			lists->list = lists->list->next;
+			j++;
+		}
+		lists->list = ptr_list;
+		printf("Il y a %i commandes dans la list %i\n", j, i);
 		lists = lists->next;
 		i++;
 	}

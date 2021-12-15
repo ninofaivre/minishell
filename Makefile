@@ -6,7 +6,7 @@
 #    By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/24 10:25:16 by nfaivre           #+#    #+#              #
-#    Updated: 2021/12/01 00:10:54 by nfaivre          ###   ########.fr        #
+#    Updated: 2021/12/15 13:14:29 by nfaivre          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,13 +22,13 @@ DIR_OBJ = .obj
 
 INCLUDE = -Iinclude
 
-SRC = $(wildcard $(DIR_SRC)/*.c)
+SRC = $(wildcard $(DIR_SRC)/*/*.c)
 OBJ = $(addprefix $(DIR_OBJ)/, $(notdir $(SRC:.c=.o)))
 
 mkdir_DIR_OBJ:
 	mkdir -p $(DIR_OBJ)
 
-$(DIR_OBJ)/%.o : $(DIR_SRC)/%.c ./include/header.h
+$(DIR_OBJ)/%.o : $(DIR_SRC)/*/%.c ./include/header.h
 	$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDE)
 
 $(NAME):
