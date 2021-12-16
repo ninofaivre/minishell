@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/16 12:34:45 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/16 15:25:02 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,10 @@ void	command_not_found(char *command_input);
 int		word_len(char *str);
 char	*skip_space(char *str);
 void	update_cote_status(bool *simplecote, bool *doublecote, char c);
+char	**add_str_to_str_tab(char **str_tab, char *str);
+void	free_tab_str(char **str_tab);
 
-char	*get_output(char *input);
+char	**get_output(char *input);
 
 t_lists	*init_lists(int n_lists);
 int		init_list(t_lists *lists, char *input);

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/15 16:25:25 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/16 16:29:51 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,50 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <stdlib.h>
+
+static void	print_tab_str(char **tab_str, char *name)
+{
+	int	i;
+
+	i = 0;
+	if (!tab_str)
+	{
+		printf("%s : (char **) NULL\n", name);
+		return ;
+	}
+	while (tab_str[i])
+	{
+		printf("%s[%i] : %s\n", name, i, tab_str[i]);
+		i++;
+	}
+}
+
+static void	print_lists(t_lists *lists)
+{
+	t_list	*ptr_list;
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (lists)
+	{
+		j = 0;
+		ptr_list = lists->list;
+		printf("LIST N°%i\n\n\n", i);
+		while (lists->list)
+		{
+			printf("command %i\n\n", j);
+			print_tab_str(lists->list->output, "output");
+			printf("\n\n");
+			lists->list = lists->list->next;
+			j++;
+		}
+		lists->list = ptr_list;
+		lists = lists->next;
+		i++;
+	}
+}
 
 static void	sig_handler(int sig)
 {
@@ -27,46 +71,13 @@ static int	parsing(char *input)
 {
 	t_lists	*lists;
 	t_lists	*ptr_lists;
-	t_list	*ptr_list;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	/*
-	else if (comp_one_word(get_command(input), "exit") == true)
-		return (1);
-	*/
+	
 	if (*input == 'e' && *(input + 1) == 'x' && *(input + 2) == 'i' && *(input + 3) == 't')
 		return (1);
 	lists = build_lists(input);
 	ptr_lists = lists;
-	while (lists)
-	{
-		j = 0;
-		ptr_list = lists->list;
-		while (lists->list)
-		{
-			printf("output de la commande %i de la list %i : %s\n", j, i, lists->list->output);
-			lists->list = lists->list->next;
-			j++;
-		}
-		lists->list = ptr_list;
-		printf("Il y a %i commandes dans la list %i\n", j, i);
-		lists = lists->next;
-		i++;
-	}
-	if (i)
-		printf("Il y a %i lists.\n", i);
+	print_lists(lists);
 	free_lists(ptr_lists);
-	/*
-	else if (comp_one_word(get_command(input), "pwd") == true)
-		return (pwd());
-	else if (comp_one_word(get_command(input), "cd") == true)
-		return (cd(get_arg(input)));
-	else
-		command_not_found(get_command(input));
-	*/
 	return (0);
 }
 

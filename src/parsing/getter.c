@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/15 16:07:54 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/16 16:08:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,35 +36,32 @@ static char	*get_one_word(char *input)
 	return (word);
 }
 
-char	*get_output(char *input)
+char	**get_output(char *input)
 {
 	bool	single_quote;
 	bool	double_quote;
-	bool	append;
+	char	**output;
 
 	single_quote = false;
 	double_quote = false;
-	append = false;
-	while (*input && *input != '|' && *input != ';' && (*input != '>' || single_quote == true || double_quote == true))
+	output = (char **) NULL;
+	while (*input)
 	{
-		input++;
-		update_cote_status(&single_quote, &double_quote, *input);
+		while (*input && *input != '|' && *input != ';' && (*input != '>' || single_quote == true || double_quote == true))
+		{
+			input++;
+			update_cote_status(&single_quote, &double_quote, *input);
+		}
+		if (*input == '>')
+			input++;
+		else
+			break ;
+		if (*input == '>')
+			input++;
+		input = skip_space(input);
+		if (!word_len(input))
+			write(2, "output vide\n", 12);
+		output = add_str_to_str_tab(output, get_one_word(input));
 	}
-	if (*input == '>')
-		input++;
-	else
-		return (NULL);
-	if (*input == '>')
-	{
-		input++;
-		append = true;
-	}
-	(void)append;
-	input = skip_space(input);
-	if (!word_len(input))
-	{
-		write(2, "output vide\n", 12);
-		return (NULL);
-	}
-	return (get_one_word(input));
+	return (output);
 }

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/15 15:48:16 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/16 15:19:41 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 static void	init_data_one_list(t_list *list)
 {
-	list->input = (char *) NULL;
-	list->output = (char *) NULL;
+	list->input = (char **) NULL;
+	list->output = (char **) NULL;
 	list->command = (char *) NULL;
 	list->arg = (char **) NULL;
 }

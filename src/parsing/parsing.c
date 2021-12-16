@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/15 16:29:01 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/16 15:20:48 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ t_lists	*free_lists(t_lists *lists)
 		while (lists->list)
 		{
 			if (lists->list->input)
-				free(lists->list->input);
+				free_tab_str(lists->list->input);
 			if (lists->list->output)
-				free(lists->list->output);
+				free_tab_str(lists->list->output);
 			if (lists->list->command)
 				free(lists->list->command);
 			if (lists->list->arg)
-				free(lists->list->arg);
+				free_tab_str(lists->list->arg);
 			ptr_list = lists->list;
 			lists->list = lists->list->next;
 			free(ptr_list);
