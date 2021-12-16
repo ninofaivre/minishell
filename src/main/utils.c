@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/16 16:16:03 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/16 17:09:26 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	free_tab_str(char **str_tab)
 	int	i;
 
 	i = 0;
+	if (!str_tab)
+		return ;
 	while (str_tab[i])
 	{
 		free(str_tab[i]);
@@ -46,7 +48,10 @@ char	**add_str_to_str_tab(char **str_tab, char *str)
 	i = 0;
 	new_str_tab = (char **)malloc(sizeof(char *) * (str_tab_len(str_tab) + 2));
 	if (!new_str_tab)
+	{
+		free_tab_str(str_tab);
 		return ((char **) NULL);
+	}
 	while (str_tab && str_tab[i])
 	{
 		new_str_tab[i] = str_tab[i];
@@ -75,7 +80,7 @@ int	word_len(char *str)
 	if (*str == '\'' || *str == '"')
 		str++;
 	update_cote_status(&single_quote, &double_quote, str[len]);
-	while (str[len] && ((str[len] != ';' && str[len] != '|' && str[len] != ' ' && str[len] != '\'' && str[len] != '"') || (single_quote == true || double_quote == true)))
+	while (str[len] && ((str[len] != ';' && str[len] != '|' && str[len] != ' ' && str[len] != '\'' && str[len] != '"' && str[len] != '>' && str[len] != '<') || (single_quote == true || double_quote == true)))
 	{
 		len++;
 		update_cote_status(&single_quote, &double_quote, str[len]);

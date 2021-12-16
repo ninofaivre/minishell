@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/16 16:08:33 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/16 17:14:45 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,16 @@ char	**get_output(char *input)
 			input++;
 		input = skip_space(input);
 		if (!word_len(input))
+		{
 			write(2, "output vide\n", 12);
+			return ((char **) NULL);
+		}
 		output = add_str_to_str_tab(output, get_one_word(input));
+		if (!output)
+		{
+			write(2, "Malloc failed !\n", 16);
+			return ((char **) NULL);
+		}
 	}
 	return (output);
 }
