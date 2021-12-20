@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/20 13:08:40 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/20 14:24:36 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@ static void	init_data_one_list(t_list *list)
 {
 	list->input = (char **) NULL;
 	list->output = (char **) NULL;
-	list->command = (char *) NULL;
-	list->arg = (char **) NULL;
+	list->argv = (char **) NULL;
 }
 
 // malloc toutes les lists et set list à NULL par défaut

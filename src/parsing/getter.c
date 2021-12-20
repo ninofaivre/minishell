@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/20 12:50:52 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/20 14:31:31 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,17 +86,20 @@ char	**get_output_input(char *input, char guillemet)
 	return (word);
 }
 
-char	*get_command(char *input)
+char	**get_argv(char *input)
 {
 	bool	single_quote;
 	bool	double_quote;
+	char	**argv;
 
 	single_quote = false;
 	double_quote = false;
+	argv = (char **) NULL;
 	update_cote_status(&single_quote, &double_quote, *input);
 	while (*input && ((*input != '|' && *input != ';') || (single_quote == true || double_quote == true)))
 	{
 		input = skip_space(input);
+		update_cote_status(&single_quote, &double_quote, *input);
 		if (*input == '<' || *input == '>')
 		{
 			input++;
@@ -106,7 +109,11 @@ char	*get_command(char *input)
 			input = skip_word(input);
 		}
 		else
-			return (get_one_word(input));
+		{
+			argv = add_str_to_str_tab(argv, get_one_word(input));
+			input = skip_word(input);
+			update_cote_status(&single_quote, &double_quote, *input);
+		}
 	}
-	return ((char *) NULL);
+	return (argv);
 }

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/20 12:49:39 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/20 14:25:14 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,8 @@ t_lists	*free_lists(t_lists *lists)
 				free_tab_str(lists->list->input);
 			if (lists->list->output)
 				free_tab_str(lists->list->output);
-			if (lists->list->command)
-				free(lists->list->command);
-			if (lists->list->arg)
-				free_tab_str(lists->list->arg);
+			if (lists->list->argv)
+				free_tab_str(lists->list->argv);
 			ptr_list = lists->list;
 			lists->list = lists->list->next;
 			free(ptr_list);
@@ -71,7 +69,7 @@ static void	feel_data_list(char *input, t_lists *lists)
 			}
 			lists->list->output = get_output_input(input, '>');
 			lists->list->input = get_output_input(input, '<');
-			lists->list->command = get_command(input);
+			lists->list->argv = get_argv(input);
 			if (lists->list->next)
 
 				while (*input && (*input != '|' || (single_quote == true || double_quote == true)))

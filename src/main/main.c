@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/20 12:53:59 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/20 14:24:10 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ static void	print_lists(t_lists *lists)
 			print_tab_str(lists->list->output, "output");
 			printf("\n");
 			print_tab_str(lists->list->input, "input");
-			printf("\ncommand : %s\n", lists->list->command);
+			printf("\n");
+			print_tab_str(lists->list->argv, "argv");
 			printf("\n\n");
 			lists->list = lists->list->next;
 			j++;
