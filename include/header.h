@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/20 11:57:00 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/20 12:52:21 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ char	**add_str_to_str_tab(char **str_tab, char *str);
 void	free_tab_str(char **str_tab);
 
 char	**get_output_input(char *input, char guillemet);
+char	*get_command(char *input);
 
 t_lists	*init_lists(int n_lists);
 int		init_list(t_lists *lists, char *input);

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/20 11:57:20 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/20 12:49:39 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,30 +45,49 @@ t_lists	*free_lists(t_lists *lists)
 
 static void	feel_data_list(char *input, t_lists *lists)
 {
+	bool	single_quote;
+	bool	double_quote;
 	t_lists	*ptr_lists;
 	t_list	*ptr_list;
 
+	single_quote = false;
+	double_quote = false;
 	ptr_lists = lists;
+	update_cote_status(&single_quote, &double_quote, *input);
 	while (lists)
 	{
 		if (*input == ';')
+		{
 			input++;
+			update_cote_status(&single_quote, &double_quote, *input);
+		}
 		ptr_list = lists->list;
 		while (lists->list)
 		{
 			if (*input == '|')
+			{
 				input++;
+				update_cote_status(&single_quote, &double_quote, *input);
+			}
 			lists->list->output = get_output_input(input, '>');
 			lists->list->input = get_output_input(input, '<');
+			lists->list->command = get_command(input);
 			if (lists->list->next)
-				while (*input && *input != '|')
+
+				while (*input && (*input != '|' || (single_quote == true || double_quote == true)))
+				{
 					input++;
+					update_cote_status(&single_quote, &double_quote, *input);
+				}
 			lists->list = lists->list->next;
 		}
 		lists->list = ptr_list;
 		if (lists->next)
-			while (*input && *input != ';')
+			while (*input && (*input != ';' || (single_quote == true || double_quote == true)))
+			{
 				input++;
+				update_cote_status(&single_quote, &double_quote, *input);
+			}
 		lists = lists->next;
 	}
 	lists = ptr_lists;
