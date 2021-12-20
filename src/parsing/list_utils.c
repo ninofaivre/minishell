@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/16 15:19:41 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/20 13:08:40 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,28 +92,41 @@ int	init_list(t_lists *lists, char *input)
 // -1 s'il y a des erreurs de ';' (rien ou seulement des whitespaces avant un ';')
 int	size_lists(char *input)
 {
+	bool	single_quote;
+	bool	double_quote;
 	int	n_lists;
 
+	single_quote = false;
+	double_quote = false;
 	n_lists = 0;
-	while (*input && *input == ' ')
-		input++;
+	input = skip_space(input);
+	update_cote_status(&single_quote, &double_quote, *input);
 	if (*input == ';')
 		return (-1);
 	if (*input)
 		n_lists++;
-	while (*input && *input != ';')
+	while (*input && (*input != ';' || (single_quote == true || double_quote == true)))
+	{
 		input++;
+		update_cote_status(&single_quote, &double_quote, *input);
+	}
 	while (*input)
 	{
 		if (*input == ';')
+		{
 			input++;
+			update_cote_status(&single_quote, &double_quote, *input);
+		}
 		input = skip_space(input);
 		if (*input && *input != ';')
 			n_lists++;
 		if (*input == ';')
 			return (-1);
-		while (*input && *input != ';')
+		while (*input && (*input != ';' || (single_quote == true || double_quote == true)))
+		{
 			input++;
+			update_cote_status(&single_quote, &double_quote, *input);
+		}
 	}
 	return (n_lists);
 }
@@ -123,27 +136,41 @@ int	size_lists(char *input)
 // avant le prochain '|' ou ';'
 int	size_list(char *input)
 {
+	bool	single_quote;
+	bool	double_quote;
 	int	n_list;
 
+	single_quote = false;
+	double_quote = false;
 	n_list = 0;
 	input = skip_space(input);
+	update_cote_status(&single_quote, &double_quote, *input);
 	if (*input == '|')
 		return (-1);
 	if (*input)
 		n_list++;
-	while (*input && *input != '|' && *input != ';')
+	while (*input && ((*input != ';' && *input != '|') || (single_quote == true || double_quote == true)))
+	{
 		input++;
+		update_cote_status(&single_quote, &double_quote, *input);
+	}
 	while (*input && *input != ';')
 	{
 		if (*input == '|')
+		{
 			input++;
+			update_cote_status(&single_quote, &double_quote, *input);
+		}
 		input = skip_space(input);
 		if (*input && *input != ';' && *input != '|')
 			n_list++;
 		if (*input == ';' || *input == '|' || !*input)
 			return (-1);
-		while (*input && *input != ';' && *input != '|')
+		while (*input && ((*input != ';' && *input != '|') || (single_quote == true || double_quote == true)))
+		{
 			input++;
+			update_cote_status(&single_quote, &double_quote, *input);
+		}
 	}
 	return (n_list);
 }
