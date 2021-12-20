@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/16 17:09:26 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/20 11:43:07 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,14 @@ char	**add_str_to_str_tab(char **str_tab, char *str)
 	return (new_str_tab);
 }
 
+char	*skip_word(char *str)
+{
+	str = skip_space(str);
+	str += word_len(str);
+	str = skip_space(str);
+	return (str);
+}
+
 int	word_len(char *str)
 {
 	bool	single_quote;
@@ -76,14 +84,12 @@ int	word_len(char *str)
 	if (!str)
 		return (0);
 	str = skip_space(str);
-	update_cote_status(&single_quote, &double_quote, str[len]);
-	if (*str == '\'' || *str == '"')
-		str++;
-	update_cote_status(&single_quote, &double_quote, str[len]);
-	while (str[len] && ((str[len] != ';' && str[len] != '|' && str[len] != ' ' && str[len] != '\'' && str[len] != '"' && str[len] != '>' && str[len] != '<') || (single_quote == true || double_quote == true)))
+	while (*str && ((*str != ';' && *str != '|' && *str != ' ' && *str != '>' && *str != '<') || (single_quote == true || double_quote == true)))
 	{
-		len++;
-		update_cote_status(&single_quote, &double_quote, str[len]);
+		if (!((*str == '\'' && double_quote == false) || (*str == '"' && single_quote == false)))
+			len++;
+		str++;
+		update_cote_status(&single_quote, &double_quote, *str);
 	}
 	return (len);
 }

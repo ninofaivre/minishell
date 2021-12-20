@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/16 15:25:02 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/20 11:43:41 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int		pwd(void);
 int		cd(char *arg_input);
 void	command_not_found(char *command_input);
 
+char	*skip_word(char *str);
 int		word_len(char *str);
 char	*skip_space(char *str);
 void	update_cote_status(bool *simplecote, bool *doublecote, char c);
