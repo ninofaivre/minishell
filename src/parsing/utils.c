@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/20 11:43:07 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/20 12:24:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int	word_len(char *str)
 	if (!str)
 		return (0);
 	str = skip_space(str);
+	update_cote_status(&single_quote, &double_quote, *str);
 	while (*str && ((*str != ';' && *str != '|' && *str != ' ' && *str != '>' && *str != '<') || (single_quote == true || double_quote == true)))
 	{
 		if (!((*str == '\'' && double_quote == false) || (*str == '"' && single_quote == false)))

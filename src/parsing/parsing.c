@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/16 15:20:48 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/20 11:57:20 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ static void	feel_data_list(char *input, t_lists *lists)
 		{
 			if (*input == '|')
 				input++;
-			lists->list->output = get_output(input);
+			lists->list->output = get_output_input(input, '>');
+			lists->list->input = get_output_input(input, '<');
 			if (lists->list->next)
 				while (*input && *input != '|')
 					input++;

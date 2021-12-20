@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/20 11:47:12 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/20 12:33:34 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static char	*get_one_word(char *str)
 		write(2, "A malloc failed !\n", 18);
 		return ((char *) NULL);
 	}
+	update_cote_status(&single_quote, &double_quote, *str);
 	while (*str && ((*str != ';' && *str != '|' && *str != ' ' && *str != '>' && *str != '<') || (single_quote == true || double_quote == true)))
 	{
 		if (!((*str == '\'' && double_quote == false) || (*str == '"' && single_quote == false)))
@@ -46,27 +47,28 @@ static char	*get_one_word(char *str)
 	return (word);
 }
 
-char	**get_output_input(char *input)
+char	**get_output_input(char *input, char guillemet)
 {
 	bool	single_quote;
 	bool	double_quote;
-	char	**output;
+	char	**word;
 
 	single_quote = false;
 	double_quote = false;
 	word = (char **) NULL;
 	while (*input)
 	{
-		while (*input && *input != '|' && *input != ';' && (*input != '>' || single_quote == true || double_quote == true))
+		update_cote_status(&single_quote, &double_quote, *input);
+		while (*input && ((*input != '|' && *input != ';' && *input != guillemet) || (single_quote == true || double_quote == true)))
 		{
 			input++;
 			update_cote_status(&single_quote, &double_quote, *input);
 		}
-		if (*input == '>')
+		if (*input == guillemet)
 			input++;
 		else
 			break ;
-		if (*input == '>')
+		if (*input == guillemet)
 			input++;
 		input = skip_space(input);
 		if (!word_len(input))
@@ -75,7 +77,7 @@ char	**get_output_input(char *input)
 			return ((char **) NULL);
 		}
 		word = add_str_to_str_tab(word, get_one_word(input));
-		if (!output)
+		if (!word)
 		{
 			write(2, "Malloc failed !\n", 16);
 			return ((char **) NULL);
