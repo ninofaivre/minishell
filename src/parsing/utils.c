@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/21 12:55:23 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/21 13:19:32 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ char	*skip_output_input(char *str)
 	}
 }
 */
+
 char	*skip_word(char *str)
 {
 	bool	single_quote;
