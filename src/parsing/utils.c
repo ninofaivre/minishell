@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/20 12:24:33 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/21 12:55:23 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,36 @@ char	**add_str_to_str_tab(char **str_tab, char *str)
 	new_str_tab[i + 1] = (char *) NULL;
 	return (new_str_tab);
 }
-
+/*
+char	*skip_output_input(char *str)
+{
+	while (*str)
+	{
+		str = skip_space(str);
+		if (*str == '<' || *str == '>')
+		{
+			str++;
+			if (*str == '<' || *str == '>')
+				str++;
+			str = skip_space(str);
+		}
+	}
+}
+*/
 char	*skip_word(char *str)
 {
+	bool	single_quote;
+	bool	double_quote;
+
+	single_quote = false;
+	double_quote = false;
 	str = skip_space(str);
-	str += word_len(str);
-	str = skip_space(str);
+	update_cote_status(&single_quote, &double_quote, *str);
+	while (*str && ((*str != ';' && *str != '|' && *str != ' ' && *str != '>' && *str != '<') || (single_quote == true || double_quote == true)))
+	{
+		str++;
+		update_cote_status(&single_quote, &double_quote, *str);
+	}
 	return (str);
 }
 

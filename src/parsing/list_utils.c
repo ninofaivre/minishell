@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/20 14:24:36 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/21 12:46:25 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,11 @@ int	size_lists(char *input)
 			input++;
 			update_cote_status(&single_quote, &double_quote, *input);
 		}
-		input = skip_space(input);
+		if (*input == ' ')
+		{
+			input = skip_space(input);
+			update_cote_status(&single_quote, &double_quote, *input);
+		}
 		if (*input && *input != ';')
 			n_lists++;
 		if (*input == ';')
@@ -160,7 +164,11 @@ int	size_list(char *input)
 			input++;
 			update_cote_status(&single_quote, &double_quote, *input);
 		}
-		input = skip_space(input);
+		if (*input == ' ')
+		{
+			input = skip_space(input);
+			update_cote_status(&single_quote, &double_quote, *input);
+		}
 		if (*input && *input != ';' && *input != '|')
 			n_list++;
 		if (*input == ';' || *input == '|' || !*input)
