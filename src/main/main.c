@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/20 14:24:10 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/21 20:29:11 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,35 +33,26 @@ static void	print_tab_str(char **tab_str, char *name)
 	}
 }
 
-static void	print_lists(t_lists *lists)
+static void	print_list(t_list *list)
 {
 	t_list	*ptr_list;
-	int	i;
-	int	j;
+	int		i;
 
 	i = 0;
-	j = 0;
-	while (lists)
+	ptr_list = list;
+	while (list)
 	{
-		j = 0;
-		ptr_list = lists->list;
-		printf("LIST N°%i\n\n\n", i);
-		while (lists->list)
-		{
-			printf("command %i\n\n", j);
-			print_tab_str(lists->list->output, "output");
-			printf("\n");
-			print_tab_str(lists->list->input, "input");
-			printf("\n");
-			print_tab_str(lists->list->argv, "argv");
-			printf("\n\n");
-			lists->list = lists->list->next;
-			j++;
-		}
-		lists->list = ptr_list;
-		lists = lists->next;
+		printf("command %i\n\n", i);
+		print_tab_str(list->output, "output");
+		printf("\n");
+		print_tab_str(list->input, "input");
+		printf("\n");
+		print_tab_str(list->argv, "argv");
+		printf("\n\n");
+		list = list->next;
 		i++;
 	}
+	list = ptr_list;
 }
 
 static void	sig_handler(int sig)
@@ -73,15 +64,14 @@ static void	sig_handler(int sig)
 
 static int	parsing(char *input)
 {
-	t_lists	*lists;
-	t_lists	*ptr_lists;
-	
-	if (*input == 'e' && *(input + 1) == 'x' && *(input + 2) == 'i' && *(input + 3) == 't')
+	t_list	*list;
+
+	if (*input == 'e' && *(input + 1) == 'x'
+		&& *(input + 2) == 'i' && *(input + 3) == 't')
 		return (1);
-	lists = build_lists(input);
-	ptr_lists = lists;
-	print_lists(lists);
-	free_lists(ptr_lists);
+	list = build_list(input);
+	print_list(list);
+	free_list(list);
 	return (0);
 }
 

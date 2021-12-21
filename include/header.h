@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/20 13:36:27 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/21 20:00:23 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,6 @@
 #  define PROMPT "minishell$> "
 # endif
 
-typedef struct s_lists
-{
-	struct s_list	*list;
-	struct s_lists	*next;
-}	t_lists;
-
 typedef struct s_list
 {
 	char			**input;
@@ -35,26 +29,33 @@ typedef struct s_list
 	struct s_list	*next;
 }	t_list;
 
-t_lists	*build_lists(char *input);
-t_lists	*free_lists(t_lists *lists);
+typedef struct s_quote
+{
+	bool	single_quote;
+	bool	double_quote;
+	bool	status;
+}	t_quote;
 
-int		pwd(void);
-int		cd(char *arg_input);
-void	command_not_found(char *command_input);
+t_list			*build_list(char *input);
+t_list			*free_list(t_list *lists);
 
-char	*skip_word(char *str);
-int		word_len(char *str);
-char	*skip_space(char *str);
-void	update_cote_status(bool *simplecote, bool *doublecote, char c);
-char	**add_str_to_str_tab(char **str_tab, char *str);
-void	free_tab_str(char **str_tab);
+int				pwd(void);
+int				cd(char *arg_input);
+void			command_not_found(char *command_input);
 
-char	**get_output_input(char *input, char guillemet);
-char	**get_argv(char *input);
+char			*skip_word(char *str);
+unsigned int	word_len(char *str);
+char			*skip_space(char *str);
+void			update_cote_status(t_quote *quote, char c);
+t_quote			init_quote(void);
+char			**add_str_to_str_tab(char **str_tab, char *str);
+void			free_tab_str(char **str_tab);
+bool			is_charset(char c, char *charset);
 
-t_lists	*init_lists(int n_lists);
-int		init_list(t_lists *lists, char *input);
-int		size_lists(char *input);
-int		size_list(char *input);
+char			**get_output_input(char *input, char guillemet);
+char			**get_argv(char *input);
+
+t_list			*init_list(char *input);
+int				size_list(char *input);
 
 #endif

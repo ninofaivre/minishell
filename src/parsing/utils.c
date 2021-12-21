@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/21 13:19:32 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/21 20:28:52 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,40 +82,38 @@ char	*skip_output_input(char *str)
 
 char	*skip_word(char *str)
 {
-	bool	single_quote;
-	bool	double_quote;
+	t_quote	quote;
 
-	single_quote = false;
-	double_quote = false;
+	quote = init_quote();
 	str = skip_space(str);
-	update_cote_status(&single_quote, &double_quote, *str);
-	while (*str && ((*str != ';' && *str != '|' && *str != ' ' && *str != '>' && *str != '<') || (single_quote == true || double_quote == true)))
+	update_cote_status(&quote, *str);
+	while (*str && (!is_charset(*str, "| ><") || quote.status == true))
 	{
 		str++;
-		update_cote_status(&single_quote, &double_quote, *str);
+		update_cote_status(&quote, *str);
 	}
+	str = skip_space(str);
 	return (str);
 }
 
-int	word_len(char *str)
+unsigned int	word_len(char *str)
 {
-	bool	single_quote;
-	bool	double_quote;
-	int		len;
+	t_quote			quote;
+	unsigned int	len;
 
-	single_quote = false;
-	double_quote = false;
+	quote = init_quote();
 	len = 0;
 	if (!str)
 		return (0);
 	str = skip_space(str);
-	update_cote_status(&single_quote, &double_quote, *str);
-	while (*str && ((*str != ';' && *str != '|' && *str != ' ' && *str != '>' && *str != '<') || (single_quote == true || double_quote == true)))
+	update_cote_status(&quote, *str);
+	while (*str && (!is_charset(*str, "| ><") || quote.status == true))
 	{
-		if (!((*str == '\'' && double_quote == false) || (*str == '"' && single_quote == false)))
+		if (!(*str == '\'' && quote.double_quote == false)
+			&& !(*str == '"' && quote.single_quote == false))
 			len++;
 		str++;
-		update_cote_status(&single_quote, &double_quote, *str);
+		update_cote_status(&quote, *str);
 	}
 	return (len);
 }
@@ -127,20 +125,45 @@ char	*skip_space(char *str)
 	return (str);
 }
 
-void	update_cote_status(bool *single_quote, bool *double_quote, char c)
+t_quote	init_quote(void)
+{
+	t_quote	quote;
+
+	quote.double_quote = false;
+	quote.single_quote = false;
+	quote.status = false;
+	return (quote);
+}
+
+void	update_cote_status(t_quote *quote, char c)
 {
 	if (c == '"')
 	{
-		if (*double_quote == true)
-			*double_quote = false;
-		else if (*single_quote == false)
-			*double_quote = true;
+		if (quote->double_quote == true)
+			quote->double_quote = false;
+		else if (quote->single_quote == false)
+			quote->double_quote = true;
 	}
 	else if (c == '\'')
 	{
-		if (*single_quote == true)
-			*single_quote = false;
-		else if (*double_quote == false)
-			*single_quote = true;
+		if (quote->single_quote == true)
+			quote->single_quote = false;
+		else if (quote->double_quote == false)
+			quote->single_quote = true;
 	}
+	if (quote->single_quote == true || quote->double_quote == true)
+		quote->status = true;
+	else
+		quote->status = false;
+}
+
+bool	is_charset(char c, char *charset)
+{
+	while (*charset)
+	{
+		if (c == *charset)
+			return (true);
+		charset++;
+	}
+	return (false);
 }
