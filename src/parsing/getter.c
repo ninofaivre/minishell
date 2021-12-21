@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/21 20:17:56 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/21 20:47:11 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@ static char	*get_one_word(char *str)
 	word = (char *)malloc(sizeof(char) * (word_len(str) + 1));
 	if (!word)
 		return ((char *) NULL);
-	update_cote_status(&quote, *str);
+	update_quote_status(&quote, *str);
 	while (*str && (!is_charset(*str, "| ><") || quote.status == true))
 	{
 		if (!(*str == '\'' && !quote.double_quote)
 			&& !(*str == '"' && !quote.single_quote))
 			word[i++] = *str;
 		str++;
-		update_cote_status(&quote, *str);
+		update_quote_status(&quote, *str);
 	}
 	word[i] = '\0';
 	return (word);
