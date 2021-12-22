@@ -6,13 +6,14 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 10:36:05 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/24 14:25:59 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/22 16:39:09 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 #include <stdlib.h>
 
+/*
 int	pwd(void)
 {
 	int		to_malloc;
@@ -67,3 +68,4 @@ void	command_not_found(char *command_input)
 		write(2, command_input++, 1);
 	write(2, "\n", 1);
 }
+*/

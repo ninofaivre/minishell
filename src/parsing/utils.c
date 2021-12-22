@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/21 20:55:28 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/22 17:07:53 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*skip_word(char *str)
 	return (str);
 }
 
-unsigned int	word_len(char *str)
+unsigned int	word_len(char **env, char *str)
 {
 	t_quote			quote;
 	unsigned int	len;
@@ -43,7 +43,12 @@ unsigned int	word_len(char *str)
 	{
 		if (!(*str == '\'' && quote.double_quote == false)
 			&& !(*str == '"' && quote.single_quote == false))
-			len++;
+		{
+			if (*str == '$' && quote.single_quote == false)
+				len += env_var_len(search_env_var(env, str));
+			else
+				len++;
+		}
 		str++;
 		update_quote_status(&quote, *str);
 	}
@@ -53,6 +58,16 @@ unsigned int	word_len(char *str)
 char	*skip_space(char *str)
 {
 	while (*str && *str == ' ')
+		str++;
+	return (str);
+}
+
+char	*skip_var(char *str)
+{
+	str++;
+	if (!str)
+		return ((char *) NULL);
+	while (*str && ((*str >= 'a' && *str <= 'z') || (*str >= 'A' && *str <= 'Z') || (*str >= '0' && *str <= '9')))
 		str++;
 	return (str);
 }
