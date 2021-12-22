@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/21 20:47:11 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/22 15:59:36 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,4 +84,16 @@ char	**get_argv(char *input)
 		}
 	}
 	return (argv);
+}
+
+char	*get_env_var(char **env, char *str)
+{
+	char	*env_var;
+
+	if (!search_env_var(env, str))
+		return ((char *) NULL);
+	env_var = search_env_var(env, str);
+	while (*env_var && *env_var != '=')
+		env_var++;
+	return (env_var);
 }
