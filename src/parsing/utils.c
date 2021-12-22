@@ -6,11 +6,21 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/22 17:07:53 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/22 18:08:27 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
+
+bool	is_alnum(char c)
+{
+	if (!c)
+		return (false);
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))
+		return (true);
+	else
+		return (false);
+}
 
 char	*skip_word(char *str)
 {
@@ -44,12 +54,19 @@ unsigned int	word_len(char **env, char *str)
 		if (!(*str == '\'' && quote.double_quote == false)
 			&& !(*str == '"' && quote.single_quote == false))
 		{
-			if (*str == '$' && quote.single_quote == false)
+			if (*str == '$' && quote.single_quote == false && is_alnum(*(str + 1)) == true)
+			{
 				len += env_var_len(search_env_var(env, str));
+				str = skip_var(str);
+			}
 			else
+			{
 				len++;
+				str++;
+			}
 		}
-		str++;
+		else
+			str++;
 		update_quote_status(&quote, *str);
 	}
 	return (len);
@@ -67,7 +84,7 @@ char	*skip_var(char *str)
 	str++;
 	if (!str)
 		return ((char *) NULL);
-	while (*str && ((*str >= 'a' && *str <= 'z') || (*str >= 'A' && *str <= 'Z') || (*str >= '0' && *str <= '9')))
+	while (*str && is_alnum(*str) == true)
 		str++;
 	return (str);
 }

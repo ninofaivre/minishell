@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/22 16:39:21 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/22 18:00:42 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ t_list			*free_list(t_list *lists);
 void			free_tab_str(char **str_tab);
 char			**add_str_to_str_tab(char **str_tab, char *str);
 
+bool			is_alnum(char c);
 char			*skip_word(char *str);
 char			*skip_space(char *str);
 char			*skip_var(char *str);

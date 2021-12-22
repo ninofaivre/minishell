@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/22 17:03:59 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/22 18:05:11 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,14 @@ static char	*get_one_word(char **env, char *str)
 	update_quote_status(&quote, *str);
 	while (*str && (!is_charset(*str, "| ><") || quote.status == true))
 	{
+		env_var = (char *) NULL;
 		if (!(*str == '\'' && !quote.double_quote)
 			&& !(*str == '"' && !quote.single_quote))
 		{
-			if (*str == '$' && quote.single_quote == false)
+			if (*str == '$' && quote.single_quote == false && is_alnum(*(str + 1)) == true)
 			{
 				env_var = search_env_var(env, str);
-				while (*env_var)
+				while (env_var && *env_var)
 				{
 					word[i] = *env_var;
 					i++;
@@ -46,9 +47,10 @@ static char	*get_one_word(char **env, char *str)
 				str = skip_var(str);
 			}
 			else
-				word[i++] = *str;
+				word[i++] = *str++;
 		}
-		str++;
+		else
+			str++;
 		update_quote_status(&quote, *str);
 	}
 	word[i] = '\0';

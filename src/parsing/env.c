@@ -6,10 +6,11 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/22 17:03:20 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/22 18:03:26 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "header.h"
 #include <unistd.h>
 #include <stdio.h>
 
@@ -18,8 +19,9 @@ unsigned int	env_var_len(char *env_var)
 	unsigned int	len;
 
 	len = 0;
-
-	while (env_var && env_var[len])
+	if (!env_var)
+		return (0);
+	while (env_var[len])
 		len++;
 	return (len);
 }
@@ -38,11 +40,12 @@ char	*search_env_var(char **env, char *str)
 		i = 0;
 		while (env[j][i] == str[i])
 			i++;
-		if (i == 1)
-			printf("%c = %c\n", *env[i], str[i]);
-		if (env[j][i] == '=' && !((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= '0' && str[i] <= '9')))
+		if (env[j][i] == '=' && is_alnum(str[i]) == false)
 			break ;
 		j++;
 	}
-	return (&env[j][i + 1]);
+	if (env[j])
+		return (&env[j][i + 1]);
+	else
+		return ((char *) NULL);
 }
