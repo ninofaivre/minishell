@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/21 20:54:07 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/22 16:02:11 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ typedef struct s_quote
 	bool	double_quote;
 	bool	status;
 }	t_quote;
+
+unsigned int	env_var_len(char *env_var);
+char			*search_env_var(char **env, char *str);
 
 char			**get_output_input(char *input, char guillemet);
 char			**get_argv(char *input);
