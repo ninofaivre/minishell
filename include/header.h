@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/22 18:00:42 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/23 15:46:21 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ typedef struct s_quote
 	bool	status;
 }	t_quote;
 
-unsigned int	env_var_len(char *env_var);
 char			*search_env_var(char **env, char *str);
 
 char			**get_output_input(char **env, char *input, char guillemet);
@@ -57,6 +56,8 @@ char			*skip_space(char *str);
 char			*skip_var(char *str);
 unsigned int	word_len(char **env, char *str);
 bool			is_charset(char c, char *charset);
+unsigned int	str_len(char *str);
+
 void			update_quote_status(t_quote *quote, char c);
 t_quote			init_quote(void);
 

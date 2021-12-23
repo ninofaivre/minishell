@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/22 18:08:27 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/23 15:45:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ unsigned int	word_len(char **env, char *str)
 		{
 			if (*str == '$' && quote.single_quote == false && is_alnum(*(str + 1)) == true)
 			{
-				len += env_var_len(search_env_var(env, str));
+				len += str_len(search_env_var(env, str));
 				str = skip_var(str);
 			}
 			else
@@ -98,4 +98,16 @@ bool	is_charset(char c, char *charset)
 		charset++;
 	}
 	return (false);
+}
+
+unsigned int	str_len(char *str)
+{
+	unsigned int	len;
+
+	len = 0;
+	if (!str)
+		return (0);
+	while (str[len])
+		len++;
+	return (len);
 }

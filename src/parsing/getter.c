@@ -6,44 +6,43 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/22 18:05:11 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/23 16:08:03 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 #include <stdlib.h>
 
+static int	add_env_var_to_word(char *word, char *env_var)
+{
+	unsigned int	env_var_len;
+
+	env_var_len = str_len(env_var);
+	while (env_var && *env_var)
+		*word++ = *env_var++;
+	return (env_var_len);
+}
+
 static char	*get_one_word(char **env, char *str)
 {
 	t_quote	quote;
 	int		i;
 	char	*word;
-	char	*env_var;
 
 	quote = init_quote();
 	i = 0;
-	str = skip_space(str);
-	if (!word_len(env, str))
-		return ((char *) NULL);
 	word = (char *)malloc(sizeof(char) * (word_len(env, str) + 1));
 	if (!word)
 		return ((char *) NULL);
 	update_quote_status(&quote, *str);
 	while (*str && (!is_charset(*str, "| ><") || quote.status == true))
 	{
-		env_var = (char *) NULL;
 		if (!(*str == '\'' && !quote.double_quote)
 			&& !(*str == '"' && !quote.single_quote))
 		{
 			if (*str == '$' && quote.single_quote == false && is_alnum(*(str + 1)) == true)
 			{
-				env_var = search_env_var(env, str);
-				while (env_var && *env_var)
-				{
-					word[i] = *env_var;
-					i++;
-					env_var++;
-				}
+				i += add_env_var_to_word(word, search_env_var(env, str));
 				str = skip_var(str);
 			}
 			else
