@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/23 15:05:54 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/23 15:24:17 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ int	size_list(char *input)
 		n_list++;
 	while (*input)
 	{
+		if (is_charset(*input, "><"))
+			input += 1 + (input[1] == *input);
 		if (*input == '|')
 		{
 			input++;
