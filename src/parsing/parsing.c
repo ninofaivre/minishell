@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/23 15:04:27 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/23 15:32:44 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,15 +99,9 @@ bool	parse_error(char **env, char *str)
 
 t_list	*build_list(char **env, char *input)
 {
-	int		j;
 	t_list	*list;
 
-	if (parse_error(env, input))
-		return ((t_list *) NULL);
-	j = size_list(input);
-	if (j == -1)
-		write(2, "syntax error after unexpected symbol \"|\" \n", 42);
-	if (j <= 0)
+	if (parse_error(env, input) || !size_list(input))
 		return ((t_list *) NULL);
 	list = init_list(input);
 	if (!list)
