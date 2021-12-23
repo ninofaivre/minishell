@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/21 20:47:08 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/23 15:05:54 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,30 +51,20 @@ t_list	*init_list(char *input)
 // avant le prochain '|'
 int	size_list(char *input)
 {
-	t_quote	quote;
 	int		n_list;
 
-	quote = init_quote();
 	n_list = 0;
 	input = skip_space(input);
-	update_quote_status(&quote, *input);
-	if (*input == '|')
-		return (-1);
 	if (*input)
 		n_list++;
 	while (*input)
 	{
-		if (*input == '|' && quote.status == false)
+		if (*input == '|')
 		{
 			input++;
-			input = skip_space(input);
-			update_quote_status(&quote, *input);
-			if (!*input || *input == '|')
-				return (-1);
 			n_list++;
 		}
-		input++;
-		update_quote_status(&quote, *input);
+		input = skip_word(input);
 	}
 	return (n_list);
 }
