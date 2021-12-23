@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/22 18:03:26 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/23 13:31:35 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,23 +29,18 @@ unsigned int	env_var_len(char *env_var)
 char	*search_env_var(char **env, char *str)
 {
 	int	i;
-	int	j;
 
-	j = 0;
-	str++;
-	if (!str)
+	if (!str || *str != '$' || !str[1])
 		return ((char *) NULL);
-	while (env[j])
+	str++;
+	while (*env)
 	{
 		i = 0;
-		while (env[j][i] == str[i])
+		while ((*env)[i] == str[i])
 			i++;
-		if (env[j][i] == '=' && is_alnum(str[i]) == false)
-			break ;
-		j++;
+		if ((*env)[i] == '=' && is_alnum(str[i]) == false)
+			return (&(*env)[i + 1]);
+		env++;
 	}
-	if (env[j])
-		return (&env[j][i + 1]);
-	else
-		return ((char *) NULL);
+	return ((char *) NULL);
 }
