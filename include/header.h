@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/23 15:46:21 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/23 16:14:31 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ typedef struct s_list
 
 typedef struct s_quote
 {
-	bool	single_quote;
-	bool	double_quote;
+	bool	single_q;
+	bool	double_q;
 	bool	status;
 }	t_quote;
 

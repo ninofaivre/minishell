@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/23 15:45:33 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/23 16:16:02 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ unsigned int	word_len(char **env, char *str)
 	update_quote_status(&quote, *str);
 	while (*str && (!is_charset(*str, "| ><") || quote.status == true))
 	{
-		if (!(*str == '\'' && quote.double_quote == false)
-			&& !(*str == '"' && quote.single_quote == false))
+		if (!(*str == '\'' && quote.double_q == false)
+			&& !(*str == '"' && quote.single_q == false))
 		{
-			if (*str == '$' && quote.single_quote == false && is_alnum(*(str + 1)) == true)
+			if (*str == '$' && quote.single_q == false && is_alnum(*(str + 1)) == true)
 			{
 				len += str_len(search_env_var(env, str));
 				str = skip_var(str);

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/23 16:08:03 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/23 16:15:50 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ static char	*get_one_word(char **env, char *str)
 	update_quote_status(&quote, *str);
 	while (*str && (!is_charset(*str, "| ><") || quote.status == true))
 	{
-		if (!(*str == '\'' && !quote.double_quote)
-			&& !(*str == '"' && !quote.single_quote))
+		if (!(*str == '\'' && !quote.double_q)
+			&& !(*str == '"' && !quote.single_q))
 		{
-			if (*str == '$' && quote.single_quote == false && is_alnum(*(str + 1)) == true)
+			if (*str == '$' && quote.single_q == false && is_alnum(str[1]) == true)
 			{
 				i += add_env_var_to_word(word, search_env_var(env, str));
 				str = skip_var(str);
