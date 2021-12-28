@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/22 18:54:34 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/28 20:14:10 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,26 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <stdlib.h>
+
+static void	print_tab_redirection(t_redirection *redirection, char *name, char guillemet)
+{
+	int	i;
+
+	i = 0;
+	if (!redirection)
+	{
+		printf("%s : (t_redirection *) NULL\n", name);
+		return ;
+	}
+	while (redirection[i].content)
+	{
+		if (redirection[i].is_double == true)
+			printf("%s[%i] : %c%c%s\n", name, i, guillemet, guillemet, redirection[i].content);
+		else
+			printf("%s[%i] : %c%s\n", name, i, guillemet, redirection[i].content);
+		i++;
+	}
+}
 
 static void	print_tab_str(char **tab_str, char *name)
 {
@@ -43,9 +63,9 @@ static void	print_list(t_list *list)
 	while (list)
 	{
 		printf("list %i\n\n", i);
-		print_tab_str(list->output, "list->output");
+		print_tab_redirection(list->output, "list->output", '>');
 		printf("\n");
-		print_tab_str(list->input, "list->input");
+		print_tab_redirection(list->input, "list->input", '<');
 		printf("\n");
 		print_tab_str(list->argv, "list->argv");
 		printf("\n\n");
@@ -96,11 +116,14 @@ int	main(int argc, char **argv, char **env)
 		{
 			if (parsing_status == -1)
 			{
-				write(2, "Error\n", 7);
+				write(2, "Error\n", 6);
 				exit(EXIT_FAILURE);
 			}
 			else if (parsing_status == 1)
+			{
+				rl_clear_history();
 				exit(EXIT_SUCCESS);
+			}
 		}
 	}
 }

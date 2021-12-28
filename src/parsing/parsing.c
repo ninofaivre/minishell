@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/23 15:32:44 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/28 19:48:48 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ t_list	*free_list(t_list *list)
 	while (list)
 	{
 		if (list->input)
-			free_tab_str(list->input);
+			free_redirection(list->input);
 		if (list->output)
-			free_tab_str(list->output);
+			free_redirection(list->output);
 		if (list->argv)
 			free_tab_str(list->argv);
 		ptr_list = list;
@@ -49,8 +49,8 @@ static void	feel_data_list(char **env, char *input, t_list *list)
 			input++;
 			update_quote_status(&quote, *input);
 		}
-		list->output = get_output_input(env, input, '>');
-		list->input = get_output_input(env, input, '<');
+		list->output = get_redirection(env, input, '>');
+		list->input = get_redirection(env, input, '<');
 		list->argv = get_argv(env, input);
 		while (*input && (*input != '|' || quote.status == true))
 		{

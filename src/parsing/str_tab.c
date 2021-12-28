@@ -6,11 +6,27 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 20:42:00 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/21 20:54:32 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/28 20:06:04 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "header.h"
 #include <stdlib.h>
+
+void	free_redirection(t_redirection *redirection)
+{
+	int	i;
+
+	i = 0;
+	if (!redirection)
+		return ;
+	while (redirection[i].content)
+	{
+		free(redirection[i].content);
+		i++;
+	}
+	free(redirection);
+}
 
 void	free_tab_str(char **str_tab)
 {

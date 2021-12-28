@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/23 16:15:50 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/28 20:18:15 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static char	*get_one_word(char **env, char *str)
 		if (!(*str == '\'' && !quote.double_q)
 			&& !(*str == '"' && !quote.single_q))
 		{
-			if (*str == '$' && quote.single_q == false && is_alnum(str[1]) == true)
+			if (*str == '$' && quote.single_q == false && is_alnum(str[1]))
 			{
 				i += add_env_var_to_word(word, search_env_var(env, str));
 				str = skip_var(str);
@@ -56,18 +56,41 @@ static char	*get_one_word(char **env, char *str)
 	return (word);
 }
 
-char	**get_output_input(char **env, char *input, char guillemet)
+int	count_redirection(char *str, char guillemet)
 {
-	char	**word;
+	int	n_redirection;
 
-	word = (char **) NULL;
+	n_redirection = 0;
+	while (*str && *str != '|')
+	{
+		if (is_charset(*str, "><"))
+		{
+			n_redirection += (*str == guillemet) + (str[1] == guillemet);
+			str += (is_charset(*str, "><")) + (is_charset(str[1], "><"));
+		}
+		str = skip_word(str);
+	}
+	return (n_redirection);
+}
+
+t_redirection	*get_redirection(char **env, char *input, char guillemet)
+{
+	int				i;
+	t_redirection	*redirection;
+
+	i = 0;
+	redirection = (t_redirection *)malloc(sizeof(t_redirection) * (count_redirection(input, guillemet) + 1));
 	while (*input && *input != '|')
 	{
 		input = skip_space(input);
 		if (*input == guillemet)
 		{
-			input += 1 + (*(input + 1) == guillemet);
-			word = add_str_to_str_tab(word, get_one_word(env, input));
+			if (input[1] == guillemet)
+				redirection[i].is_double = true;
+			input += 1 + (input[1] == guillemet);
+			input = skip_space(input);
+			redirection[i].content = get_one_word(env, input);
+			i++;
 			input = skip_word(input);
 		}
 		else
@@ -76,8 +99,9 @@ char	**get_output_input(char **env, char *input, char guillemet)
 				input += 1 + (is_charset(*(input + 1), "><"));
 			input = skip_word(input);
 		}
+		redirection[i].content = (char *) NULL;
 	}
-	return (word);
+	return (redirection);
 }
 
 char	**get_argv(char **env, char *input)
