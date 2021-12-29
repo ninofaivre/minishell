@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/28 19:47:52 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/29 23:43:24 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,9 @@ char			*search_env_var(char **env, char *str);
 
 t_redirection	*get_redirection(char **env, char *input, char guillemet);
 char			**get_argv(char **env, char *input);
+char			*get_next_pipe(char *str);
 
-t_list			*init_list(char *input);
+t_list			*init_list(char *input, char **env);
 int				size_list(char *input);
 
 t_list			*build_list(char **env, char *input);

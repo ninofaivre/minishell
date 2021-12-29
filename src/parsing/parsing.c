@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/28 19:48:48 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/29 23:45:17 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,34 +32,6 @@ t_list	*free_list(t_list *list)
 		free(ptr_list);
 	}
 	return ((t_list *) NULL);
-}
-
-static void	feel_data_list(char **env, char *input, t_list *list)
-{
-	t_quote	quote;
-	t_list	*ptr_list;
-
-	quote = init_quote();
-	ptr_list = list;
-	update_quote_status(&quote, *input);
-	while (list)
-	{
-		if (*input == '|')
-		{
-			input++;
-			update_quote_status(&quote, *input);
-		}
-		list->output = get_redirection(env, input, '>');
-		list->input = get_redirection(env, input, '<');
-		list->argv = get_argv(env, input);
-		while (*input && (*input != '|' || quote.status == true))
-		{
-			input++;
-			update_quote_status(&quote, *input);
-		}
-		list = list->next;
-	}
-	list = ptr_list;
 }
 
 bool	syntax_error(char c)
@@ -103,12 +75,11 @@ t_list	*build_list(char **env, char *input)
 
 	if (parse_error(env, input) || !size_list(input))
 		return ((t_list *) NULL);
-	list = init_list(input);
+	list = init_list(input, env);
 	if (!list)
 	{
 		write(2, "Malloc Error !\n", 15);
 		return ((t_list *) NULL);
 	}
-	feel_data_list(env, input, list);
 	return (list);
 }

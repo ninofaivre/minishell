@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/28 20:18:15 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/29 23:41:08 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,19 @@ static char	*get_one_word(char **env, char *str)
 	}
 	word[i] = '\0';
 	return (word);
+}
+
+char	*get_next_pipe(char *str)
+{
+	while (*str && *str != '|')
+	{
+		str = skip_word(str);
+		if (is_charset(*str, "><"))
+			str++;
+	}
+	if (*str == '|')
+		str++;
+	return (str);
 }
 
 int	count_redirection(char *str, char guillemet)

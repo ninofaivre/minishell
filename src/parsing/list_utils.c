@@ -6,21 +6,21 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/28 19:44:54 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/29 23:42:09 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 #include <stdlib.h>
 
-static void	init_data_one_list(t_list *list)
+static void	feel_data(t_list *list, char **env, char *input)
 {
-	list->input = (t_redirection *) NULL;
-	list->output = (t_redirection *) NULL;
-	list->argv = (char **) NULL;
+	list->output = get_redirection(env, input, '>');
+	list->input = get_redirection(env, input, '<');
+	list->argv = get_argv(env, input);
 }
 
-t_list	*init_list(char *input)
+t_list	*init_list(char *input, char **env)
 {
 	t_list	*ptr_list;
 	t_list	*list;
@@ -32,7 +32,7 @@ t_list	*init_list(char *input)
 		return ((t_list *) NULL);
 	n_list--;
 	ptr_list = list;
-	init_data_one_list(list);
+	feel_data(list, env, input);
 	list->next = (t_list *) NULL;
 	while (n_list--)
 	{
@@ -40,7 +40,8 @@ t_list	*init_list(char *input)
 		if (!list->next)
 			return ((t_list *) NULL);
 		list = list->next;
-		init_data_one_list(list);
+		input = get_next_pipe(input);
+		feel_data(list, env, input);
 		list->next = (t_list *) NULL;
 	}
 	return (ptr_list);
