@@ -3,6 +3,8 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 int ft_strlen(char *str)
 {
@@ -167,6 +169,25 @@ int check(char *str, char c)
     return (nb);
 }
 
+void    test_fork(t_list *list, char **env, char *full_path)
+{
+    t_list  *ptr_list;
+
+    ptr_list = list;
+    int pid;
+
+    while (list)
+    {
+        pid = fork();
+        if (pid == 0)
+        {
+            execve(full_path, list->argv, env);
+        }
+        waitpid(pid, 0, 0);
+        list = list->next;
+    }
+    list = ptr_list;
+}
 
 int execution(t_list *list, char **env)
 {
@@ -209,7 +230,7 @@ int execution(t_list *list, char **env)
             printf("path : %s | num : %d | fd = %d\n", path[i], i, fd);
             if (fd != -1)
             {
-                printf("retour execve : %i\n", execve(path[i], list->argv, (char * const *)NULL));
+                test_fork(list, env, path[i]);
                 i = 9;
             }
             else
