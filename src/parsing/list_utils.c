@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/30 10:28:14 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/30 10:35:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,11 @@ t_list	*init_list(char *input, char **env)
 	list->next = (t_list *) NULL;
 	while (*get_next_pipe(input))
 	{
-		printf("input : %s\n", input);
 		list->next = (t_list *)malloc(sizeof(t_list));
 		if (!list->next)
-			return ((t_list *) NULL);
+			return (free_list(ptr_list));
 		list = list->next;
 		input = get_next_pipe(input);
-		input = skip_space(input);
 		feel_data(list, env, input);
 		list->next = (t_list *) NULL;
 	}

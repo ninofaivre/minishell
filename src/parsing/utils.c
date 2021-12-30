@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/30 10:21:44 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/30 10:38:03 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ bool	is_alnum(char c)
 {
 	if (!c)
 		return (false);
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+		|| (c >= '0' && c <= '9'))
 		return (true);
 	else
 		return (false);
@@ -54,7 +55,7 @@ unsigned int	word_len(char **env, char *str)
 		if (!(*str == '\'' && quote.double_q == false)
 			&& !(*str == '"' && quote.single_q == false))
 		{
-			if (*str == '$' && quote.single_q == false && is_alnum(*(str + 1)) == true)
+			if (*str == '$' && !quote.single_q && is_alnum(*(str + 1)))
 			{
 				len += str_len(search_env_var(env, str));
 				str = skip_var(str);

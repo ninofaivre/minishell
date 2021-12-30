@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/30 10:28:54 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/30 10:38:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,8 @@ t_redirection	*get_redirection(char **env, char *input, char guillemet)
 	t_redirection	*redirection;
 
 	i = 0;
-	redirection = (t_redirection *)malloc(sizeof(t_redirection) * (count_redirection(input, guillemet) + 1));
+	redirection = (t_redirection *)malloc(sizeof(t_redirection)
+			* (count_redirection(input, guillemet) + 1));
 	while (*input && *input != '|')
 	{
 		input = skip_space(input);

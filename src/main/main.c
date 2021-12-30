@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/28 20:14:10 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/30 10:40:38 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 #include <readline/history.h>
 #include <stdlib.h>
 
-static void	print_tab_redirection(t_redirection *redirection, char *name, char guillemet)
+static void	print_tab_redirection(t_redirection *redirection,
+char *name, char guillemet)
 {
 	int	i;
 
@@ -29,9 +30,11 @@ static void	print_tab_redirection(t_redirection *redirection, char *name, char g
 	while (redirection[i].content)
 	{
 		if (redirection[i].is_double == true)
-			printf("%s[%i] : %c%c%s\n", name, i, guillemet, guillemet, redirection[i].content);
+			printf("%s[%i] : %c%c%s\n", name, i, guillemet,
+				guillemet, redirection[i].content);
 		else
-			printf("%s[%i] : %c%s\n", name, i, guillemet, redirection[i].content);
+			printf("%s[%i] : %c%s\n", name, i, guillemet,
+				redirection[i].content);
 		i++;
 	}
 }
@@ -102,7 +105,6 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
-	//printf("test : %s\n", search_env_var(env, "$HOME"));
 	parsing_status = 0;
 	input = NULL;
 	signal(SIGINT, sig_handler);
