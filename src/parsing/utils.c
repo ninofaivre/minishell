@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/23 16:16:02 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/30 10:21:44 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ unsigned int	word_len(char **env, char *str)
 
 char	*skip_space(char *str)
 {
+	if (!str)
+		return ((char *) NULL);
 	while (*str && *str == ' ')
 		str++;
 	return (str);

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/29 23:41:08 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/30 10:28:54 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ static char	*get_one_word(char **env, char *str)
 
 char	*get_next_pipe(char *str)
 {
+	if (!str || !*str)
+		return ((char *) NULL);
 	while (*str && *str != '|')
 	{
 		str = skip_word(str);
