@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/30 16:16:42 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/30 16:22:59 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ unsigned int	word_len(char **env, char *str)
 	{
 		if (!(*str == '\'' && quote != '"') && !(*str == '"' && quote != '\''))
 		{
-			if (*str == '$' && quote != '\'' && is_alnum(*(str + 1)))
+			if (*str == '$' && quote != '\'' && is_alnum(str[1]))
 			{
 				len += str_len(search_env_var(env, str));
 				str = skip_var(str);
