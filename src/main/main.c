@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/30 10:40:38 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/30 17:24:51 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ static int	parsing(char **env, char *input)
 		return (1);
 	list = build_list(env, input);
 	print_list(list);
+	execution(list, env);
 	free_list(list);
 	return (0);
 }

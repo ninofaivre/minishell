@@ -1,3 +1,4 @@
+#include "header.h"
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -13,7 +14,7 @@ int ft_strlen(char *str)
     return (i);
 }
 
-char        *ft_strcpy(char *dest, char *cpy)
+char    *ft_strcpy(char *dest, char *cpy)
 {
     int i;
     int j;
@@ -167,40 +168,35 @@ int check(char *str, char c)
 }
 
 
-int main(int ac, char **av)
+int execution(t_list *list, char **env)
 {
     int fd;
     int nb;
     int x;
-    int y;
     char    *str;
-    char    **env;
+    char    **path;
     int i;
 
     i = 0; 
-    if (ac < 2)
-    {
-        printf("%s\n", "few arg");
-        return (0);
-    }
     str = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin";
     x = check(str, ':');
-    env = ft_split(str, ':');
-    nb = check(av[1], '/');
+    path = ft_split(str, ':');
+    nb = check(list->argv[0], '/');
     i = 0;
     if (nb == 0)
     {
         while (x != -1)
         {
-            env[x] = ft_strcpy(env[x], av[1]);
+            path[x] = ft_strcpy(path[x], list->argv[0]);
             x--;
         }
     }
     if (nb > 0)
     {
-        fd = open(av[1], O_RDONLY);
+        fd = open(list->argv[0], O_RDONLY);
+        close(fd);
         if (fd != -1)
-            execve(av[1], av, NULL);
+            execve(list->argv[0], list->argv, env);
         else
             printf("%s\n", "no file found");
     }
@@ -208,11 +204,11 @@ int main(int ac, char **av)
     {
         while (i != 9)
         {
-            fd = open(env[i], O_RDONLY);
-            printf("path : %s | num : %d | fd = %d\n", env[i], i, fd);
+            fd = open(path[i], O_RDONLY);
+            printf("path : %s | num : %d | fd = %d\n", path[i], i, fd);
             if (fd != -1)
             {
-                execve(av[1], av, NULL);
+                execve(list->argv[0], list->argv, env);
                 i = 9;
             }
             else

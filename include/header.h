@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/30 15:55:01 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/30 17:23:51 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ bool			is_charset(char c, char *charset);
 unsigned int	str_len(char *str);
 
 char			update_quote_status(char quote, char c);
+
+int				execution(t_list *list, char **env);
 
 /*
 int				pwd(void);
