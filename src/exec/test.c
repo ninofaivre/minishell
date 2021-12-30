@@ -176,9 +176,11 @@ int execution(t_list *list, char **env)
     char    *str;
     char    **path;
     int i;
+    char **argv = (char **)malloc(sizeof(char *) * 1);
+    argv[0] = (char *) NULL;
 
     i = 0; 
-    str = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin";
+    str = search_env_var(env, "$PATH");
     x = check(str, ':');
     path = ft_split(str, ':');
     nb = check(list->argv[0], '/');
@@ -194,7 +196,6 @@ int execution(t_list *list, char **env)
     if (nb > 0)
     {
         fd = open(list->argv[0], O_RDONLY);
-        close(fd);
         if (fd != -1)
             execve(list->argv[0], list->argv, env);
         else
@@ -208,7 +209,7 @@ int execution(t_list *list, char **env)
             printf("path : %s | num : %d | fd = %d\n", path[i], i, fd);
             if (fd != -1)
             {
-                execve(list->argv[0], list->argv, env);
+                printf("retour execve : %i\n", execve(path[i], list->argv, (char * const *)NULL));
                 i = 9;
             }
             else
