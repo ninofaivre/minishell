@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/30 15:50:16 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/30 16:16:42 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,21 +21,6 @@ bool	is_alnum(char c)
 		return (true);
 	else
 		return (false);
-}
-
-char	*skip_word(char *str)
-{
-	char	quote;
-
-	str = skip_space(str);
-	quote = update_quote_status('\0', *str);
-	while (*str && (!is_charset(*str, "| ><") || quote != '\0'))
-	{
-		str++;
-		quote = update_quote_status(quote, *str);
-	}
-	str = skip_space(str);
-	return (str);
 }
 
 unsigned int	word_len(char **env, char *str)
@@ -68,25 +53,6 @@ unsigned int	word_len(char **env, char *str)
 		quote = update_quote_status(quote, *str);
 	}
 	return (len);
-}
-
-char	*skip_space(char *str)
-{
-	if (!str)
-		return ((char *) NULL);
-	while (*str && *str == ' ')
-		str++;
-	return (str);
-}
-
-char	*skip_var(char *str)
-{
-	str++;
-	if (!str)
-		return ((char *) NULL);
-	while (*str && is_alnum(*str) == true)
-		str++;
-	return (str);
 }
 
 bool	is_charset(char c, char *charset)

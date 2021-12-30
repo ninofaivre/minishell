@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/30 15:51:57 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/30 15:55:01 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,6 @@ typedef struct s_redirection
 	char	*content;
 	bool	is_double;
 }	t_redirection;
-
-typedef struct s_quote
-{
-	bool	single_q;
-	bool	double_q;
-	bool	status;
-}	t_quote;
 
 char			*search_env_var(char **env, char *str);
 
