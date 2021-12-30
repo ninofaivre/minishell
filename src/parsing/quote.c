@@ -6,40 +6,18 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 20:54:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/23 16:16:15 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/30 15:43:00 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-t_quote	init_quote(void)
+char	update_quote_status(char quote, char c)
 {
-	t_quote	quote;
-
-	quote.double_q = false;
-	quote.single_q = false;
-	quote.status = false;
-	return (quote);
-}
-
-void	update_quote_status(t_quote *quote, char c)
-{
-	if (c == '"')
-	{
-		if (quote->double_q == true)
-			quote->double_q = false;
-		else if (quote->single_q == false)
-			quote->double_q = true;
-	}
-	else if (c == '\'')
-	{
-		if (quote->single_q == true)
-			quote->single_q = false;
-		else if (quote->double_q == false)
-			quote->single_q = true;
-	}
-	if (quote->single_q == true || quote->double_q == true)
-		quote->status = true;
+	if (quote == '\0' && is_charset(c, "'\""))
+		return (c);
+	else if (quote != '\0' && quote == c)
+		return ('\0');
 	else
-		quote->status = false;
+		return (quote);
 }

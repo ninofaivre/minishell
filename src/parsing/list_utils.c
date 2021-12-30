@@ -6,12 +6,33 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/30 10:35:33 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/30 12:37:28 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 #include <stdlib.h>
+
+// free toutes list et le contenu (input/output/command/arg)
+// renvoie (t_list *) NULL
+t_list	*free_list(t_list *list)
+{
+	t_list	*ptr_list;
+
+	while (list)
+	{
+		if (list->input)
+			free_redirection(list->input);
+		if (list->output)
+			free_redirection(list->output);
+		if (list->argv)
+			free_tab_str(list->argv);
+		ptr_list = list;
+		list = list->next;
+		free(ptr_list);
+	}
+	return ((t_list *) NULL);
+}
 
 static void	feel_data(t_list *list, char **env, char *input)
 {
