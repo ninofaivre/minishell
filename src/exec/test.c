@@ -202,16 +202,16 @@ int execution(t_list *list, char **env)
 
     i = 0; 
     str = search_env_var(env, "$PATH");
-    x = check(str, ':');
+    x = 0;
     path = ft_split(str, ':');
     nb = check(list->argv[0], '/');
     i = 0;
     if (nb == 0)
     {
-        while (x != -1)
+        while (path[x])
         {
             path[x] = ft_strcpy(path[x], list->argv[0]);
-            x--;
+            x++;
         }
     }
     if (nb > 0)
