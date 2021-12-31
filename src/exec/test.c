@@ -6,41 +6,41 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-int ft_strlen(char *str)
+int	ft_strlen(char *str)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (str[i])
-        i++;
-    return (i);
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
 }
 
-char    *ft_strcpy(char *dest, char *cpy)
+char	*ft_strcpy(char *dest, char *cpy)
 {
-    int i;
-    int j;
-    char    *new;
+	int		i;
+	int		j;
+	char	*new;
 
-    i = 0;
-    j = 0;
-    new = malloc(sizeof(char) * (ft_strlen(dest) + ft_strlen(cpy) + 1));
-    while (dest[i])
-    {
-        new[i] = dest[i];
-        i++;
-    }
-    while (cpy[j])
-    {
-        new[i + j] = cpy[j];
-        j++;
-    }
-    new[i + j] = '\0';
-    free (dest);
-    return (new);
+	i = 0;
+	j = 0;
+	new = malloc(sizeof(char) * (ft_strlen(dest) + ft_strlen(cpy) + 1));
+	while (dest[i])
+	{
+		new[i] = dest[i];
+		i++;
+	}
+	while (cpy[j])
+	{
+		new[i + j] = cpy[j];
+		j++;
+	}
+	new[i + j] = '\0';
+	free (dest);
+	return (new);
 }
 
-size_t		ft_strlcpy(char *dest, const char *src, size_t dstsize)
+size_t	ft_strlcpy(char *dest, const char *src, size_t dstsize)
 {
 	size_t	src_len;
 	size_t	i;
@@ -60,12 +60,12 @@ size_t		ft_strlcpy(char *dest, const char *src, size_t dstsize)
 		dest[i] = src[i];
 		i++;
 	}
-    dest[i] = '/';
+	dest[i] = '/';
 	dest[i + 1] = '\0';
 	return (src_len);
 }
 
-static char			**ft_malloc_error(char **tab)
+static char	**ft_malloc_error(char **tab)
 {
 	unsigned int	i;
 
@@ -104,10 +104,9 @@ static unsigned int	ft_get_nb_strs(char const *s, char c)
 	return (nb_strs);
 }
 
-static void			ft_get_next_str(char **next_str, unsigned int *next_str_len,
-					char c)
+static void	ft_get_next_str(char **next_str, unsigned int *next_str_len, char c)
 {
-	unsigned int i;
+	unsigned int	i;
 
 	*next_str += *next_str_len;
 	*next_str_len = 0;
@@ -123,7 +122,7 @@ static void			ft_get_next_str(char **next_str, unsigned int *next_str_len,
 	}
 }
 
-char				**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
 	char			**tab;
 	char			*next_str;
@@ -151,91 +150,92 @@ char				**ft_split(char const *s, char c)
 	return (tab);
 }
 
-int check(char *str, char c)
+int	check(char *str, char c)
 {
-    int i;
-    int nb;
+	int	i;
+	int	nb;
 
-    i = 0;
-    nb = 0;
-    while (str[i])
-    {
-        if (str[i] == c)
-            nb ++;
-        i++;
-    }
-    return (nb);
+	i = 0;
+	nb = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			nb ++;
+		i++;
+	}
+	return (nb);
 }
 
-void    test_fork(t_list *list, char **env, char *full_path)
+void	test_fork(t_list *list, char **env, char *full_path)
 {
-    t_list  *ptr_list;
+	t_list	*ptr_list;
+	int		pid;
 
-    ptr_list = list;
-    int pid;
+	ptr_list = list;
+	pid = 0;
 
-    while (list)
-    {
-        pid = fork();
-        if (pid == 0)
-        {
-            execve(full_path, list->argv, env);
-        }
-        waitpid(pid, 0, 0);
-        list = list->next;
-    }
-    list = ptr_list;
+	while (list)
+	{
+		pid = fork();
+		if (pid == 0)
+		{
+			execve(full_path, list->argv, env);
+		}
+		waitpid(pid, 0, 0);
+		list = list->next;
+	}
+	list = ptr_list;
 }
 
-int execution(t_list *list, char **env)
+int	execution(t_list *list, char **env)
 {
-    int fd;
-    int nb;
-    int x;
-    char    *str;
-    char    **path;
-    int i;
-    char **argv = (char **)malloc(sizeof(char *) * 1);
-    argv[0] = (char *) NULL;
+	int		fd;
+	int		nb;
+	int		x;
+	char	*str;
+	char	**path;
+	int		i;
+	char	**argv = (char **)malloc(sizeof(char *) * 1);
+	argv[0] = (char *) NULL;
 
-    i = 0; 
-    str = search_env_var(env, "$PATH");
-    x = 0;
-    path = ft_split(str, ':');
-    nb = check(list->argv[0], '/');
-    i = 0;
-    if (nb == 0)
-    {
-        while (path[x])
-        {
-            path[x] = ft_strcpy(path[x], list->argv[0]);
-            x++;
-        }
-    }
-    if (nb > 0)
-    {
-        fd = open(list->argv[0], O_RDONLY);
-        if (fd != -1)
-            execve(list->argv[0], list->argv, env);
-        else
-            printf("%s\n", "no file found");
-    }
-    else
-    {
-        while (i != 9)
-        {
-            fd = open(path[i], O_RDONLY);
-            printf("path : %s | num : %d | fd = %d\n", path[i], i, fd);
-            if (fd != -1)
-            {
-                test_fork(list, env, path[i]);
-                i = 9;
-            }
-            else
-                i++;
-        }
-        if (fd == -1)
-            printf("%s\n", "no file found");
-    }
-    return (0);
+	i = 0; 
+	str = search_env_var(env, "$PATH");
+	x = 0;
+	path = ft_split(str, ':');
+	nb = check(list->argv[0], '/');
+	i = 0;
+	if (nb == 0)
+	{
+		while (path[x])
+		{
+			path[x] = ft_strcpy(path[x], list->argv[0]);
+			x++;
+		}
+	}
+	if (nb > 0)
+	{
+		fd = open(list->argv[0], O_RDONLY);
+		if (fd != -1)
+			execve(list->argv[0], list->argv, env);
+		else
+			printf("%s\n", "no file found");
+	}
+	else
+	{
+		while (i != 9)
+		{
+			fd = open(path[i], O_RDONLY);
+			printf("path : %s | num : %d | fd = %d\n", path[i], i, fd);
+			if (fd != -1)
+			{
+				test_fork(list, env, path[i]);
+				i = 9;
+			}
+			else
+				i++;
+		}
+		if (fd == -1)
+			printf("%s\n", "no file found");
+	}
+	return (0);
 }
