@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/30 17:23:51 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/31 14:27:50 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,9 @@ t_redirection	*get_redirection(char **env, char *input, char guillemet);
 char			**get_argv(char **env, char *input);
 char			*get_next_pipe(char *str);
 
+int				add_env_var_to_word(char *word, char *env_var);
+int				count_redirection(char *str, char guillemet);
+
 t_list			*init_list(char *input, char **env);
 int				size_list(char *input);
 
@@ -49,6 +52,7 @@ t_list			*free_list(t_list *lists);
 
 void			free_redirection(t_redirection *redirection);
 void			free_tab_str(char **str_tab);
+int				str_tab_len(char **str_tab);
 char			**add_str_to_str_tab(char **str_tab, char *str);
 
 bool			is_alnum(char c);

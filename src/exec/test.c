@@ -36,7 +36,6 @@ char	*ft_strcpy(char *dest, char *cpy)
 		j++;
 	}
 	new[i + j] = '\0';
-	free (dest);
 	return (new);
 }
 
@@ -166,76 +165,87 @@ int	check(char *str, char c)
 	return (nb);
 }
 
-void	test_fork(t_list *list, char **env, char *full_path)
+void	test_fork(t_list *list, char **env, char *full_path_split)
 {
-	t_list	*ptr_list;
 	int		pid;
 
-	ptr_list = list;
-	pid = 0;
+	pid = fork();
+	if (pid == 0)
+		execve(full_path_split, list->argv, env);
+	waitpid(pid, 0, 0);
+}
 
-	while (list)
+static char	**ft_path_exec(char **path_split, char *exec)
+{
+	int		i;
+	char	**path_exec;
+
+	i = 0;
+	path_exec = (char **)malloc(sizeof(char *) * (str_tab_len(path_split) + 1));
+	if (!path_exec)
+		return ((char **) NULL);
+	while (*path_split)
 	{
-		pid = fork();
-		if (pid == 0)
-		{
-			execve(full_path, list->argv, env);
-		}
-		waitpid(pid, 0, 0);
-		list = list->next;
+		path_exec[i] = ft_strcpy(*path_split, exec);
+		i++;
+		path_split++;
 	}
-	list = ptr_list;
+	return (path_exec);
 }
 
 int	execution(t_list *list, char **env)
 {
 	int		fd;
 	int		nb;
-	int		x;
 	char	*str;
-	char	**path;
+	char	**path_split;
+	char	**path_exec;
 	int		i;
 	char	**argv = (char **)malloc(sizeof(char *) * 1);
 	argv[0] = (char *) NULL;
 
 	i = 0; 
 	str = search_env_var(env, "$PATH");
-	x = 0;
-	path = ft_split(str, ':');
+	path_split = ft_split(str, ':');
 	nb = check(list->argv[0], '/');
 	i = 0;
-	if (nb == 0)
+	t_list	*ptr_list = list;
+	while (list)
 	{
-		while (path[x])
+		if (nb == 0)
 		{
-			path[x] = ft_strcpy(path[x], list->argv[0]);
-			x++;
+			path_exec = ft_path_exec(path_split, list->argv[0]);
 		}
-	}
-	if (nb > 0)
-	{
-		fd = open(list->argv[0], O_RDONLY);
-		if (fd != -1)
-			execve(list->argv[0], list->argv, env);
-		else
-			printf("%s\n", "no file found");
-	}
-	else
-	{
-		while (i != 9)
+		if (nb > 0)
 		{
-			fd = open(path[i], O_RDONLY);
-			printf("path : %s | num : %d | fd = %d\n", path[i], i, fd);
+			fd = open(list->argv[0], O_RDONLY);
 			if (fd != -1)
-			{
-				test_fork(list, env, path[i]);
-				i = 9;
-			}
+				execve(list->argv[0], list->argv, env);
 			else
-				i++;
+				printf("%s\n", "no file found");
 		}
-		if (fd == -1)
-			printf("%s\n", "no file found");
+		else
+		{
+			while (path_exec[i])
+			{
+				fd = open(path_exec[i], O_RDONLY);
+				printf("path_split : %s | num : %d | fd = %d\n", path_split[i], i, fd);
+				if (fd != -1)
+				{
+					test_fork(list, env, path_exec[i]);
+					break ;
+				}
+				else
+					i++;
+			}
+			i = 0;
+			if (fd == -1)
+				printf("%s\n", "no file found");
+		}
+		list = list->next;
+		free_tab_str(path_exec);
 	}
+	list = ptr_list;
+	free_tab_str(path_split);
 	return (0);
 }

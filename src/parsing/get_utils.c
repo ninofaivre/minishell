@@ -6,13 +6,13 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/31 13:50:35 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/31 13:51:46 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/31 14:01:18 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-static int	add_env_var_to_word(char *word, char *env_var)
+int	add_env_var_to_word(char *word, char *env_var)
 {
 	unsigned int	env_var_len;
 

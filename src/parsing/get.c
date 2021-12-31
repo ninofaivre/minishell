@@ -6,24 +6,18 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/31 13:51:30 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/31 14:04:24 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 #include <stdlib.h>
 
-static char	*get_one_word(char **env, char *str)
+static void	cpy_word(char *word, char *str, char **env, char quote)
 {
-	char	quote;
-	int		i;
-	char	*word;
+	int	i;
 
-	quote = update_quote_status('\0', *str);
 	i = 0;
-	word = (char *)malloc(sizeof(char) * (word_len(env, str) + 1));
-	if (!word)
-		return ((char *) NULL);
 	while (*str && (!is_charset(*str, "| ><") || quote != '\0'))
 	{
 		if (!(is_charset(*str, "'\"") && (quote == '\0' || quote == *str)))
@@ -41,6 +35,18 @@ static char	*get_one_word(char **env, char *str)
 		quote = update_quote_status(quote, *str);
 	}
 	word[i] = '\0';
+}
+
+static char	*get_one_word(char *str, char **env)
+{
+	char	quote;
+	char	*word;
+
+	quote = update_quote_status('\0', *str);
+	word = (char *)malloc(sizeof(char) * (word_len(env, str) + 1));
+	if (!word)
+		return ((char *) NULL);
+	cpy_word(word, str, env, quote);
 	return (word);
 }
 
@@ -76,7 +82,7 @@ t_redirection	*get_redirection(char **env, char *input, char guillemet)
 				redirection[i].is_double = true;
 			input += 1 + (input[1] == guillemet);
 			input = skip_space(input);
-			redirection[i++].content = get_one_word(env, input);
+			redirection[i++].content = get_one_word(input, env);
 			input = skip_word(input);
 		}
 		else
@@ -105,7 +111,7 @@ char	**get_argv(char **env, char *input)
 		}
 		else
 		{
-			argv = add_str_to_str_tab(argv, get_one_word(env, input));
+			argv = add_str_to_str_tab(argv, get_one_word(input, env));
 			input = skip_word(input);
 		}
 	}
