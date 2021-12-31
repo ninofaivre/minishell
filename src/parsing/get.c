@@ -1,27 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   getter.c                                           :+:      :+:    :+:   */
+/*   get.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/30 15:46:09 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/12/31 13:51:30 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 #include <stdlib.h>
-
-static int	add_env_var_to_word(char *word, char *env_var)
-{
-	unsigned int	env_var_len;
-
-	env_var_len = str_len(env_var);
-	while (env_var && *env_var)
-		*word++ = *env_var++;
-	return (env_var_len);
-}
 
 static char	*get_one_word(char **env, char *str)
 {
@@ -67,23 +57,6 @@ char	*get_next_pipe(char *str)
 	if (*str == '|')
 		str++;
 	return (str);
-}
-
-int	count_redirection(char *str, char guillemet)
-{
-	int	n_redirection;
-
-	n_redirection = 0;
-	while (*str && *str != '|')
-	{
-		if (is_charset(*str, "><"))
-		{
-			n_redirection += (*str == guillemet) + (str[1] == guillemet);
-			str += (is_charset(*str, "><")) + (is_charset(str[1], "><"));
-		}
-		str = skip_word(str);
-	}
-	return (n_redirection);
 }
 
 t_redirection	*get_redirection(char **env, char *input, char guillemet)
