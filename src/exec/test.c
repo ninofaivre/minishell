@@ -84,7 +84,7 @@ static unsigned int	ft_get_nb_strs(char const *s, char c)
 	unsigned int	i;
 	unsigned int	nb_strs;
 
-	if (!s[0])
+	if (!s)
 		return (0);
 	i = 0;
 	nb_strs = 0;
