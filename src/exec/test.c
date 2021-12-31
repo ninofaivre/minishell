@@ -190,6 +190,7 @@ static char	**ft_path_exec(char **path_split, char *exec)
 		i++;
 		path_split++;
 	}
+	path_exec[i] = (char *) NULL;
 	return (path_exec);
 }
 
@@ -207,6 +208,7 @@ int	execution(t_list *list, char **env)
 	i = 0; 
 	str = search_env_var(env, "$PATH");
 	path_split = ft_split(str, ':');
+	path_exec = (char **) NULL;
 	nb = check(list->argv[0], '/');
 	i = 0;
 	t_list	*ptr_list = list;
