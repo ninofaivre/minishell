@@ -246,8 +246,20 @@ int	execution(t_list *list, char **env)
 		if (nb > 0)
 		{
 			fd = open(list->argv[0], O_RDONLY);
+			close(fd);
 			if (fd != -1)
-				execve(list->argv[0], list->argv, env);
+			{
+				if (id % 2)
+				{
+					test_fork(list, env, list->argv[0], pipe_b, pipe_a, id);
+					pipe(pipe_b);
+				}
+				else
+				{
+					test_fork(list, env, list->argv[0], pipe_a, pipe_b, id);
+					pipe(pipe_a);
+				}
+			}
 			else
 				printf("%s\n", "no file found");
 		}
