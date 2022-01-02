@@ -165,7 +165,7 @@ int	check(char *str, char c)
 	return (nb);
 }
 
-void	test_fork(t_list *list, char **env, char *full_path_split, int *pipe_a, int *pipe_b)
+void	test_fork(t_list *list, char **env, char *full_path_split, int *pipe_a, int *pipe_b, int id)
 {
 	pid_t	pid;
 	int		status = 0;
@@ -175,7 +175,10 @@ void	test_fork(t_list *list, char **env, char *full_path_split, int *pipe_a, int
 	{
 		close(pipe_a[1]);
 		close(pipe_b[0]);
-		dup2(pipe_a[0], 0);
+		if (id != 0)
+			dup2(pipe_a[0], 0);
+		else
+			close(pipe_a[0]);
 		if (list->next)
 			dup2(pipe_b[1], 1);
 		else
@@ -185,6 +188,8 @@ void	test_fork(t_list *list, char **env, char *full_path_split, int *pipe_a, int
 	}
 	else
 	{
+		close(pipe_a[0]);
+		close(pipe_a[1]);
 		waitpid(pid, &status, 0);
 		kill(pid, SIGTERM);
 	}
@@ -252,21 +257,17 @@ int	execution(t_list *list, char **env)
 			{
 				fd = open(path_exec[i], O_RDONLY);
 				close(fd);
-				//printf("path_split : %s | num : %d | fd = %d\n", path_split[i], i, fd);
+				printf("path_split : %s | num : %d | fd = %d\n", path_split[i], i, fd);
 				if (fd != -1)
 				{
 					if (id % 2)
 					{
-						test_fork(list, env, path_exec[i], pipe_b, pipe_a);
-						close(pipe_b[0]);
-						close(pipe_b[1]);
+						test_fork(list, env, path_exec[i], pipe_b, pipe_a, id);
 						pipe(pipe_b);
 					}
 					else
 					{
-						test_fork(list, env, path_exec[i], pipe_a, pipe_b);
-						close(pipe_a[0]);
-						close(pipe_a[1]);
+						test_fork(list, env, path_exec[i], pipe_a, pipe_b, id);
 						pipe(pipe_a);
 					}
 					break ;
