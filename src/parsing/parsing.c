@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/30 12:37:21 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/02 16:56:25 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ bool	parse_error(char **env, char *str)
 		{
 			str += 1 + (str[1] == *str);
 			if (!word_len(env, str))
-				return (syntax_error(*(str - 1)));
+				return (syntax_error(str[-1]));
 		}
 		str = skip_word(str);
 	}
