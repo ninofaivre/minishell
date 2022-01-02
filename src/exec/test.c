@@ -222,8 +222,6 @@ int	execution(t_list *list, char **env)
 	char	**path_split;
 	char	**path_exec;
 	int		i;
-	char	**argv = (char **)malloc(sizeof(char *) * 1);
-	argv[0] = (char *) NULL;
 
 	i = 0; 
 	str = search_env_var(env, "$PATH");
