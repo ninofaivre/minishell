@@ -165,14 +165,29 @@ int	check(char *str, char c)
 	return (nb);
 }
 
-void	test_fork(t_list *list, char **env, char *full_path_split)
+void	test_fork(t_list *list, char **env, char *full_path_split, int *pipe_a, int *pipe_b)
 {
-	int		pid;
+	pid_t	pid;
+	int		status = 0;
 
 	pid = fork();
 	if (pid == 0)
+	{
+		close(pipe_a[1]);
+		close(pipe_b[0]);
+		dup2(pipe_a[0], 0);
+		if (list->next)
+			dup2(pipe_b[1], 1);
+		else
+			close(pipe_b[1]);
 		execve(full_path_split, list->argv, env);
-	waitpid(pid, 0, 0);
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		waitpid(pid, &status, 0);
+		kill(pid, SIGTERM);
+	}
 }
 
 static char	**ft_path_exec(char **path_split, char *exec)
@@ -212,6 +227,11 @@ int	execution(t_list *list, char **env)
 	nb = check(list->argv[0], '/');
 	i = 0;
 	t_list	*ptr_list = list;
+	int	pipe_a[2];
+	int	pipe_b[2];
+	pipe(pipe_a);
+	pipe(pipe_b);
+	int	id = 0;
 	while (list)
 	{
 		if (nb == 0)
@@ -231,10 +251,24 @@ int	execution(t_list *list, char **env)
 			while (path_exec[i])
 			{
 				fd = open(path_exec[i], O_RDONLY);
-				printf("path_split : %s | num : %d | fd = %d\n", path_split[i], i, fd);
+				close(fd);
+				//printf("path_split : %s | num : %d | fd = %d\n", path_split[i], i, fd);
 				if (fd != -1)
 				{
-					test_fork(list, env, path_exec[i]);
+					if (id % 2)
+					{
+						test_fork(list, env, path_exec[i], pipe_b, pipe_a);
+						close(pipe_b[0]);
+						close(pipe_b[1]);
+						pipe(pipe_b);
+					}
+					else
+					{
+						test_fork(list, env, path_exec[i], pipe_a, pipe_b);
+						close(pipe_a[0]);
+						close(pipe_a[1]);
+						pipe(pipe_a);
+					}
 					break ;
 				}
 				else
@@ -246,8 +280,13 @@ int	execution(t_list *list, char **env)
 		}
 		list = list->next;
 		free_tab_str(path_exec);
+		id++;
 	}
 	list = ptr_list;
 	free_tab_str(path_split);
+	close(pipe_a[0]);
+	close(pipe_a[1]);
+	close(pipe_b[0]);
+	close(pipe_b[1]);
 	return (0);
 }
