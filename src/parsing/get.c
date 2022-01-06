@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/31 14:04:24 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/06 12:34:53 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	cpy_word(char *word, char *str, char **env, char quote)
 		{
 			if (*str == '$' && quote != '\'' && is_alnum(str[1]))
 			{
-				i += add_env_var_to_word(word, search_env_var(env, str));
+				i += add_env_var_to_word(&word[i], search_env_var(env, str));
 				str = skip_var(str);
 			}
 			else
