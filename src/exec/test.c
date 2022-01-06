@@ -216,7 +216,6 @@ static char	**ft_path_exec(char **path_split, char *exec)
 
 int	execution(t_list *list, char **env)
 {
-	int		fd;
 	int		nb;
 	char	*str;
 	char	**path_split;
@@ -243,9 +242,7 @@ int	execution(t_list *list, char **env)
 		}
 		if (nb > 0)
 		{
-			fd = open(list->argv[0], O_RDONLY);
-			close(fd);
-			if (fd != -1)
+			if (access(list->argv[0], X_OK) != -1)
 			{
 				if (id % 2)
 				{
@@ -265,10 +262,7 @@ int	execution(t_list *list, char **env)
 		{
 			while (path_exec[i])
 			{
-				fd = open(path_exec[i], O_RDONLY);
-				close(fd);
-				printf("path_split : %s | num : %d | fd = %d\n", path_split[i], i, fd);
-				if (fd != -1)
+				if (access(path_exec[i], X_OK) != -1)
 				{
 					if (id % 2)
 					{
@@ -285,9 +279,9 @@ int	execution(t_list *list, char **env)
 				else
 					i++;
 			}
-			i = 0;
-			if (fd == -1)
+			if (!path_exec[i])
 				printf("%s\n", "no file found");
+			i = 0;
 		}
 		list = list->next;
 		free_tab_str(path_exec);
