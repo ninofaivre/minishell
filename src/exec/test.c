@@ -169,17 +169,63 @@ void	test_fork(t_list *list, char **env, char *full_path_split, int *pipe_a, int
 {
 	pid_t	pid;
 	int		status = 0;
+	int		fd = 0;
+	int		i = 0;
 
 	pid = fork();
 	if (pid == 0)
 	{
 		close(pipe_a[1]);
 		close(pipe_b[0]);
-		if (id != 0)
+		if (list->input[0].content)
+		{
+			close(pipe_a[0]);
+			while (list->input[i].content)
+			{
+				if (access(list->input[i].content, R_OK) == -1)
+				{
+					printf("Impossible d'accéder au fichier (%s) !\n", list->input[i].content);
+					exit(EXIT_FAILURE);
+				}
+				else if (!list->input[i + 1].content)
+				{
+					fd = open(list->input[i].content, O_RDONLY);
+					dup2(fd, 0);
+					break ;
+				}
+				i++;
+			}
+		}
+		else if (id != 0)
 			dup2(pipe_a[0], 0);
 		else
 			close(pipe_a[0]);
-		if (list->next)
+		i = 0;
+		if (list->output[0].content)
+		{
+			close(pipe_b[1]);
+			while (list->output[i].content)
+			{
+				if (list->output[i].is_double == true)
+					fd = open(list->output[i].content, O_APPEND | O_RDWR | O_CREAT, 0644);
+				else
+					fd = open(list->output[i].content, O_TRUNC | O_RDWR | O_CREAT, 0644);
+				if (fd != -1)
+				{
+					if (!list->output[i + 1].content)
+						dup2(fd, 1);
+					else
+						close(fd);
+				}
+				else
+				{
+					printf("Impossible de créer le fichier !\n");
+					exit(EXIT_FAILURE);
+				}
+				i++;
+			}
+		}
+		else if (list->next)
 			dup2(pipe_b[1], 1);
 		else
 			close(pipe_b[1]);
@@ -191,6 +237,8 @@ void	test_fork(t_list *list, char **env, char *full_path_split, int *pipe_a, int
 		close(pipe_a[0]);
 		close(pipe_a[1]);
 		waitpid(pid, &status, 0);
+		if (fd > 0)
+			close(fd);
 		kill(pid, SIGTERM);
 	}
 }
