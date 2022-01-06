@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/30 17:24:51 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/06 14:08:44 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ int	main(int argc, char **argv, char **env)
 	while (true)
 	{
 		input = readline(PROMPT);
+		add_history(input);
 		parsing_status = parsing(env, input);
 		free(input);
 		if (parsing_status)
@@ -124,6 +125,7 @@ int	main(int argc, char **argv, char **env)
 			}
 			else if (parsing_status == 1)
 			{
+				clear_history();
 				rl_clear_history();
 				exit(EXIT_SUCCESS);
 			}
