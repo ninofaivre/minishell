@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <readline/readline.h>
 
 int	ft_strlen(char *str)
 {
@@ -165,7 +166,64 @@ int	check(char *str, char c)
 	return (nb);
 }
 
-void	test_fork(t_list *list, char **env, char *full_path_split, int *pipe_a, int *pipe_b, int id)
+bool	is_same_string(char *str1, char *str2)
+{
+	if ((!str1 && str2) || (str1 && !str2))
+		return (false);
+	else if (!str1 && !str2)
+		return (true);
+	while (*str1 && *str2 && *str1 == *str2)
+	{
+		str1++;
+		str2++;
+	}
+	if (*str1 == *str2)
+		return (true);
+	else
+		return (false);
+}
+
+void	write_str_tab_to_fd(char **str_tab, int fd)
+{
+	while (*str_tab)
+	{
+		write(fd, *str_tab, str_len(*str_tab));
+		write(fd, "\n", 1);
+		str_tab++;
+	}
+}
+
+int	doubleinput(char *eof, bool need_pipe)
+{
+	char	**str_tab;
+	char	*input;
+
+	str_tab = (char **) NULL;
+	input = readline(">");
+	while (!is_same_string(input, eof))
+	{
+		str_tab = add_str_to_str_tab(str_tab, input);
+		input = readline(">");
+	}
+	if (need_pipe == false)
+	{
+		free_tab_str(str_tab);
+		free(input);
+		return (-1);
+	}
+	else
+	{
+		int	pipe_tab[2];
+		pipe(pipe_tab);
+		write_str_tab_to_fd(str_tab, pipe_tab[1]);
+		close(pipe_tab[1]);
+		free_tab_str(str_tab);
+		free(input);
+		return (pipe_tab[0]);
+	}
+}
+
+int	test_fork(t_list *list, char **env, char *full_path_split, int *pipe_a, int *pipe_b, int id)
 {
 	pid_t	pid;
 	int		status = 0;
@@ -182,16 +240,25 @@ void	test_fork(t_list *list, char **env, char *full_path_split, int *pipe_a, int
 			close(pipe_a[0]);
 			while (list->input[i].content)
 			{
-				if (access(list->input[i].content, R_OK) == -1)
+				if (list->input[i].is_double == true)
 				{
-					printf("Impossible d'accéder au fichier (%s) !\n", list->input[i].content);
-					exit(EXIT_FAILURE);
+					fd = doubleinput(list->input[i].content, !list->input[i + 1].content);
+					if (fd != 1)
+						dup2(fd, 0);
 				}
-				else if (!list->input[i + 1].content)
+				else
 				{
-					fd = open(list->input[i].content, O_RDONLY);
-					dup2(fd, 0);
-					break ;
+					if (access(list->input[i].content, R_OK) == -1)
+					{
+						printf("Impossible d'accéder au fichier (%s) !\n", list->input[i].content);
+						exit(EXIT_FAILURE);
+					}
+					else if (!list->input[i + 1].content)
+					{
+						fd = open(list->input[i].content, O_RDONLY);
+						dup2(fd, 0);
+						break ;
+					}
 				}
 				i++;
 			}
@@ -240,6 +307,7 @@ void	test_fork(t_list *list, char **env, char *full_path_split, int *pipe_a, int
 		if (fd > 0)
 			close(fd);
 		kill(pid, SIGTERM);
+		return (WEXITSTATUS(status));
 	}
 }
 
@@ -269,6 +337,7 @@ int	execution(t_list *list, char **env)
 	char	**path_split;
 	char	**path_exec;
 	int		i;
+	int		status = 0;
 
 	i = 0; 
 	str = search_env_var(env, "$PATH");
@@ -294,12 +363,12 @@ int	execution(t_list *list, char **env)
 			{
 				if (id % 2)
 				{
-					test_fork(list, env, list->argv[0], pipe_b, pipe_a, id);
+					status = test_fork(list, env, list->argv[0], pipe_b, pipe_a, id);
 					pipe(pipe_b);
 				}
 				else
 				{
-					test_fork(list, env, list->argv[0], pipe_a, pipe_b, id);
+					status = test_fork(list, env, list->argv[0], pipe_a, pipe_b, id);
 					pipe(pipe_a);
 				}
 			}
@@ -314,12 +383,12 @@ int	execution(t_list *list, char **env)
 				{
 					if (id % 2)
 					{
-						test_fork(list, env, path_exec[i], pipe_b, pipe_a, id);
+						status = test_fork(list, env, path_exec[i], pipe_b, pipe_a, id);
 						pipe(pipe_b);
 					}
 					else
 					{
-						test_fork(list, env, path_exec[i], pipe_a, pipe_b, id);
+						status = test_fork(list, env, path_exec[i], pipe_a, pipe_b, id);
 						pipe(pipe_a);
 					}
 					break ;
@@ -341,5 +410,5 @@ int	execution(t_list *list, char **env)
 	close(pipe_a[1]);
 	close(pipe_b[0]);
 	close(pipe_b[1]);
-	return (0);
+	return (status);
 }

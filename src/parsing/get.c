@@ -6,16 +6,29 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/06 12:34:53 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/07 16:19:46 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 #include <stdlib.h>
 
-static void	cpy_word(char *word, char *str, char **env, char quote)
+int	cpy_status(char *word, int status)
 {
-	int	i;
+	int		i;
+	char	*str_status;
+
+	i = 0;
+	str_status = itoa(status);
+	while (str_status[i])
+		*word++ = str_status[i++];
+	free(str_status);
+	return (int_len(status));
+}
+
+static void	cpy_word(char *word, char *str, char **env, char quote, int status)
+{
+	int		i;
 
 	i = 0;
 	while (*str && (!is_charset(*str, "| ><") || quote != '\0'))
@@ -27,6 +40,11 @@ static void	cpy_word(char *word, char *str, char **env, char quote)
 				i += add_env_var_to_word(&word[i], search_env_var(env, str));
 				str = skip_var(str);
 			}
+			else if (*str == '$' && quote != '\'' && str[1] == '?')
+			{
+				i += cpy_status(&word[i], status);
+				str += 2;
+			}
 			else
 				word[i++] = *str++;
 		}
@@ -37,16 +55,16 @@ static void	cpy_word(char *word, char *str, char **env, char quote)
 	word[i] = '\0';
 }
 
-static char	*get_one_word(char *str, char **env)
+static char	*get_one_word(char *str, char **env, int status)
 {
 	char	quote;
 	char	*word;
 
 	quote = update_quote_status('\0', *str);
-	word = (char *)malloc(sizeof(char) * (word_len(env, str) + 1));
+	word = (char *)malloc(sizeof(char) * (word_len(env, str, status) + 1));
 	if (!word)
 		return ((char *) NULL);
-	cpy_word(word, str, env, quote);
+	cpy_word(word, str, env, quote, status);
 	return (word);
 }
 
@@ -65,7 +83,7 @@ char	*get_next_pipe(char *str)
 	return (str);
 }
 
-t_redirection	*get_redirection(char **env, char *input, char guillemet)
+t_redirection	*get_redirection(char **env, char *input, char guillemet, int status)
 {
 	int				i;
 	t_redirection	*redirection;
@@ -82,7 +100,7 @@ t_redirection	*get_redirection(char **env, char *input, char guillemet)
 				redirection[i].is_double = true;
 			input += 1 + (input[1] == guillemet);
 			input = skip_space(input);
-			redirection[i++].content = get_one_word(input, env);
+			redirection[i++].content = get_one_word(input, env, status);
 			input = skip_word(input);
 		}
 		else
@@ -96,7 +114,7 @@ t_redirection	*get_redirection(char **env, char *input, char guillemet)
 	return (redirection);
 }
 
-char	**get_argv(char **env, char *input)
+char	**get_argv(char **env, char *input, int status)
 {
 	char	**argv;
 
@@ -111,7 +129,7 @@ char	**get_argv(char **env, char *input)
 		}
 		else
 		{
-			argv = add_str_to_str_tab(argv, get_one_word(input, env));
+			argv = add_str_to_str_tab(argv, get_one_word(input, env, status));
 			input = skip_word(input);
 		}
 	}

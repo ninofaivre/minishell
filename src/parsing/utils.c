@@ -6,11 +6,47 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/30 16:22:59 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/07 16:17:47 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
+#include <stdlib.h>
+
+char	*itoa(int nbr)
+{
+	printf("hey je suis itoa et on m'a passé cet int : %i\n", nbr);
+	int		i;
+	char	*str;
+
+	i = int_len(nbr);
+	str = (char *)malloc(sizeof(char) * (i + 1));
+	if (!str)
+		return ((char *) NULL);
+	str[i--] = '\0';
+	while (nbr / 10)
+	{
+		str[i--] = (nbr % 10) + 48;
+		nbr /= 10;
+	}
+	str[i] = nbr + 48;
+	printf("hey je suis ito et je renvoi : %s\n", str);
+	return (str);
+}
+
+int	int_len(int nbr)
+{
+	int	len;
+
+	len = 0;
+	while (nbr / 10)
+	{
+		len++;
+		nbr /= 10;
+	}
+	len++;
+	return (len);
+}
 
 bool	is_alnum(char c)
 {
@@ -23,7 +59,7 @@ bool	is_alnum(char c)
 		return (false);
 }
 
-unsigned int	word_len(char **env, char *str)
+unsigned int	word_len(char **env, char *str, int status)
 {
 	char			quote;
 	unsigned int	len;
@@ -41,6 +77,11 @@ unsigned int	word_len(char **env, char *str)
 			{
 				len += str_len(search_env_var(env, str));
 				str = skip_var(str);
+			}
+			else if (*str == '$' && quote != '\'' && str[1] == '?')
+			{
+				len += int_len(status);
+				str += 2;
 			}
 			else
 			{

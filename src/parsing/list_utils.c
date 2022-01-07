@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/30 12:37:28 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/07 16:11:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,14 @@ t_list	*free_list(t_list *list)
 	return ((t_list *) NULL);
 }
 
-static void	feel_data(t_list *list, char **env, char *input)
+static void	feel_data(t_list *list, char **env, char *input, int status)
 {
-	list->output = get_redirection(env, input, '>');
-	list->input = get_redirection(env, input, '<');
-	list->argv = get_argv(env, input);
+	list->output = get_redirection(env, input, '>', status);
+	list->input = get_redirection(env, input, '<', status);
+	list->argv = get_argv(env, input, status);
 }
 
-t_list	*init_list(char *input, char **env)
+t_list	*init_list(char *input, char **env, int status)
 {
 	t_list	*ptr_list;
 	t_list	*list;
@@ -50,7 +50,7 @@ t_list	*init_list(char *input, char **env)
 	if (!list)
 		return ((t_list *) NULL);
 	ptr_list = list;
-	feel_data(list, env, input);
+	feel_data(list, env, input, status);
 	list->next = (t_list *) NULL;
 	while (*get_next_pipe(input))
 	{
@@ -59,7 +59,7 @@ t_list	*init_list(char *input, char **env)
 			return (free_list(ptr_list));
 		list = list->next;
 		input = get_next_pipe(input);
-		feel_data(list, env, input);
+		feel_data(list, env, input, status);
 		list->next = (t_list *) NULL;
 	}
 	return (ptr_list);

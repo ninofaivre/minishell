@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/06 14:08:44 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/07 15:44:18 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,16 +85,16 @@ static void	sig_handler(int sig)
 	write(1, PROMPT, 17);
 }
 
-static int	parsing(char **env, char *input)
+static int	parsing(char **env, char *input, int *status)
 {
 	t_list	*list;
 
 	if (*input == 'e' && *(input + 1) == 'x'
 		&& *(input + 2) == 'i' && *(input + 3) == 't')
 		return (1);
-	list = build_list(env, input);
+	list = build_list(env, input, *status);
 	print_list(list);
-	execution(list, env);
+	*status = execution(list, env);
 	free_list(list);
 	return (0);
 }
@@ -103,6 +103,7 @@ int	main(int argc, char **argv, char **env)
 {
 	int		parsing_status;
 	char	*input;
+	int status = 0;
 
 	(void)argc;
 	(void)argv;
@@ -114,7 +115,7 @@ int	main(int argc, char **argv, char **env)
 	{
 		input = readline(PROMPT);
 		add_history(input);
-		parsing_status = parsing(env, input);
+		parsing_status = parsing(env, input, &status);
 		free(input);
 		if (parsing_status)
 		{
