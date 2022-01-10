@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/07 16:17:47 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/10 12:04:16 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 char	*itoa(int nbr)
 {
-	printf("hey je suis itoa et on m'a passé cet int : %i\n", nbr);
 	int		i;
 	char	*str;
 
@@ -30,7 +29,6 @@ char	*itoa(int nbr)
 		nbr /= 10;
 	}
 	str[i] = nbr + 48;
-	printf("hey je suis ito et je renvoi : %s\n", str);
 	return (str);
 }
 

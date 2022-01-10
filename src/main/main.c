@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/07 15:44:18 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/10 11:56:49 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,18 +85,31 @@ static void	sig_handler(int sig)
 	write(1, PROMPT, 17);
 }
 
-static int	parsing(char **env, char *input, int *status)
+static int	parsing(char ***env, char *input, int *status)
 {
 	t_list	*list;
 
 	if (*input == 'e' && *(input + 1) == 'x'
 		&& *(input + 2) == 'i' && *(input + 3) == 't')
 		return (1);
-	list = build_list(env, input, *status);
+	list = build_list(*env, input, *status);
 	print_list(list);
 	*status = execution(list, env);
 	free_list(list);
 	return (0);
+}
+
+static void	malloc_env(char ***env)
+{
+	int		i;
+	char	**new_env;
+
+	i = 0;
+	new_env = (char **)malloc(sizeof(char *) * (str_tab_len(*env) + 1));
+	while ((*env)[i])
+		new_env[i] = (*env)[i++];
+	new_env[i] = (char *) NULL;
+	*env = new_env;
 }
 
 int	main(int argc, char **argv, char **env)
@@ -115,7 +128,7 @@ int	main(int argc, char **argv, char **env)
 	{
 		input = readline(PROMPT);
 		add_history(input);
-		parsing_status = parsing(env, input, &status);
+		parsing_status = parsing(env, input);
 		free(input);
 		if (parsing_status)
 		{
@@ -126,6 +139,7 @@ int	main(int argc, char **argv, char **env)
 			}
 			else if (parsing_status == 1)
 			{
+				free(env);
 				clear_history();
 				rl_clear_history();
 				exit(EXIT_SUCCESS);
