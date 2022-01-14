@@ -223,7 +223,7 @@ int	doubleinput(char *eof, bool need_pipe)
 	}
 }
 
-int	test_fork(t_list *list, char **env, char *full_path_split, int *pipe_a, int *pipe_b, int id)
+int	test_fork(t_list *list, char ***env, char *full_path_split, int *pipe_a, int *pipe_b, int id)
 {
 	pid_t	pid;
 	int		status = 0;
@@ -296,7 +296,19 @@ int	test_fork(t_list *list, char **env, char *full_path_split, int *pipe_a, int 
 			dup2(pipe_b[1], 1);
 		else
 			close(pipe_b[1]);
-		execve(full_path_split, list->argv, env);
+		if (is_same_string(list->argv[0], "cd"))
+			exit(cd(list->argv));
+		else if (is_same_string(list->argv[0], "pwd"))
+			exit(pwd());
+		else if (is_same_string(list->argv[0], "echo"))
+			exit(echo(list->argv));
+		else if (is_same_string(list->argv[0], "env"))
+			exit(ft_env(list->argv, *env));
+		else if (is_same_string(list->argv[0], "export"))
+			exit(ft_export(list->argv, env));
+		else if (is_same_string(list->argv[0], "unset"))
+			exit(unset(list->argv, env));
+		execve(full_path_split, list->argv, *env);
 		exit(EXIT_FAILURE);
 	}
 	else
@@ -330,7 +342,7 @@ static char	**ft_path_exec(char **path_split, char *exec)
 	return (path_exec);
 }
 
-int	execution(t_list *list, char **env)
+int	execution(t_list *list, char ***env)
 {
 	int		nb;
 	char	*str;
@@ -340,7 +352,7 @@ int	execution(t_list *list, char **env)
 	int		status = 0;
 
 	i = 0; 
-	str = search_env_var(env, "$PATH");
+	str = getenv("PATH");
 	path_split = ft_split(str, ':');
 	path_exec = (char **) NULL;
 	nb = check(list->argv[0], '/');
@@ -379,7 +391,7 @@ int	execution(t_list *list, char **env)
 		{
 			while (path_exec[i])
 			{
-				if (access(path_exec[i], X_OK) != -1)
+				if (access(path_exec[i], X_OK) != -1 || is_same_string(list->argv[0], "cd") || is_same_string(list->argv[0], "echo") || is_same_string(list->argv[0], "pwd") || is_same_string(list->argv[0], "env") || is_same_string(list->argv[0], "export") || is_same_string(list->argv[0], "unset"))
 				{
 					if (id % 2)
 					{

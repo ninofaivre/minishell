@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/10 12:05:11 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/14 12:58:26 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,18 @@ char			*skip_var(char *str);
 unsigned int	word_len(char **env, char *str, int status);
 bool			is_charset(char c, char *charset);
 unsigned int	str_len(char *str);
+bool			minishell_error(char *error, char *str, char c);
 
 char			update_quote_status(char quote, char c);
 
-int				execution(t_list *list, char **env);
+int				execution(t_list *list, char ***env);
 bool			is_same_string(char *str1, char *str2);
 
-/*
 int				pwd(void);
-int				cd(char *arg_input);
-*/
+int				cd(char **argv);
+int				echo(char **argv);
+int				ft_export(char **argv, char ***env);
+int				unset(char **argv, char ***env);
+int				ft_env(char **argv, char **env);
 
 #endif

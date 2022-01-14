@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/10 11:56:49 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/14 12:35:55 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,10 @@ static void	malloc_env(char ***env)
 	i = 0;
 	new_env = (char **)malloc(sizeof(char *) * (str_tab_len(*env) + 1));
 	while ((*env)[i])
-		new_env[i] = (*env)[i++];
+	{
+		new_env[i] = (*env)[i];
+		i++;
+	}
 	new_env[i] = (char *) NULL;
 	*env = new_env;
 }
@@ -122,13 +125,14 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	parsing_status = 0;
 	input = NULL;
+	malloc_env(&env);
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
 	while (true)
 	{
 		input = readline(PROMPT);
 		add_history(input);
-		parsing_status = parsing(env, input);
+		parsing_status = parsing(&env, input, &status);
 		free(input);
 		if (parsing_status)
 		{

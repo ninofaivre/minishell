@@ -6,18 +6,27 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/07 16:13:09 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/14 12:40:53 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 #include <stdlib.h>
 
-bool	syntax_error(char c)
+bool	minishell_error(char *error, char *str, char c)
 {
-	write(2, "syntax error near symbol \"", 26);
-	write(2, &c, 1);
-	write(2, "\"\n", 2);
+	write(2, "minishell : ", 12);
+	while (*error)
+	{
+		if (*error == '#')
+			write(2, &c, 1);
+		else if (*error == '$')
+			while (str && *str)
+				write(2, str++, 1);
+		else
+			write(2, error, 1);
+		error++;
+	}
 	return (true);
 }
 
@@ -29,7 +38,7 @@ bool	parse_error(char **env, char *str, int status)
 	if (!str || !*str)
 		return (true);
 	if (*str == '|')
-		return (syntax_error('|'));
+		return (minishell_error("syntax error near symbol \"#\"\n", NULL, '|'));
 	while (*str)
 	{
 		if (*str == '|')
@@ -37,13 +46,13 @@ bool	parse_error(char **env, char *str, int status)
 			str++;
 			str = skip_space(str);
 			if (!*str || *str == '|')
-				return (syntax_error('|'));
+				return (minishell_error("syntax error near symbol \"#\"\n", NULL, '|'));
 		}
 		else if (is_charset(*str, "><"))
 		{
 			str += 1 + (str[1] == *str);
 			if (!word_len(env, str, status))
-				return (syntax_error(str[-1]));
+				return (minishell_error("syntax error near symbol \"#\"\n", NULL, str[-1]));
 		}
 		str = skip_word(str);
 	}

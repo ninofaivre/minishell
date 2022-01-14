@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 11:12:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/10 13:26:06 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/14 12:58:36 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ static void	print_str_tab(char **str_tab)
 		printf("%s\n", *str_tab++);
 }
 
-int	env(char **argv, char **env)
+int	ft_env(char **argv, char **env)
 {
 	if (str_tab_len(argv) != 1)
 	{
-		minishell_error("env : too much args\n", (char *) NULL);
+		minishell_error("env : too much args\n", (char *) NULL, '\0');
 		return (1);
 	}
 	print_str_tab(env);
@@ -66,7 +66,7 @@ char	**search_in_env(char *name, char **env)
 	return ((char **) NULL);
 }
 
-static unset_one_var(char *name, char ***env)
+static void	unset_one_var(char *name, char ***env)
 {
 	int		i;
 	int		j;
@@ -77,7 +77,7 @@ static unset_one_var(char *name, char ***env)
 	new_env = (char **) NULL;
 	if (!search_in_env(name, *env))
 		return ;
-	new_env = (char **)malloc(sizeof(char *) * str_tab_len(*env))
+	new_env = (char **)malloc(sizeof(char *) * str_tab_len(*env));
 	while (*env[j])
 	{
 		if (comp_env_var_name((*env)[j], name))
@@ -91,15 +91,32 @@ static unset_one_var(char *name, char ***env)
 	*env = new_env;
 }
 
+static char	*str_dupe(char *str)
+{
+	int		i;
+	char	*new_str;
+
+	i = 0;
+	if (!str)
+		return ((char *) NULL);
+	new_str = (char *)malloc(sizeof(char) * (str_len(str) + 1));
+	if (!new_str)
+		return ((char *) NULL);
+	while (*str)
+		new_str[i++] = *str++;
+	new_str[i] = '\0';
+	return (new_str);
+}
+
 int	unset(char **argv, char ***env)
 {
 	argv++;
 	while (*argv)
-		unset(argv++, env);
+		unset_one_var(*argv++, env);
 	return (0);
 }
 
-int	export(char **argv, char ***env)
+int	ft_export(char **argv, char ***env)
 {
 	char	*str;
 	char	**ptr_env_var;
@@ -109,7 +126,7 @@ int	export(char **argv, char ***env)
 	argv++;
 	while (*argv)
 	{
-		if (ptr_env_var = search_in_env(*argv, env))
+		if ((ptr_env_var = search_in_env(*argv, *env)))
 		{
 			free(*ptr_env_var);
 			*ptr_env_var = str_dupe(*argv);
