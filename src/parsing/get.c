@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/07 16:19:46 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/16 23:30:24 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,8 @@ t_redirection	*get_redirection(char **env, char *input, char guillemet, int stat
 				input += 1 + (is_charset(input[1], "><"));
 			input = skip_word(input);
 		}
-		redirection[i].content = (char *) NULL;
 	}
+	redirection[i].content = (char *) NULL;
 	return (redirection);
 }
 

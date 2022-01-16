@@ -17,7 +17,7 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-char	*ft_strcpy(char *dest, char *cpy)
+char	*concat(char *dest, char *cpy)
 {
 	int		i;
 	int		j;
@@ -150,20 +150,20 @@ char	**ft_split(char const *s, char c)
 	return (tab);
 }
 
-int	check(char *str, char c)
+int	count_char_in_str(char *str, char c)
 {
 	int	i;
-	int	nb;
 
 	i = 0;
-	nb = 0;
-	while (str[i])
+	if (!str)
+		return (0);
+	while (*str)
 	{
-		if (str[i] == c)
-			nb ++;
-		i++;
+		if (*str == c)
+			i++;
+		str++;
 	}
-	return (nb);
+	return (i);
 }
 
 bool	is_same_string(char *str1, char *str2)
@@ -195,6 +195,7 @@ void	write_str_tab_to_fd(char **str_tab, int fd)
 
 int	doubleinput(char *eof, bool need_pipe)
 {
+	int		pipe_tab[2];
 	char	**str_tab;
 	char	*input;
 
@@ -209,11 +210,10 @@ int	doubleinput(char *eof, bool need_pipe)
 	{
 		free_tab_str(str_tab);
 		free(input);
-		return (-1);
+		return (0);
 	}
 	else
 	{
-		int	pipe_tab[2];
 		pipe(pipe_tab);
 		write_str_tab_to_fd(str_tab, pipe_tab[1]);
 		close(pipe_tab[1]);
@@ -223,204 +223,179 @@ int	doubleinput(char *eof, bool need_pipe)
 	}
 }
 
-int	test_fork(t_list *list, char ***env, char *full_path_split, int *pipe_a, int *pipe_b, int id)
+void	take_input(t_redirection *input, int *read_pipe)
+{
+	int	fd;
+	int	i;
+
+	i = 0;
+	close(read_pipe[0]);
+	while (input[i].content)
+	{
+		if (input[i].is_double == true)
+		{
+			fd = doubleinput(input[i].content, !input[i + 1].content);
+			if (fd != -1 && !input[i + 1].content)
+				dup2(fd, 0);
+		}
+		else
+		{
+			if (access(input[i].content, R_OK) == -1)
+			{
+				printf("Impossible d'accéder au fichier (%s) !\n", input[i].content);
+				exit(EXIT_FAILURE);
+			}
+			else if (!input[i + 1].content)
+			{
+				fd = open(input[i].content, O_RDONLY);
+				dup2(fd, 0);
+				break ;
+			}
+		}
+		i++;
+	}
+}
+
+void	take_output(t_redirection *output, int *write_pipe)
+{
+	int	fd;
+	int	i;
+
+	i = 0;
+	close(write_pipe[1]);
+	while (output[i].content)
+	{
+		if (output[i].is_double == true)
+			fd = open(output[i].content, O_APPEND | O_RDWR | O_CREAT, 0644);
+		else
+			fd = open(output[i].content, O_TRUNC | O_RDWR | O_CREAT, 0644);
+		if (fd != -1)
+		{
+			if (!output[i + 1].content)
+				dup2(fd, 1);
+			else
+				close(fd);
+		}
+		else
+		{
+			printf("Impossible de créer le fichier !\n");
+			exit(EXIT_FAILURE);
+		}
+		i++;
+	}
+}
+
+int	test_fork(t_list *list, char ***env, char *executable, int *read_pipe, int *write_pipe)
 {
 	pid_t	pid;
 	int		status = 0;
-	int		fd = 0;
-	int		i = 0;
 
 	pid = fork();
 	if (pid == 0)
 	{
-		close(pipe_a[1]);
-		close(pipe_b[0]);
+		close(read_pipe[1]);
+		close(write_pipe[0]);
 		if (list->input[0].content)
-		{
-			close(pipe_a[0]);
-			while (list->input[i].content)
-			{
-				if (list->input[i].is_double == true)
-				{
-					fd = doubleinput(list->input[i].content, !list->input[i + 1].content);
-					if (fd != 1)
-						dup2(fd, 0);
-				}
-				else
-				{
-					if (access(list->input[i].content, R_OK) == -1)
-					{
-						printf("Impossible d'accéder au fichier (%s) !\n", list->input[i].content);
-						exit(EXIT_FAILURE);
-					}
-					else if (!list->input[i + 1].content)
-					{
-						fd = open(list->input[i].content, O_RDONLY);
-						dup2(fd, 0);
-						break ;
-					}
-				}
-				i++;
-			}
-		}
-		else if (id != 0)
-			dup2(pipe_a[0], 0);
+			take_input(list->input, read_pipe);
 		else
-			close(pipe_a[0]);
-		i = 0;
+			dup2(read_pipe[0], 0);
 		if (list->output[0].content)
-		{
-			close(pipe_b[1]);
-			while (list->output[i].content)
-			{
-				if (list->output[i].is_double == true)
-					fd = open(list->output[i].content, O_APPEND | O_RDWR | O_CREAT, 0644);
-				else
-					fd = open(list->output[i].content, O_TRUNC | O_RDWR | O_CREAT, 0644);
-				if (fd != -1)
-				{
-					if (!list->output[i + 1].content)
-						dup2(fd, 1);
-					else
-						close(fd);
-				}
-				else
-				{
-					printf("Impossible de créer le fichier !\n");
-					exit(EXIT_FAILURE);
-				}
-				i++;
-			}
-		}
+			take_output(list->output, write_pipe);
 		else if (list->next)
-			dup2(pipe_b[1], 1);
+			dup2(write_pipe[1], 1);
 		else
-			close(pipe_b[1]);
-		if (is_same_string(list->argv[0], "cd"))
-			exit(cd(list->argv));
-		else if (is_same_string(list->argv[0], "pwd"))
-			exit(pwd());
-		else if (is_same_string(list->argv[0], "echo"))
-			exit(echo(list->argv));
-		else if (is_same_string(list->argv[0], "env"))
-			exit(ft_env(list->argv, *env));
-		else if (is_same_string(list->argv[0], "export"))
-			exit(ft_export(list->argv, env));
-		else if (is_same_string(list->argv[0], "unset"))
-			exit(unset(list->argv, env));
-		execve(full_path_split, list->argv, *env);
+			close(write_pipe[1]);
+		execve(executable, list->argv, *env);
 		exit(EXIT_FAILURE);
 	}
 	else
 	{
-		close(pipe_a[0]);
-		close(pipe_a[1]);
+		close(read_pipe[0]);
+		close(read_pipe[1]);
 		waitpid(pid, &status, 0);
-		if (fd > 0)
-			close(fd);
-		kill(pid, SIGTERM);
 		return (WEXITSTATUS(status));
 	}
 }
 
-static char	**ft_path_exec(char **path_split, char *exec)
+int	function(t_list *list, char ***env, int *read_pipe, int *write_pipe)
 {
-	int		i;
-	char	**path_exec;
+	int			status;
+	int			i;
+	char		*executable;
+	static char	**path;
 
+	status = 127;
 	i = 0;
-	path_exec = (char **)malloc(sizeof(char *) * (str_tab_len(path_split) + 1));
-	if (!path_exec)
-		return ((char **) NULL);
-	while (*path_split)
+	if (!path)
+		path = ft_split(getenv("PATH"), ':');
+	if (!list)
 	{
-		path_exec[i] = ft_strcpy(*path_split, exec);
-		i++;
-		path_split++;
+		free(path);
+		path = (char **) NULL;
+		return (0);
 	}
-	path_exec[i] = (char *) NULL;
-	return (path_exec);
+	if (count_char_in_str(list->argv[0], '/'))
+	{
+		if (access(list->argv[0], X_OK) != -1)
+			status = test_fork(list, env, list->argv[0], read_pipe, write_pipe);
+		else
+			printf("File not found !\n");
+	}
+	else
+	{
+		while (path[i])
+		{
+			executable = concat(path[i], list->argv[0]);
+			if (access(executable, X_OK) != -1)
+			{
+				status = test_fork(list, env, executable, read_pipe, write_pipe);
+				free(executable);
+				break ;
+			}
+			free(executable);
+			i++;
+		}
+		if (!path[i])
+			printf("File not found !\n");
+	}
+	return (status);
+}
+
+void	swap_pipe(int *pipe1, int *pipe2)
+{
+	int	tmp;
+
+	tmp = pipe1[0];
+	pipe1[0] = pipe2[0];
+	pipe2[0] = tmp;
+	tmp = pipe1[1];
+	pipe1[1] = pipe2[1];
+	pipe2[1] = tmp;
 }
 
 int	execution(t_list *list, char ***env)
 {
-	int		nb;
-	char	*str;
-	char	**path_split;
-	char	**path_exec;
-	int		i;
-	int		status = 0;
+	int		read_pipe[2];
+	int		write_pipe[2];
+	int		status;
+	t_list	*ptr_list;
 
-	i = 0; 
-	str = getenv("PATH");
-	path_split = ft_split(str, ':');
-	path_exec = (char **) NULL;
-	nb = check(list->argv[0], '/');
-	i = 0;
-	t_list	*ptr_list = list;
-	int	pipe_a[2];
-	int	pipe_b[2];
-	pipe(pipe_a);
-	pipe(pipe_b);
-	int	id = 0;
+	pipe(read_pipe);
+	pipe(write_pipe);
+	status = 0;
+	ptr_list = list;
 	while (list)
 	{
-		if (nb == 0)
-		{
-			path_exec = ft_path_exec(path_split, list->argv[0]);
-		}
-		if (nb > 0)
-		{
-			if (access(list->argv[0], X_OK) != -1)
-			{
-				if (id % 2)
-				{
-					status = test_fork(list, env, list->argv[0], pipe_b, pipe_a, id);
-					pipe(pipe_b);
-				}
-				else
-				{
-					status = test_fork(list, env, list->argv[0], pipe_a, pipe_b, id);
-					pipe(pipe_a);
-				}
-			}
-			else
-				printf("%s\n", "no file found");
-		}
-		else
-		{
-			while (path_exec[i])
-			{
-				if (access(path_exec[i], X_OK) != -1 || is_same_string(list->argv[0], "cd") || is_same_string(list->argv[0], "echo") || is_same_string(list->argv[0], "pwd") || is_same_string(list->argv[0], "env") || is_same_string(list->argv[0], "export") || is_same_string(list->argv[0], "unset"))
-				{
-					if (id % 2)
-					{
-						status = test_fork(list, env, path_exec[i], pipe_b, pipe_a, id);
-						pipe(pipe_b);
-					}
-					else
-					{
-						status = test_fork(list, env, path_exec[i], pipe_a, pipe_b, id);
-						pipe(pipe_a);
-					}
-					break ;
-				}
-				else
-					i++;
-			}
-			if (!path_exec[i])
-				printf("%s\n", "no file found");
-			i = 0;
-		}
+		status = function(list, env, read_pipe, write_pipe);
+		pipe(read_pipe);
+		swap_pipe(read_pipe, write_pipe);
 		list = list->next;
-		free_tab_str(path_exec);
-		id++;
 	}
+	function(list, env, read_pipe, write_pipe);
 	list = ptr_list;
-	free_tab_str(path_split);
-	close(pipe_a[0]);
-	close(pipe_a[1]);
-	close(pipe_b[0]);
-	close(pipe_b[1]);
+	close(read_pipe[0]);
+	close(read_pipe[1]);
+	close(write_pipe[0]);
+	close(write_pipe[1]);
 	return (status);
 }
