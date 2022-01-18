@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/14 12:35:55 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/18 16:06:21 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ static void	print_list(t_list *list)
 
 	i = 0;
 	ptr_list = list;
+	if (!list)
+		printf("list : (t_list *) NULL\n");
 	while (list)
 	{
 		printf("list %i\n\n", i);
@@ -80,9 +82,18 @@ static void	print_list(t_list *list)
 
 static void	sig_handler(int sig)
 {
-	if (sig == SIGINT || sig == SIGQUIT)
+	if (sig == SIGINT)
+	{
+		rl_replace_line("", 0);
 		write(1, "\n", 1);
-	write(1, PROMPT, 17);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+	else if (sig == SIGQUIT)
+	{
+		rl_on_new_line();
+		rl_redisplay();
+	}
 }
 
 static int	parsing(char ***env, char *input, int *status)
@@ -108,7 +119,7 @@ static void	malloc_env(char ***env)
 	new_env = (char **)malloc(sizeof(char *) * (str_tab_len(*env) + 1));
 	while ((*env)[i])
 	{
-		new_env[i] = (*env)[i];
+		new_env[i] = str_dupe((*env)[i]);
 		i++;
 	}
 	new_env[i] = (char *) NULL;
@@ -117,6 +128,7 @@ static void	malloc_env(char ***env)
 
 int	main(int argc, char **argv, char **env)
 {
+	printf("PID : %i\n", getpid());
 	int		parsing_status;
 	char	*input;
 	int status = 0;
@@ -131,6 +143,13 @@ int	main(int argc, char **argv, char **env)
 	while (true)
 	{
 		input = readline(PROMPT);
+		if (!input)
+		{
+			free(env);
+			clear_history();
+			rl_clear_history();
+			exit(EXIT_SUCCESS);
+		}
 		add_history(input);
 		parsing_status = parsing(&env, input, &status);
 		free(input);
@@ -146,7 +165,7 @@ int	main(int argc, char **argv, char **env)
 				free(env);
 				clear_history();
 				rl_clear_history();
-				exit(EXIT_SUCCESS);
+				_exit(EXIT_SUCCESS);
 			}
 		}
 	}

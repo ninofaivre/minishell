@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 11:12:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/16 12:21:06 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/18 16:03:51 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,12 @@ char	**search_in_env(char *name, char **env)
 	{
 		i = 0;
 		j = 0;
-		while ((*env)[i] == name[j] && (*env)[i] && name[j])
+		while ((*env)[i] == name[j] && (*env)[i] && name[j] && name[j] != '=')
 		{
 			i++;
 			j++;
 		}
-		if (!name[j] && (*env)[i] == '=')
+		if ((!name[j] || name[j] == '=') && (*env)[i] == '=')
 			return (&(*env));
 		env++;
 	}
@@ -78,7 +78,7 @@ static void	unset_one_var(char *name, char ***env)
 	if (!search_in_env(name, *env))
 		return ;
 	new_env = (char **)malloc(sizeof(char *) * str_tab_len(*env));
-	while (*env[j])
+	while ((*env)[j])
 	{
 		if (comp_env_var_name((*env)[j], name))
 			free((*env)[j]);
@@ -91,7 +91,7 @@ static void	unset_one_var(char *name, char ***env)
 	*env = new_env;
 }
 
-static char	*str_dupe(char *str)
+char	*str_dupe(char *str)
 {
 	int		i;
 	char	*new_str;
@@ -126,6 +126,11 @@ int	ft_export(char **argv, char ***env)
 	argv++;
 	while (*argv)
 	{
+		if (!(count_char_in_str(*argv, '=')))
+		{
+			argv++;
+			continue ;
+		}
 		if ((ptr_env_var = search_in_env(*argv, *env)))
 		{
 			free(*ptr_env_var);

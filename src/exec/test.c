@@ -17,27 +17,21 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-char	*concat(char *dest, char *cpy)
+char	*concat(char *str1, char *str2)
 {
 	int		i;
-	int		j;
-	char	*new;
+	char	*new_str;
 
 	i = 0;
-	j = 0;
-	new = malloc(sizeof(char) * (ft_strlen(dest) + ft_strlen(cpy) + 1));
-	while (dest[i])
-	{
-		new[i] = dest[i];
-		i++;
-	}
-	while (cpy[j])
-	{
-		new[i + j] = cpy[j];
-		j++;
-	}
-	new[i + j] = '\0';
-	return (new);
+	new_str = (char *)malloc(sizeof(char) * (ft_strlen(str1) + ft_strlen(str2) + 1));
+	if (!new_str)
+		return ((char *) NULL);
+	while (str1 && *str1)
+		new_str[i++] = *str1++;
+	while (str2 && *str2)
+		new_str[i++] = *str2++;
+	new_str[i] = '\0';
+	return (new_str);
 }
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t dstsize)
@@ -285,7 +279,9 @@ void	take_output(t_redirection *output, int *write_pipe)
 	}
 }
 
-int	test_fork(t_list *list, char ***env, char *executable, int *read_pipe, int *write_pipe)
+
+
+int	test_fork(t_list *list, char **env, char *executable, int *read_pipe, int *write_pipe)
 {
 	pid_t	pid;
 	int		status = 0;
@@ -305,8 +301,14 @@ int	test_fork(t_list *list, char ***env, char *executable, int *read_pipe, int *
 			dup2(write_pipe[1], 1);
 		else
 			close(write_pipe[1]);
-		execve(executable, list->argv, *env);
-		exit(EXIT_FAILURE);
+		if (is_same_string(executable, "echo"))
+			_exit(echo(list->argv));
+		else if (is_same_string(executable, "pwd"))
+			_exit(pwd());
+		else if (is_same_string(executable, "env"))
+			_exit(ft_env(list->argv, env));
+		execve(executable, list->argv, env);
+		_exit(EXIT_FAILURE);
 	}
 	else
 	{
@@ -315,6 +317,22 @@ int	test_fork(t_list *list, char ***env, char *executable, int *read_pipe, int *
 		waitpid(pid, &status, 0);
 		return (WEXITSTATUS(status));
 	}
+}
+
+int	builtin(t_list *list, char ***env, int *read_pipe, int *write_pipe)
+{
+	close(read_pipe[0]);
+	close(read_pipe[1]);
+	(void)read_pipe;
+	(void)write_pipe;
+	if (is_same_string(list->argv[0], "export"))
+		return(ft_export(list->argv, env));
+	else if (is_same_string(list->argv[0], "unset"))
+		return(unset(list->argv, env));
+	else if (is_same_string(list->argv[0], "cd"))
+		return(cd(list->argv));
+	else
+		return (-1);
 }
 
 int	function(t_list *list, char ***env, int *read_pipe, int *write_pipe)
@@ -334,10 +352,14 @@ int	function(t_list *list, char ***env, int *read_pipe, int *write_pipe)
 		path = (char **) NULL;
 		return (0);
 	}
+	if (is_same_string(list->argv[0], "cd") || is_same_string(list->argv[0], "export") || is_same_string(list->argv[0], "unset"))
+		return(builtin(list, env, read_pipe, write_pipe));
+	else if (is_same_string(list->argv[0], "echo") || is_same_string(list->argv[0], "pwd") || is_same_string(list->argv[0], "env"))
+		return(test_fork(list, *env, list->argv[0], read_pipe, write_pipe));
 	if (count_char_in_str(list->argv[0], '/'))
 	{
 		if (access(list->argv[0], X_OK) != -1)
-			status = test_fork(list, env, list->argv[0], read_pipe, write_pipe);
+			status = test_fork(list, *env, list->argv[0], read_pipe, write_pipe);
 		else
 			printf("File not found !\n");
 	}
@@ -348,7 +370,7 @@ int	function(t_list *list, char ***env, int *read_pipe, int *write_pipe)
 			executable = concat(path[i], list->argv[0]);
 			if (access(executable, X_OK) != -1)
 			{
-				status = test_fork(list, env, executable, read_pipe, write_pipe);
+				status = test_fork(list, *env, executable, read_pipe, write_pipe);
 				free(executable);
 				break ;
 			}
@@ -387,7 +409,8 @@ int	execution(t_list *list, char ***env)
 	while (list)
 	{
 		status = function(list, env, read_pipe, write_pipe);
-		pipe(read_pipe);
+		if (status != 127)
+			pipe(read_pipe);
 		swap_pipe(read_pipe, write_pipe);
 		list = list->next;
 	}

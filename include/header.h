@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/14 12:58:26 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/18 16:03:39 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ char			update_quote_status(char quote, char c);
 
 int				execution(t_list *list, char ***env);
 bool			is_same_string(char *str1, char *str2);
+int				count_char_in_str(char *str, char c);
 
 int				pwd(void);
 int				cd(char **argv);
@@ -77,5 +78,6 @@ int				echo(char **argv);
 int				ft_export(char **argv, char ***env);
 int				unset(char **argv, char ***env);
 int				ft_env(char **argv, char **env);
+char			*str_dupe(char *str);
 
 #endif
