@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/18 15:42:57 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/21 21:45:10 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*concat(char *str1, char *str2)
 	int		i;
 	char	*new_str;
 
-	i = ft_strlen(str1) + ft_strlen(str2) + 1;
+	i = str_len(str1) + str_len(str2) + 1;
 	new_str = (char *)malloc(sizeof(char) * (i));
 	i = 0;
 	if (!new_str)

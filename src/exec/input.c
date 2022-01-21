@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/18 15:42:57 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/21 21:41:55 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void	take_output(t_redirection *output, int *write_pipe)
 	}
 }
 
-pid_t	test_fork(t_list *list, char **env, char *executable, int *read_pipe, int *write_pipe)
+pid_t	test_fork(t_var *var, char *executable, int *read_pipe, int *write_pipe)
 {
 	pid_t	pid;
 
@@ -126,7 +126,7 @@ pid_t	test_fork(t_list *list, char **env, char *executable, int *read_pipe, int 
 			dup2(read_pipe[0], 0);
 		if (write_pipe)
 			dup2(write_pipe[1], 1);
-		execve(executable, list->argv, env);
+		execve(executable, var->list->argv, *(var->env));
 		_exit(EXIT_FAILURE);
 	}
 	else
@@ -140,19 +140,19 @@ pid_t	test_fork(t_list *list, char **env, char *executable, int *read_pipe, int 
 	}
 }
 
-int	builtin(t_list *list, char ***env, int *read_pipe)
+int	builtin(t_var *var, int *read_pipe)
 {
 	if (read_pipe)
 	{
 		close(read_pipe[0]);
 		close(read_pipe[1]);
 	}
-	if (is_same_string(list->argv[0], "export"))
-		return (ft_export(list->argv, env));
-	else if (is_same_string(list->argv[0], "unset"))
-		return (unset(list->argv, env));
-	else if (is_same_string(list->argv[0], "cd"))
-		return (cd(list->argv));
+	if (is_same_string(var->list->argv[0], "export"))
+		return (ft_export(var->list->argv, var->env));
+	else if (is_same_string(var->list->argv[0], "unset"))
+		return (unset(var->list->argv, var->env));
+	else if (is_same_string(var->list->argv[0], "cd"))
+		return (cd(var->list->argv));
 	else
 		return (-1);
 }

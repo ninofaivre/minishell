@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/18 15:42:57 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/21 21:47:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <sys/wait.h>
 #include <readline/readline.h>
 
-int	function(t_list *list, char ***env, int *read_pipe, int *write_pipe)
+int	function(t_var *var, int *read_pipe, int *write_pipe)
 {
 	pid_t		pid;
 	int			i;
@@ -30,24 +30,24 @@ int	function(t_list *list, char ***env, int *read_pipe, int *write_pipe)
 	i = 0;
 	if (!path)
 		path = ft_split(getenv("PATH"), ':');
-	if (!list)
+	if (!var->list)
 	{
 		free(path);
 		path = (char **) NULL;
 		return (0);
 	}
-	if (is_same_string(list->argv[0], "cd")
-		|| is_same_string(list->argv[0], "export")
-		|| is_same_string(list->argv[0], "unset"))
-		return (builtin(list, env, read_pipe));
-	else if (is_same_string(list->argv[0], "echo")
-		|| is_same_string(list->argv[0], "pwd")
-		|| is_same_string(list->argv[0], "env"))
-		return (test_fork(list, *env, list->argv[0], read_pipe, write_pipe));
-	if (count_char_in_str(list->argv[0], '/'))
+	if (is_same_string(var->list->argv[0], "cd")
+		|| is_same_string(var->list->argv[0], "export")
+		|| is_same_string(var->list->argv[0], "unset"))
+		return (builtin(var, read_pipe));
+	else if (is_same_string(var->list->argv[0], "echo")
+		|| is_same_string(var->list->argv[0], "pwd")
+		|| is_same_string(var->list->argv[0], "env"))
+		return (test_fork(var, var->list->argv[0], read_pipe, write_pipe));
+	if (count_char_in_str(var->list->argv[0], '/'))
 	{
-		if (access(list->argv[0], X_OK) != -1)
-			pid = test_fork(list, *env, list->argv[0], read_pipe, write_pipe);
+		if (access(var->list->argv[0], X_OK) != -1)
+			pid = test_fork(var, var->list->argv[0], read_pipe, write_pipe);
 		else
 			printf("File not found !\n");
 	}
@@ -55,10 +55,10 @@ int	function(t_list *list, char ***env, int *read_pipe, int *write_pipe)
 	{
 		while (path[i])
 		{
-			executable = concat(path[i], list->argv[0]);
+			executable = concat(path[i], var->list->argv[0]);
 			if (access(executable, X_OK) != -1)
 			{
-				pid = test_fork(list, *env, executable, read_pipe, write_pipe);
+				pid = test_fork(var, executable, read_pipe, write_pipe);
 				free(executable);
 				break ;
 			}
@@ -112,30 +112,28 @@ int	wait_function(int pid, int n_cmd)
 	return (to_return);
 }
 
-int	execution(t_list *list, char ***env)
+int	execution(t_var *var)
 {
 	int		**pipes;
-	t_list	*ptr_list;
 	int		i;
 	int		pid;
 	int		status;
 
 	i = -1;
-	pipes = init_pipes(list);
-	ptr_list = list;
-	while (list)
+	pipes = init_pipes(var->list);
+	while (var->list)
 	{
 		if (i == -1)
-			function(list, env, (int *) NULL, pipes[i + 1]);
-		else if (!list->next)
-			pid = function(list, env, pipes[i], (int *) NULL);
+			function(var, (int *) NULL, pipes[i + 1]);
+		else if (!var->list->next)
+			pid = function(var, pipes[i], (int *) NULL);
 		else
-			function(list, env, pipes[i], pipes[i + 1]);
+			function(var, pipes[i], pipes[i + 1]);
 		i++;
-		list = list->next;
+		var->list = var->list->next;
 	}
 	status = wait_function(pid, ++i);
-	function (list, env, (int *) NULL, (int *) NULL);
-	list = ptr_list;
+	function (var, (int *) NULL, (int *) NULL);
+	var->list = var->ptr_start_list;
 	return (status);
 }
