@@ -281,41 +281,32 @@ void	take_output(t_redirection *output, int *write_pipe)
 
 
 
-int	test_fork(t_list *list, char **env, char *executable, int *read_pipe, int *write_pipe)
+pid_t	test_fork(t_list *list, char **env, char *executable, int *read_pipe, int *write_pipe)
 {
 	pid_t	pid;
-	int		status = 0;
 
 	pid = fork();
 	if (pid == 0)
 	{
-		close(read_pipe[1]);
-		close(write_pipe[0]);
-		if (list->input[0].content)
-			take_input(list->input, read_pipe);
-		else
+		if (read_pipe)
+			close(read_pipe[1]);
+		if (write_pipe)
+			close(write_pipe[0]);
+		if (read_pipe)
 			dup2(read_pipe[0], 0);
-		if (list->output[0].content)
-			take_output(list->output, write_pipe);
-		else if (list->next)
+		if (write_pipe)
 			dup2(write_pipe[1], 1);
-		else
-			close(write_pipe[1]);
-		if (is_same_string(executable, "echo"))
-			_exit(echo(list->argv));
-		else if (is_same_string(executable, "pwd"))
-			_exit(pwd());
-		else if (is_same_string(executable, "env"))
-			_exit(ft_env(list->argv, env));
 		execve(executable, list->argv, env);
 		_exit(EXIT_FAILURE);
 	}
 	else
 	{
-		close(read_pipe[0]);
-		close(read_pipe[1]);
-		waitpid(pid, &status, 0);
-		return (WEXITSTATUS(status));
+		if (read_pipe)
+		{
+			close(read_pipe[0]);
+			close(read_pipe[1]);
+		}
+		return (pid);
 	}
 }
 
@@ -337,12 +328,12 @@ int	builtin(t_list *list, char ***env, int *read_pipe, int *write_pipe)
 
 int	function(t_list *list, char ***env, int *read_pipe, int *write_pipe)
 {
-	int			status;
+	pid_t		pid;
 	int			i;
 	char		*executable;
 	static char	**path;
 
-	status = 127;
+	pid = 0;
 	i = 0;
 	if (!path)
 		path = ft_split(getenv("PATH"), ':');
@@ -359,7 +350,7 @@ int	function(t_list *list, char ***env, int *read_pipe, int *write_pipe)
 	if (count_char_in_str(list->argv[0], '/'))
 	{
 		if (access(list->argv[0], X_OK) != -1)
-			status = test_fork(list, *env, list->argv[0], read_pipe, write_pipe);
+			pid = test_fork(list, *env, list->argv[0], read_pipe, write_pipe);
 		else
 			printf("File not found !\n");
 	}
@@ -370,7 +361,7 @@ int	function(t_list *list, char ***env, int *read_pipe, int *write_pipe)
 			executable = concat(path[i], list->argv[0]);
 			if (access(executable, X_OK) != -1)
 			{
-				status = test_fork(list, *env, executable, read_pipe, write_pipe);
+				pid = test_fork(list, *env, executable, read_pipe, write_pipe);
 				free(executable);
 				break ;
 			}
@@ -380,45 +371,72 @@ int	function(t_list *list, char ***env, int *read_pipe, int *write_pipe)
 		if (!path[i])
 			printf("File not found !\n");
 	}
-	return (status);
+	return (pid);
 }
 
-void	swap_pipe(int *pipe1, int *pipe2)
+int	**init_pipes(t_list *list)
 {
-	int	tmp;
+	int		n_cmd;
+	t_list	*ptr_list;
+	int		**pipes;
 
-	tmp = pipe1[0];
-	pipe1[0] = pipe2[0];
-	pipe2[0] = tmp;
-	tmp = pipe1[1];
-	pipe1[1] = pipe2[1];
-	pipe2[1] = tmp;
+	n_cmd = 0;
+	ptr_list = list;
+	while (list)
+	{
+		list = list->next;
+		n_cmd++;
+	}
+	if (n_cmd == 0)
+		return ((int **) NULL);
+	pipes = (int **)malloc(sizeof(int *) * n_cmd);
+	pipes[--n_cmd] = (int *) NULL;
+	while (n_cmd--)
+	{
+		pipes[n_cmd] = (int *)malloc(sizeof(int) * 2);
+		pipe(pipes[n_cmd]);
+	}
+	list = ptr_list;
+	return (pipes);
+}
+
+int	wait_function(int pid, int n_cmd)
+{
+	int status;
+	int	child_pid;
+	int to_return;
+
+	while (n_cmd--)
+	{
+		child_pid = wait(&status);
+		if (child_pid == pid)
+			to_return = WEXITSTATUS(status);
+	}
+	return (to_return);
 }
 
 int	execution(t_list *list, char ***env)
 {
-	int		read_pipe[2];
-	int		write_pipe[2];
-	int		status;
+	int 	**pipes = init_pipes(list);
 	t_list	*ptr_list;
+	int		i = -1;
+	int		pid;
+	int		status;
 
-	pipe(read_pipe);
-	pipe(write_pipe);
-	status = 0;
 	ptr_list = list;
 	while (list)
 	{
-		status = function(list, env, read_pipe, write_pipe);
-		if (status != 127)
-			pipe(read_pipe);
-		swap_pipe(read_pipe, write_pipe);
+		if (i == -1)
+			function(list, env, (int *) NULL, pipes[i + 1]);
+		else if (!list->next)
+			pid = function(list, env, pipes[i], (int *) NULL);
+		else
+			function(list, env, pipes[i], pipes[i + 1]);
+		i++;
 		list = list->next;
 	}
-	function(list, env, read_pipe, write_pipe);
+	status = wait_function(pid, ++i);
+	function(list, env, (int *)NULL, (int *)NULL);
 	list = ptr_list;
-	close(read_pipe[0]);
-	close(read_pipe[1]);
-	close(write_pipe[0]);
-	close(write_pipe[1]);
 	return (status);
 }
