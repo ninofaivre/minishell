@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/23 18:29:01 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/23 20:23:19 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	cpy_word(t_var *var, char *word, char *str, char quote)
 		{
 			if (*str == '$' && quote != '\'' && is_alnum(str[1]))
 			{
-				i += add_env_var_to_word(&word[i], search_env_var(*(var->env), str));
+				i += add_str_word(&word[i], search_env_var(*(var->env), str));
 				str = skip_var(str);
 			}
 			else if (*str == '$' && quote != '\'' && str[1] == '?')
@@ -101,14 +101,10 @@ t_redirection	*get_redirection(t_var *var, char *input, char guillemet)
 			input += 1 + (input[1] == guillemet);
 			input = skip_space(input);
 			redirection[i++].content = get_one_word(var, input);
-			input = skip_word(input);
 		}
-		else
-		{
-			if (is_charset(*input, "><"))
+		else if (is_charset(*input, "><"))
 				input += 1 + (is_charset(input[1], "><"));
-			input = skip_word(input);
-		}
+		input = skip_word(input);
 	}
 	redirection[i].content = (char *) NULL;
 	return (redirection);

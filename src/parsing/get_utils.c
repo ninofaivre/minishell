@@ -6,20 +6,20 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/31 13:50:35 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/31 14:01:18 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/23 20:21:18 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-int	add_env_var_to_word(char *word, char *env_var)
+int	add_str_word(char *word, char *str)
 {
-	unsigned int	env_var_len;
+	unsigned int	len;
 
-	env_var_len = str_len(env_var);
-	while (env_var && *env_var)
-		*word++ = *env_var++;
-	return (env_var_len);
+	len = str_len(str);
+	while (str && *str)
+		*word++ = *str++;
+	return (len);
 }
 
 int	count_redirection(char *str, char guillemet)

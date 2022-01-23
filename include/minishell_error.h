@@ -1,35 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   minishell_error.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/10 10:19:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/23 19:25:57 by nfaivre          ###   ########.fr       */
+/*   Created: 2022/01/23 18:42:09 by nfaivre           #+#    #+#             */
+/*   Updated: 2022/01/23 19:28:31 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
-#include "minishell_error.h"
-#include <unistd.h>
-#include <errno.h>
+#ifndef MINISHELL_ERROR_H
+# define MINISHELL_ERROR_H
 
-int	cd(char **argv)
-{
-	if (str_tab_len(argv) > 2)
-	{
-		minishell_error("cd", MAXARG);
-		return (1);
-	}
-	if (chdir(argv[1]) == -1)
-	{
-		if (errno == ENOTDIR)
-			minishell_error("cd",  "is not a directory");
-		else
-			minishell_error("cd", "unable to open this directory");
-		return (1);
-	}
-	else
-		return (0);
-}
+int	minishell_error(char *call, char *error);
+
+# define VOIDPIPE "syntax error near symbol \"|\""
+# define VOIDINPUT "syntax error near symbol \"<\""
+# define VOIDOUTPUT "syntax error near symbol \">\""
+# define ALLOC "allocation error (a malloc failed)"
+# define MAXARG "too many arguments"
+
+#endif

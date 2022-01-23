@@ -6,12 +6,13 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 11:12:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/18 16:03:51 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/23 19:27:01 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <header.h>
+#include "header.h"
+#include "minishell_error.h"
 
 static void	print_str_tab(char **str_tab)
 {
@@ -25,7 +26,7 @@ int	ft_env(char **argv, char **env)
 {
 	if (str_tab_len(argv) != 1)
 	{
-		minishell_error("env : too much args\n", (char *) NULL, '\0');
+		minishell_error("env", MAXARG);
 		return (1);
 	}
 	print_str_tab(env);

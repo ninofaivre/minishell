@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/23 16:37:34 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/23 20:14:21 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,26 @@ bool	is_alnum(char c)
 		return (false);
 }
 
+char	*env_var_len(t_var *var, char *str, unsigned int *len)
+{
+	if (is_alnum(str[1]))
+	{
+		*len += str_len(search_env_var(*(var->env), str));
+		str = skip_var(str);
+	}
+	else if (str[1] == '?')
+	{
+		*len += int_len(var->status);
+		str += 2;
+	}
+	else
+	{
+		*len += 1;
+		str++;
+	}
+	return (str);
+}
+
 unsigned int	word_len(t_var *var, char *str)
 {
 	char			quote;
@@ -71,16 +91,8 @@ unsigned int	word_len(t_var *var, char *str)
 	{
 		if (!(*str == '\'' && quote != '"') && !(*str == '"' && quote != '\''))
 		{
-			if (*str == '$' && quote != '\'' && is_alnum(str[1]))
-			{
-				len += str_len(search_env_var(*(var->env), str));
-				str = skip_var(str);
-			}
-			else if (*str == '$' && quote != '\'' && str[1] == '?')
-			{
-				len += int_len(var->status);
-				str += 2;
-			}
+			if (*str == '$' && quote != '\'')
+				str = env_var_len(var, str, &len);
 			else
 			{
 				len++;

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/23 18:30:52 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/23 20:21:07 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_redirection	*get_redirection(t_var *var, char *input, char guillemet);
 char			**get_argv(t_var *var, char *input);
 char			*get_next_pipe(char *str);
 
-int				add_env_var_to_word(char *word, char *env_var);
+int				add_str_word(char *word, char *str);
 int				count_redirection(char *str, char guillemet);
 
 t_list			*init_list(t_var *var, char *input);
@@ -72,7 +72,6 @@ char			*skip_var(char *str);
 unsigned int	word_len(t_var *var, char *str);
 bool			is_charset(char c, char *charset);
 unsigned int	str_len(char *str);
-bool			minishell_error(char *error, char *str, char c);
 
 char			update_quote_status(char quote, char c);
 
