@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:19:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/23 19:25:57 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/23 22:04:10 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ int	cd(char **argv)
 	if (chdir(argv[1]) == -1)
 	{
 		if (errno == ENOTDIR)
-			minishell_error("cd",  "is not a directory");
+			minishell_error("cd",  NOTDIR);
 		else
-			minishell_error("cd", "unable to open this directory");
+			minishell_error("cd", INACCESSIBLE);
 		return (1);
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 18:42:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/23 19:28:31 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/23 22:02:45 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,8 @@ int	minishell_error(char *call, char *error);
 # define VOIDOUTPUT "syntax error near symbol \">\""
 # define ALLOC "allocation error (a malloc failed)"
 # define MAXARG "too many arguments"
+
+# define NOTDIR "the file you are trying to access is not a directory"
+# define INACCESSIBLE "unable to access to the file or directory specified"
 
 #endif
