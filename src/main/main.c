@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/21 21:41:27 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/23 18:28:11 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,19 +98,18 @@ static void	sig_handler(int sig)
 
 static int	parsing(char ***env, char *input, int *status)
 {
-	t_list	*list;
+	t_var	var;
 
 	if (*input == 'e' && *(input + 1) == 'x'
 		&& *(input + 2) == 'i' && *(input + 3) == 't')
 		return (1);
-	list = build_list(*env, input, *status);
-	print_list(list);
-	t_var	var;
-	var.list = list;
-	var.ptr_start_list = list;
+	var.status = *status;
 	var.env = env;
+	var.list = build_list(&var, input);
+	var.ptr_start_list = var.list;
+	print_list(var.list);
 	*status = execution(&var);
-	free_list(list);
+	free_list(var.list);
 	return (0);
 }
 

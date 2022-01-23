@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/14 12:40:53 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/23 16:38:34 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool	minishell_error(char *error, char *str, char c)
 
 // return true et écrit une erreur sur la sortie d'erreur
 // s'il y a une erreur de syntaxe dans str, false si-non
-bool	parse_error(char **env, char *str, int status)
+bool	parse_error(t_var *var, char *str)
 {
 	str = skip_space(str);
 	if (!str || !*str)
@@ -51,7 +51,7 @@ bool	parse_error(char **env, char *str, int status)
 		else if (is_charset(*str, "><"))
 		{
 			str += 1 + (str[1] == *str);
-			if (!word_len(env, str, status))
+			if (!word_len(var, str))
 				return (minishell_error("syntax error near symbol \"#\"\n", NULL, str[-1]));
 		}
 		str = skip_word(str);
@@ -59,13 +59,13 @@ bool	parse_error(char **env, char *str, int status)
 	return (false);
 }
 
-t_list	*build_list(char **env, char *input, int status)
+t_list	*build_list(t_var *var, char *input)
 {
 	t_list	*list;
 
-	if (parse_error(env, input, status))
+	if (parse_error(var, input))
 		return ((t_list *) NULL);
-	list = init_list(input, env, status);
+	list = init_list(var, input);
 	if (!list)
 	{
 		write(2, "Malloc Error !\n", 15);

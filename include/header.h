@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/21 21:47:53 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/23 18:30:52 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_var
 	struct s_list	*list;
 	struct s_list	*ptr_start_list;
 	char			***env;
+	int				status;
 }	t_var;
 
 typedef struct s_redirection
@@ -44,17 +45,17 @@ typedef struct s_redirection
 
 char			*search_env_var(char **env, char *str);
 
-t_redirection	*get_redirection(char **env, char *input, char guillemet, int status);
-char			**get_argv(char **env, char *input, int status);
+t_redirection	*get_redirection(t_var *var, char *input, char guillemet);
+char			**get_argv(t_var *var, char *input);
 char			*get_next_pipe(char *str);
 
 int				add_env_var_to_word(char *word, char *env_var);
 int				count_redirection(char *str, char guillemet);
 
-t_list			*init_list(char *input, char **env, int status);
+t_list			*init_list(t_var *var, char *input);
 int				size_list(char *input);
 
-t_list			*build_list(char **env, char *input, int status);
+t_list			*build_list(t_var *var, char *input);
 t_list			*free_list(t_list *lists);
 
 void			free_redirection(t_redirection *redirection);
@@ -68,7 +69,7 @@ bool			is_alnum(char c);
 char			*skip_word(char *str);
 char			*skip_space(char *str);
 char			*skip_var(char *str);
-unsigned int	word_len(char **env, char *str, int status);
+unsigned int	word_len(t_var *var, char *str);
 bool			is_charset(char c, char *charset);
 unsigned int	str_len(char *str);
 bool			minishell_error(char *error, char *str, char c);
