@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: paboutel <paboutel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 18:45:12 by paboutel         ###   ########.fr       */
+/*   Updated: 2022/01/24 19:23:26 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ void	take_input(t_redirection *input, int *read_pipe)
 	int	i;
 
 	i = 0;
-	close(read_pipe[0]);
+	if (read_pipe)
+		close(read_pipe[0]);
 	while (input[i].content)
 	{
 		if (input[i].is_double == true)
@@ -72,7 +73,10 @@ void	take_input(t_redirection *input, int *read_pipe)
 		else
 		{
 			if (access(input[i].content, R_OK) == -1)
+			{
 				minishell_error(input[i].content, INACCESSIBLE);
+				_exit(1);
+			}
 			else if (!input[i + 1].content)
 			{
 				fd = open(input[i].content, O_RDONLY);
@@ -90,7 +94,8 @@ void	take_output(t_redirection *output, int *write_pipe)
 	int	i;
 
 	i = 0;
-	close(write_pipe[1]);
+	if (write_pipe)
+		close(write_pipe[1]);
 	while (output[i].content)
 	{
 		if (output[i].is_double == true)
@@ -106,8 +111,8 @@ void	take_output(t_redirection *output, int *write_pipe)
 		}
 		else
 		{
-			printf("Impossible de créer le fichier !\n");
-			exit(EXIT_FAILURE);
+			minishell_error(output[i].content, CREAT);
+			_exit(1);
 		}
 		i++;
 	}

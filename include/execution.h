@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:49:07 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 18:57:29 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,8 @@ void	write_str_tab_to_fd(char **str_tab, int fd);
 char	**ft_split(char const *s, char c);
 pid_t	test_fork(t_var *var, char *executable, int *read_pipe, int *write_pipe);
 int		builtin(t_var *var, int *read_pipe);
+void	take_input(t_redirection *input, int *read_pipe);
+void	take_output(t_redirection *output, int *write_pipe);
+int		check_builtin(t_var *var);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 10:36:05 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 14:00:37 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 18:53:34 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*get_pwd(void)
 	return (buffer);
 }
 
-int	ft_pwd(void)
+int	builtin_pwd(void)
 {
 	char	*pwd;
 
