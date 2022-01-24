@@ -19,6 +19,19 @@
 #include <sys/wait.h>
 #include <readline/readline.h>
 
+int	check_builtin(t_var *var)
+{
+	if (is_same_string(var->list->argv[0], "cd")
+		|| is_same_string(var->list->argv[0], "export")
+		|| is_same_string(var->list->argv[0], "unset"))
+		return (0);
+	else if (is_same_string(var->list->argv[0], "echo")
+		|| is_same_string(var->list->argv[0], "pwd")
+		|| is_same_string(var->list->argv[0], "env"))
+		return (1);
+	return (-1);
+}
+
 int	function(t_var *var, int *read_pipe, int *write_pipe)
 {
 	pid_t		pid;
@@ -36,13 +49,10 @@ int	function(t_var *var, int *read_pipe, int *write_pipe)
 		path = (char **) NULL;
 		return (0);
 	}
-	if (is_same_string(var->list->argv[0], "cd")
-		|| is_same_string(var->list->argv[0], "export")
-		|| is_same_string(var->list->argv[0], "unset"))
+
+	if (check_builtin(var) == 0)
 		return (builtin(var, read_pipe));
-	else if (is_same_string(var->list->argv[0], "echo")
-		|| is_same_string(var->list->argv[0], "pwd")
-		|| is_same_string(var->list->argv[0], "env"))
+	else if (check_builtin(var) == 1)
 		return (test_fork(var, var->list->argv[0], read_pipe, write_pipe));
 	if (count_char_in_str(var->list->argv[0], '/'))
 	{
