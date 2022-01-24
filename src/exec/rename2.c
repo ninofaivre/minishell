@@ -45,7 +45,7 @@ int	check_exec(t_var *var, int *read_pipe, int *write_pipe, char **path)
 int	check_file(t_var *var, int *read_pipe, int *write_pipe)
 {
 	if (access(var->list->argv[0], X_OK) != -1)
-		return(test_fork(var, var->list->argv[0], read_pipe, write_pipe));
+		return (test_fork(var, var->list->argv[0], read_pipe, write_pipe));
 	else
 		printf("File not found !\n");
 	return (127);
