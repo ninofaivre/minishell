@@ -6,11 +6,11 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/21 21:45:10 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:41:00 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "execution.h"
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -18,24 +18,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <readline/readline.h>
-
-char	*concat(char *str1, char *str2)
-{
-	int		i;
-	char	*new_str;
-
-	i = str_len(str1) + str_len(str2) + 1;
-	new_str = (char *)malloc(sizeof(char) * (i));
-	i = 0;
-	if (!new_str)
-		return ((char *) NULL);
-	while (str1 && *str1)
-		new_str[i++] = *str1++;
-	while (str2 && *str2)
-		new_str[i++] = *str2++;
-	new_str[i] = '\0';
-	return (new_str);
-}
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t dstsize)
 {

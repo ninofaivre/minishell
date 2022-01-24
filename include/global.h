@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:34:51 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:02:38 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:35:12 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,10 @@ int		str_len(char *str);
 void	free_str_tab(char **str_tab);
 int		str_tab_len(char **str_tab);
 char	**add_str_to_str_tab(char **str_tab, char *str);
+
+char	*str_dupe(char *str);
+char	*concat(char *str1, char *str2);
+bool	is_same_string(char *str1, char *str2);
+int		count_char_in_str(char *str, char c);
 
 #endif

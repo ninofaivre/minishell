@@ -6,11 +6,11 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 15:41:22 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:45:21 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "parsing.h"
 #include <stdlib.h>
 
 static void	free_redirection(t_redirection *redirection)

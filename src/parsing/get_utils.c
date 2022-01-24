@@ -6,18 +6,18 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/31 13:50:35 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 14:52:08 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:45:08 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "parsing.h"
+#include <stdlib.h>
 
 int	add_int_word(char *word, int status)
 {
 	int		len;
 	char	*str_status;
 
-	i = 0;
 	str_status = itoa(status);
 	len = add_str_word(word, str_status);
 	free(str_status);

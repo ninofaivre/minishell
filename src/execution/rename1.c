@@ -6,11 +6,12 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 14:05:18 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:40:17 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "execution.h"
+#include "builtin.h"
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -56,11 +57,11 @@ int	builtin(t_var *var, int *read_pipe)
 		close(read_pipe[1]);
 	}
 	if (is_same_string(var->list->argv[0], "export"))
-		return (ft_export(var->list->argv, var->env));
+		return (builtin_export(var->list->argv, var->env));
 	else if (is_same_string(var->list->argv[0], "unset"))
-		return (unset(var->list->argv, var->env));
+		return (builtin_unset(var->list->argv, var->env));
 	else if (is_same_string(var->list->argv[0], "cd"))
-		return (cd(var->list->argv, var->env));
+		return (builtin_cd(var->list->argv, var->env));
 	else
 		return (-1);
 }

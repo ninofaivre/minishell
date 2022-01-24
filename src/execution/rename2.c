@@ -6,11 +6,11 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/21 21:41:55 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:40:48 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "execution.h"
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -81,7 +81,7 @@ int	function(t_var *var, int *read_pipe, int *write_pipe)
 	else if (check_builtin(var) == 1)
 		return (test_fork(var, var->list->argv[0], read_pipe, write_pipe));
 	if (count_char_in_str(var->list->argv[0], '/'))
-		return (check_file(var, read_pipe, write_pipe, pid));
+		return (check_file(var, read_pipe, write_pipe));
 	else
 		return (check_exec(var, read_pipe, write_pipe, path));
 	return (127);

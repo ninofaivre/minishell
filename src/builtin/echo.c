@@ -6,14 +6,14 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:57:22 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:12:21 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:26:45 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "global.h"
 
-int	echo(char **argv)
+int	builtin_echo(char **argv)
 {
 	bool	backslash_n;
 

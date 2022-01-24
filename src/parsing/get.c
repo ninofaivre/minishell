@@ -6,11 +6,11 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 14:54:27 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:44:06 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "parsing.h"
 #include <stdlib.h>
 
 static void	cpy_word(t_var *var, char *word, char *str, char quote)

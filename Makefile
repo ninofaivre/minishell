@@ -6,7 +6,7 @@
 #    By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/24 10:25:16 by nfaivre           #+#    #+#              #
-#    Updated: 2022/01/19 18:23:55 by nfaivre          ###   ########.fr        #
+#    Updated: 2022/01/24 17:27:51 by nfaivre          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ OBJ = $(addprefix $(DIR_OBJ)/, $(notdir $(SRC:.c=.o)))
 mkdir_DIR_OBJ:
 	mkdir -p $(DIR_OBJ)
 
-$(DIR_OBJ)/%.o : $(DIR_SRC)/*/%.c ./include/header.h
+$(DIR_OBJ)/%.o : $(DIR_SRC)/*/%.c
 	$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDE)
 
 $(NAME):

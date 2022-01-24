@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:19:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:22:03 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:32:23 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,14 @@ static int	update_pwd(char ***env)
 		export_argv[0] = export_argv_0;
 		export_argv[1] = export_argv_1;
 		export_argv[2] = (char *) NULL;
-		ft_export(export_argv, env);
+		builtin_export(export_argv, env);
 	}
 	else
 		minishell_error("cd (update_pwd)", ALLOC);
 	return (free_update_pwd(export_argv, export_argv_0, export_argv_1, pwd));
 }
 
-int	cd(char **argv, char ***env)
+int	builtin_cd(char **argv, char ***env)
 {
 	if (str_tab_len(argv) > 2)
 	{

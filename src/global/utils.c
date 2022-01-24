@@ -6,11 +6,12 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:00:41 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 15:39:39 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:42:04 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "global.h"
+#include <unistd.h>
 
 char	*search_env_var(char **env, char *str)
 {

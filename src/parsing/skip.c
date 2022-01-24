@@ -6,12 +6,12 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 16:16:10 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 15:23:17 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:46:27 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-#include "header.h"
+#include <unistd.h>
 
 char	*skip_space(char *str)
 {

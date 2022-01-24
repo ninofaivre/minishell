@@ -6,13 +6,14 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 11:12:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/23 19:27:01 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:34:22 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include "header.h"
 #include "minishell_error.h"
+#include "global.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 static void	print_str_tab(char **str_tab)
 {
@@ -22,7 +23,7 @@ static void	print_str_tab(char **str_tab)
 		printf("%s\n", *str_tab++);
 }
 
-int	ft_env(char **argv, char **env)
+int	builtin_env(char **argv, char **env)
 {
 	if (str_tab_len(argv) != 1)
 	{
@@ -92,24 +93,7 @@ static void	unset_one_var(char *name, char ***env)
 	*env = new_env;
 }
 
-char	*str_dupe(char *str)
-{
-	int		i;
-	char	*new_str;
-
-	i = 0;
-	if (!str)
-		return ((char *) NULL);
-	new_str = (char *)malloc(sizeof(char) * (str_len(str) + 1));
-	if (!new_str)
-		return ((char *) NULL);
-	while (*str)
-		new_str[i++] = *str++;
-	new_str[i] = '\0';
-	return (new_str);
-}
-
-int	unset(char **argv, char ***env)
+int	builtin_unset(char **argv, char ***env)
 {
 	argv++;
 	while (*argv)
@@ -117,7 +101,7 @@ int	unset(char **argv, char ***env)
 	return (0);
 }
 
-int	ft_export(char **argv, char ***env)
+int	builtin_export(char **argv, char ***env)
 {
 	char	*str;
 	char	**ptr_env_var;

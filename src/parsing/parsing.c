@@ -6,13 +6,13 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 15:22:11 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:45:45 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 #include "minishell_error.h"
-#include <stdbool.h>
+#include <unistd.h>
 
 static bool	parse_error(t_var *var, char *str)
 {
