@@ -78,6 +78,7 @@ char			update_quote_status(char quote, char c);
 int				execution(t_var *var);
 bool			is_same_string(char *str1, char *str2);
 int				count_char_in_str(char *str, char c);
+int				function(t_var *var, int *read_pipe, int *write_pipe);
 
 int				pwd(void);
 int				cd(char **argv);
