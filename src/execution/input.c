@@ -6,7 +6,7 @@
 /*   By: paboutel <paboutel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 18:42:59 by paboutel         ###   ########.fr       */
+/*   Updated: 2022/01/24 18:45:12 by paboutel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	take_input(t_redirection *input, int *read_pipe)
 		else
 		{
 			if (access(input[i].content, R_OK) == -1)
-				minishell_error((char *) NULL, INACCESSIBLE);
+				minishell_error(input[i].content, INACCESSIBLE);
 			else if (!input[i + 1].content)
 			{
 				fd = open(input[i].content, O_RDONLY);
