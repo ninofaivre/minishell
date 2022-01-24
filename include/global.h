@@ -6,14 +6,19 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:34:51 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 15:42:24 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:02:38 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GLOBAL_H
 # define GLOBAL_H
 
+#include "minishell_error.h"
 #include <stdbool.h>
+
+# ifndef PROMPT
+#  define PROMPT "minishell$> "
+# endif
 
 typedef struct s_redirection
 {
@@ -37,7 +42,6 @@ typedef struct s_var
 	int				status;
 }	t_var;
 
-int		minishell_error(char *call, char *error);
 char	*search_env_var(char **env, char *str);
 bool	is_alnum(char c);
 bool	is_charset(char c, char *charset);

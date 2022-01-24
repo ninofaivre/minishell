@@ -6,12 +6,12 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:57:22 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/14 12:23:54 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:12:21 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
-#include <stdbool.h>
+#include "global.h"
 
 int	echo(char **argv)
 {
@@ -21,7 +21,7 @@ int	echo(char **argv)
 	argv++;
 	while (*argv)
 	{
-		if (*argv[0] == '-' && *argv[1] == 'n' && *argv[2] == '\0')
+		if (is_same_string(*argv, "-n"))
 			backslash_n = false;
 		else
 			printf("%s ", *argv);
