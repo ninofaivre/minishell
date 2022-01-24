@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
+/*   By: paboutel <paboutel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:38:46 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 18:32:01 by paboutel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,8 @@
 #include <sys/wait.h>
 #include <readline/readline.h>
 
-int	doubleinput(char *eof, bool need_pipe)
+int	doubleinput_end(int *pipe_tab, char **str_tab, bool need_pipe, char *input)
 {
-	int		pipe_tab[2];
-	char	**str_tab;
-	char	*input;
-
-	str_tab = (char **) NULL;
-	input = readline(">");
-	while (!is_same_string(input, eof))
-	{
-		str_tab = add_str_to_str_tab(str_tab, input);
-		input = readline(">");
-	}
 	if (need_pipe == false)
 	{
 		free_str_tab(str_tab);
@@ -47,6 +36,22 @@ int	doubleinput(char *eof, bool need_pipe)
 		free(input);
 		return (pipe_tab[0]);
 	}
+}
+
+int	doubleinput(char *eof, bool need_pipe)
+{
+	int		pipe_tab[2];
+	char	**str_tab;
+	char	*input;
+
+	str_tab = (char **) NULL;
+	input = readline(">");
+	while (!is_same_string(input, eof))
+	{
+		str_tab = add_str_to_str_tab(str_tab, input);
+		input = readline(">");
+	}
+	return (doubleinput_end(pipe_tab, str_tab, need_pipe, input));
 }
 
 void	take_input(t_redirection *input, int *read_pipe)
