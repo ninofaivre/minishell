@@ -6,11 +6,12 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:43:33 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 18:08:13 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "global.h"
+#include "builtin.h"
 #include "execution.h"
 #include "parsing.h"
 #include <signal.h>
@@ -103,9 +104,6 @@ static int	parsing(char ***env, char *input, int *status)
 {
 	t_var	var;
 
-	if (*input == 'e' && *(input + 1) == 'x'
-		&& *(input + 2) == 'i' && *(input + 3) == 't')
-		return (1);
 	var.status = *status;
 	var.env = env;
 	var.list = build_list(&var, input);
@@ -150,12 +148,7 @@ int	main(int argc, char **argv, char **env)
 	{
 		input = readline(PROMPT);
 		if (!input)
-		{
-			free(env);
-			clear_history();
-			rl_clear_history();
-			exit(EXIT_SUCCESS);
-		}
+			builtin_exit(false, env);
 		add_history(input);
 		parsing_status = parsing(&env, input, &status);
 		free(input);
@@ -165,13 +158,6 @@ int	main(int argc, char **argv, char **env)
 			{
 				write(2, "Error\n", 6);
 				exit(EXIT_FAILURE);
-			}
-			else if (parsing_status == 1)
-			{
-				free(env);
-				clear_history();
-				rl_clear_history();
-				_exit(EXIT_SUCCESS);
 			}
 		}
 	}

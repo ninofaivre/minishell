@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:40:48 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 18:06:54 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ int	check_builtin(t_var *var)
 {
 	if (is_same_string(var->list->argv[0], "cd")
 		|| is_same_string(var->list->argv[0], "export")
-		|| is_same_string(var->list->argv[0], "unset"))
+		|| is_same_string(var->list->argv[0], "unset")
+		|| is_same_string(var->list->argv[0], "exit"))
 		return (0);
 	else if (is_same_string(var->list->argv[0], "echo")
 		|| is_same_string(var->list->argv[0], "pwd")
