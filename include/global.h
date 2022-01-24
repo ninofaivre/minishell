@@ -6,15 +6,15 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:34:51 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:35:12 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:48:26 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GLOBAL_H
 # define GLOBAL_H
 
-#include "minishell_error.h"
-#include <stdbool.h>
+# include "minishell_error.h"
+# include <stdbool.h>
 
 # ifndef PROMPT
 #  define PROMPT "minishell$> "

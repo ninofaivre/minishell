@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 11:12:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:34:22 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 17:49:57 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char	**search_in_env(char *name, char **env)
 {
 	int	i;
 	int	j;
-	
+
 	while (*env)
 	{
 		i = 0;
