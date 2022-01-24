@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:19:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/23 22:04:10 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 13:59:31 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,54 @@
 #include "minishell_error.h"
 #include <unistd.h>
 #include <errno.h>
+#include <stdlib.h>
 
-int	cd(char **argv)
+static int	free_update_pwd(char **export_argv, char *export_argv_0,
+char *export_argv_1, char *pwd)
+{
+	int	to_return;
+
+	if (!export_argv || !export_argv_0 || !export_argv_1 || !pwd)
+		to_return = -1;
+	else
+		to_return = 0;
+	if (export_argv)
+		free_tab_str(export_argv);
+	if (export_argv_0)
+		free(export_argv_0);
+	if (export_argv_1)
+		free(export_argv_1);
+	if (pwd)
+		free(pwd);
+	return (to_return);
+}
+
+static int	update_pwd(char ***env)
+{
+	char	**export_argv;
+	char	*export_argv_0;
+	char	*export_argv_1;
+	char	*pwd;
+
+	export_argv = (char **)malloc(sizeof(char *) * 3);
+	if (export_argv)
+		export_argv[0] = (char *) NULL;
+	export_argv_0 = str_dupe("export\0");
+	pwd = get_pwd();
+	export_argv_1 = concat("PATH=\0", pwd);
+	if (export_argv && export_argv_0 && export_argv_1 && pwd)
+	{
+		export_argv[0] = export_argv_0;
+		export_argv[1] = export_argv_1;
+		export_argv[2] = (char *) NULL;
+		ft_export(export_argv, env);
+	}
+	else
+		minishell_error("cd (update_pwd)", ALLOC);
+	return (free_update_pwd(export_argv, export_argv_0, export_argv_1, pwd));
+}
+
+int	cd(char **argv, char ***env)
 {
 	if (str_tab_len(argv) > 2)
 	{
@@ -25,11 +71,11 @@ int	cd(char **argv)
 	if (chdir(argv[1]) == -1)
 	{
 		if (errno == ENOTDIR)
-			minishell_error("cd",  NOTDIR);
+			minishell_error("cd", NOTDIR);
 		else
 			minishell_error("cd", INACCESSIBLE);
 		return (1);
 	}
 	else
-		return (0);
+		return (update_pwd(env));
 }

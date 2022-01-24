@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/23 20:21:07 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 13:58:35 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,9 @@ int				execution(t_var *var);
 bool			is_same_string(char *str1, char *str2);
 int				count_char_in_str(char *str, char c);
 
-int				pwd(void);
-int				cd(char **argv);
+int				ft_pwd(void);
+char			*get_pwd(void);
+int				cd(char **argv, char ***env);
 int				echo(char **argv);
 int				ft_export(char **argv, char ***env);
 int				unset(char **argv, char ***env);

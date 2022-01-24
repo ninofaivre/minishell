@@ -6,15 +6,16 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 10:36:05 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/14 12:31:18 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 14:00:37 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell_error.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
 
-int	pwd(void)
+char	*get_pwd(void)
 {
 	int		to_malloc;
 	char	*buffer;
@@ -26,14 +27,27 @@ int	pwd(void)
 		to_malloc++;
 		buffer = (char *)malloc(sizeof(char) * (to_malloc + 1));
 		if (!buffer)
-			return (-1);
+			return ((char *) NULL);
 		else if (!getcwd(buffer, to_malloc))
 		{
 			free (buffer);
 			buffer = (char *) NULL;
 		}
 	}
-	printf("%s\n", buffer);
-	free(buffer);
+	return (buffer);
+}
+
+int	ft_pwd(void)
+{
+	char	*pwd;
+
+	pwd = get_pwd();
+	if (!pwd)
+	{
+		minishell_error("pwd", ALLOC);
+		return (-1);
+	}
+	printf("%s\n", pwd);
+	free(pwd);
 	return (0);
 }
