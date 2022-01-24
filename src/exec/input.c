@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/21 21:41:55 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 15:41:22 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	doubleinput(char *eof, bool need_pipe)
 	}
 	if (need_pipe == false)
 	{
-		free_tab_str(str_tab);
+		free_str_tab(str_tab);
 		free(input);
 		return (0);
 	}
@@ -43,7 +43,7 @@ int	doubleinput(char *eof, bool need_pipe)
 		pipe(pipe_tab);
 		write_str_tab_to_fd(str_tab, pipe_tab[1]);
 		close(pipe_tab[1]);
-		free_tab_str(str_tab);
+		free_str_tab(str_tab);
 		free(input);
 		return (pipe_tab[0]);
 	}

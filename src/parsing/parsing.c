@@ -6,28 +6,15 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/23 20:34:44 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 15:22:11 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "parsing.h"
 #include "minishell_error.h"
-#include <stdlib.h>
+#include <stdbool.h>
 
-int	minishell_error(char *call, char *error)
-{
-	write(2, "minishell : ", 12);
-	if (call)
-	{
-		write(2, call, str_len(call));
-		write(2, " : ", 3);
-	}
-	write(2, error, str_len(error));
-	write(2, "\n", 1);
-	return (0);
-}
-
-bool	parse_error(t_var *var, char *str)
+static bool	parse_error(t_var *var, char *str)
 {
 	str = skip_space(str);
 	if (!str || !*str)
@@ -56,13 +43,13 @@ bool	parse_error(t_var *var, char *str)
 	return (true);
 }
 
-t_list	*build_list(t_var *var, char *input)
+t_list	*parse(t_var *var, char *input)
 {
 	t_list	*list;
 
 	if (!parse_error(var, input))
 		return ((t_list *) NULL);
-	list = init_list(var, input);
+	list = build_list(var, input);
 	if (!list)
 		minishell_error("parsing", ALLOC);
 	return (list);

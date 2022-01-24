@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env1.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/18 15:42:57 by nfaivre          ###   ########.fr       */
+/*   Created: 2022/01/24 15:00:41 by nfaivre           #+#    #+#             */
+/*   Updated: 2022/01/24 15:39:39 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
-#include <unistd.h>
-#include <stdio.h>
+#include "global.h"
 
 char	*search_env_var(char **env, char *str)
 {
@@ -31,4 +29,51 @@ char	*search_env_var(char **env, char *str)
 		env++;
 	}
 	return ((char *) NULL);
+}
+
+int	minishell_error(char *call, char *error)
+{
+	write(2, "minishell : ", 12);
+	if (call)
+	{
+		write(2, call, str_len(call));
+		write(2, " : ", 3);
+	}
+	write(2, error, str_len(error));
+	write(2, "\n", 1);
+	return (0);
+}
+
+bool	is_alnum(char c)
+{
+	if (!c)
+		return (false);
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+		|| (c >= '0' && c <= '9'))
+		return (true);
+	else
+		return (false);
+}
+
+bool	is_charset(char c, char *charset)
+{
+	while (*charset)
+	{
+		if (c == *charset)
+			return (true);
+		charset++;
+	}
+	return (false);
+}
+
+int	str_len(char *str)
+{
+	unsigned int	len;
+
+	len = 0;
+	if (!str)
+		return (0);
+	while (str[len])
+		len++;
+	return (len);
 }

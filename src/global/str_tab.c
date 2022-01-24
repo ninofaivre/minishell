@@ -6,29 +6,13 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 20:42:00 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/12/31 14:26:53 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 15:41:22 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
 #include <stdlib.h>
 
-void	free_redirection(t_redirection *redirection)
-{
-	int	i;
-
-	i = 0;
-	if (!redirection)
-		return ;
-	while (redirection[i].content)
-	{
-		free(redirection[i].content);
-		i++;
-	}
-	free(redirection);
-}
-
-void	free_tab_str(char **str_tab)
+void	free_str_tab(char **str_tab)
 {
 	int	i;
 
@@ -64,7 +48,7 @@ char	**add_str_to_str_tab(char **str_tab, char *str)
 	new_str_tab = (char **)malloc(sizeof(char *) * (str_tab_len(str_tab) + 2));
 	if (!new_str_tab)
 	{
-		free_tab_str(str_tab);
+		free_str_tab(str_tab);
 		return ((char **) NULL);
 	}
 	while (str_tab && str_tab[i])

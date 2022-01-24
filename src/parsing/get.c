@@ -6,25 +6,12 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/23 20:23:19 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 14:54:27 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 #include <stdlib.h>
-
-int	cpy_status(char *word, int status)
-{
-	int		i;
-	char	*str_status;
-
-	i = 0;
-	str_status = itoa(status);
-	while (str_status[i])
-		*word++ = str_status[i++];
-	free(str_status);
-	return (int_len(status));
-}
 
 static void	cpy_word(t_var *var, char *word, char *str, char quote)
 {
@@ -42,7 +29,7 @@ static void	cpy_word(t_var *var, char *word, char *str, char quote)
 			}
 			else if (*str == '$' && quote != '\'' && str[1] == '?')
 			{
-				i += cpy_status(&word[i], var->status);
+				i += add_int_word(&word[i], var->status);
 				str += 2;
 			}
 			else
@@ -66,21 +53,6 @@ static char	*get_one_word(t_var *var, char *str)
 		return ((char *) NULL);
 	cpy_word(var, word, str, quote);
 	return (word);
-}
-
-char	*get_next_pipe(char *str)
-{
-	if (!str || !*str)
-		return ((char *) NULL);
-	while (*str && *str != '|')
-	{
-		str = skip_word(str);
-		if (is_charset(*str, "><"))
-			str++;
-	}
-	if (*str == '|')
-		str++;
-	return (str);
 }
 
 t_redirection	*get_redirection(t_var *var, char *input, char guillemet)

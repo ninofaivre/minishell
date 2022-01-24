@@ -6,11 +6,11 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:19:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 13:59:31 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 15:43:10 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "global.h"
 #include "minishell_error.h"
 #include <unistd.h>
 #include <errno.h>
@@ -26,7 +26,7 @@ char *export_argv_1, char *pwd)
 	else
 		to_return = 0;
 	if (export_argv)
-		free_tab_str(export_argv);
+		free_str_tab(export_argv);
 	if (export_argv_0)
 		free(export_argv_0);
 	if (export_argv_1)

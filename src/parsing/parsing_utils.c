@@ -1,17 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/23 20:14:21 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/24 15:11:51 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 #include <stdlib.h>
+
+static int	int_len(int nbr)
+{
+	int	len;
+
+	len = 0;
+	while (nbr / 10)
+	{
+		len++;
+		nbr /= 10;
+	}
+	len++;
+	return (len);
+}
 
 char	*itoa(int nbr)
 {
@@ -32,32 +46,7 @@ char	*itoa(int nbr)
 	return (str);
 }
 
-int	int_len(int nbr)
-{
-	int	len;
-
-	len = 0;
-	while (nbr / 10)
-	{
-		len++;
-		nbr /= 10;
-	}
-	len++;
-	return (len);
-}
-
-bool	is_alnum(char c)
-{
-	if (!c)
-		return (false);
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
-		|| (c >= '0' && c <= '9'))
-		return (true);
-	else
-		return (false);
-}
-
-char	*env_var_len(t_var *var, char *str, unsigned int *len)
+static char	*env_var_len(t_var *var, char *str, unsigned int *len)
 {
 	if (is_alnum(str[1]))
 	{
@@ -106,25 +95,12 @@ unsigned int	word_len(t_var *var, char *str)
 	return (len);
 }
 
-bool	is_charset(char c, char *charset)
+char	update_quote_status(char quote, char c)
 {
-	while (*charset)
-	{
-		if (c == *charset)
-			return (true);
-		charset++;
-	}
-	return (false);
-}
-
-unsigned int	str_len(char *str)
-{
-	unsigned int	len;
-
-	len = 0;
-	if (!str)
-		return (0);
-	while (str[len])
-		len++;
-	return (len);
+	if (quote == '\0' && is_charset(c, "'\""))
+		return (c);
+	else if (quote != '\0' && quote == c)
+		return ('\0');
+	else
+		return (quote);
 }
