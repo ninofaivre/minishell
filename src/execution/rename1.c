@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rename1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: paboutel <paboutel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 03:20:55 by paboutel         ###   ########.fr       */
+/*   Updated: 2022/01/25 15:24:54 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,26 @@
 #include <sys/wait.h>
 #include <readline/readline.h>
 
-void	pid_zero(t_var *var, int *read_pipe, int *write_pipe)
+static bool	pid_zero(t_redirection *input, t_redirection *output,
+int *read_pipe, int *write_pipe)
 {
 	if (read_pipe)
+	{
 		close(read_pipe[1]);
-	if (write_pipe)
-		close(write_pipe[0]);
-	if (read_pipe)
 		dup2(read_pipe[0], 0);
+	}
 	if (write_pipe)
+	{
+		close(write_pipe[0]);
 		dup2(write_pipe[1], 1);
-	if (var->list->input[0].content)
-		take_input(var->list->input, read_pipe);
-	if (var->list->output[0].content)
-		take_output(var->list->output, write_pipe);
+	}
+	if (input[0].content)
+		if (take_input(input, read_pipe))
+			return (true);
+	if (output[0].content)
+		if (take_output(output, write_pipe))
+			return (true);
+	return (false);
 }
 
 pid_t	test_fork(t_var *var, char *executable, int *read_pipe, int *write_pipe)
@@ -43,8 +49,10 @@ pid_t	test_fork(t_var *var, char *executable, int *read_pipe, int *write_pipe)
 	pid = fork();
 	if (pid == 0)
 	{
-		pid_zero(var, read_pipe, write_pipe);
-		if (check_builtin(var) == 1)
+		if (pid_zero(var->list->input, var->list->output,
+				read_pipe, write_pipe))
+			_exit(EXIT_FAILURE);
+		if (check_builtin(var->list->argv[0]) == 1)
 			_exit(builtin(var, (int *) NULL));
 		execve(executable, var->list->argv, *(var->env));
 		_exit(EXIT_FAILURE);

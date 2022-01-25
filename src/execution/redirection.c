@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input.c                                            :+:      :+:    :+:   */
+/*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: paboutel <paboutel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 03:15:03 by paboutel         ###   ########.fr       */
+/*   Updated: 2022/01/25 15:20:55 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 #include <sys/wait.h>
 #include <readline/readline.h>
 
-int	doubleinput_end(int *pipe_tab, char **str_tab, bool need_pipe, char *input)
+static int	doubleinput_return(int *pipe_tab, char **str_tab,
+bool need_pipe, char *input)
 {
 	if (need_pipe == false)
 	{
@@ -38,7 +39,7 @@ int	doubleinput_end(int *pipe_tab, char **str_tab, bool need_pipe, char *input)
 	}
 }
 
-int	doubleinput(char *eof, bool need_pipe)
+static int	doubleinput(char *eof, bool need_pipe)
 {
 	int		pipe_tab[2];
 	char	**str_tab;
@@ -51,16 +52,17 @@ int	doubleinput(char *eof, bool need_pipe)
 		str_tab = add_str_to_str_tab(str_tab, input);
 		input = readline(">");
 	}
-	return (doubleinput_end(pipe_tab, str_tab, need_pipe, input));
+	return (doubleinput_return(pipe_tab, str_tab, need_pipe, input));
 }
 
-void	take_input(t_redirection *input, int *read_pipe)
+bool	take_input(t_redirection *input, int *read_pipe)
 {
 	int	fd;
 	int	i;
 
 	i = -1;
-	close(read_pipe[0]);
+	if (read_pipe)
+		close(read_pipe[0]);
 	while (input[++i].content)
 	{
 		if (input[i].is_double == true)
@@ -69,27 +71,26 @@ void	take_input(t_redirection *input, int *read_pipe)
 			if (fd != -1 && !input[i + 1].content)
 				dup2(fd, 0);
 		}
-		else
+		else if (access(input[i].content, R_OK) == -1)
+			return (minishell_error(input[i].content, INACCESSIBLE) + true);
+		else if (!input[i + 1].content)
 		{
-			if (access(input[i].content, R_OK) == -1)
-				minishell_error(input[i].content, INACCESSIBLE);
-			else if (!input[i + 1].content)
-			{
-				fd = open(input[i].content, O_RDONLY);
-				dup2(fd, 0);
-				break ;
-			}
+			fd = open(input[i].content, O_RDONLY);
+			dup2(fd, 0);
+			break ;
 		}
 	}
+	return (false);
 }
 
-void	take_output(t_redirection *output, int *write_pipe)
+bool	take_output(t_redirection *output, int *write_pipe)
 {
 	int	fd;
 	int	i;
 
 	i = 0;
-	close(write_pipe[1]);
+	if (write_pipe)
+		close(write_pipe[1]);
 	while (output[i].content)
 	{
 		if (output[i].is_double == true)
@@ -104,10 +105,8 @@ void	take_output(t_redirection *output, int *write_pipe)
 				close(fd);
 		}
 		else
-		{
-			printf("Impossible de créer le fichier !\n");
-			exit(EXIT_FAILURE);
-		}
+			return (minishell_error(output[i].content, CREAT) + true);
 		i++;
 	}
+	return (false);
 }

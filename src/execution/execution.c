@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:36:49 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/25 14:57:05 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <sys/wait.h>
 #include <readline/readline.h>
 
-int	**init_pipes(t_list *list)
+static int	**init_pipes(t_list *list)
 {
 	int		n_cmd;
 	t_list	*ptr_list;
@@ -45,7 +45,7 @@ int	**init_pipes(t_list *list)
 	return (pipes);
 }
 
-int	wait_function(int pid, int n_cmd)
+static int	wait_childs(int pid, int n_cmd)
 {
 	int	status;
 	int	child_pid;
@@ -80,7 +80,7 @@ int	execution(t_var *var)
 		i++;
 		var->list = var->list->next;
 	}
-	status = wait_function(pid, ++i);
+	status = wait_childs(pid, ++i);
 	function (var, (int *) NULL, (int *) NULL);
 	var->list = var->ptr_start_list;
 	return (status);

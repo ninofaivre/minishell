@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 18:06:54 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/25 15:12:28 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,20 +47,20 @@ int	check_file(t_var *var, int *read_pipe, int *write_pipe)
 	if (access(var->list->argv[0], X_OK) != -1)
 		return (test_fork(var, var->list->argv[0], read_pipe, write_pipe));
 	else
-		printf("File not found !\n");
+		minishell_error(var->list->argv[0], INACCESSIBLE);
 	return (127);
 }
 
-int	check_builtin(t_var *var)
+int	check_builtin(char *str)
 {
-	if (is_same_string(var->list->argv[0], "cd")
-		|| is_same_string(var->list->argv[0], "export")
-		|| is_same_string(var->list->argv[0], "unset")
-		|| is_same_string(var->list->argv[0], "exit"))
+	if (is_same_string(str, "cd")
+		|| is_same_string(str, "export")
+		|| is_same_string(str, "unset")
+		|| is_same_string(str, "exit"))
 		return (0);
-	else if (is_same_string(var->list->argv[0], "echo")
-		|| is_same_string(var->list->argv[0], "pwd")
-		|| is_same_string(var->list->argv[0], "env"))
+	else if (is_same_string(str, "echo")
+		|| is_same_string(str, "pwd")
+		|| is_same_string(str, "env"))
 		return (1);
 	return (-1);
 }
@@ -77,9 +77,9 @@ int	function(t_var *var, int *read_pipe, int *write_pipe)
 		path = (char **) NULL;
 		return (0);
 	}
-	if (check_builtin(var) == 0)
+	if (check_builtin(var->list->argv[0]) == 0)
 		return (builtin(var, read_pipe));
-	else if (check_builtin(var) == 1)
+	else if (check_builtin(var->list->argv[0]) == 1)
 		return (test_fork(var, var->list->argv[0], read_pipe, write_pipe));
 	if (count_char_in_str(var->list->argv[0], '/'))
 		return (check_file(var, read_pipe, write_pipe));
