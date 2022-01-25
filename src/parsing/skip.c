@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 16:16:10 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:46:27 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/25 17:13:53 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*skip_var(char *str)
 	str++;
 	if (!str)
 		return ((char *) NULL);
-	while (*str && is_alnum(*str) == true)
+	while (*str && is_env_var_name_allowed(*str) == true)
 		str++;
 	return (str);
 }

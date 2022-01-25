@@ -6,11 +6,12 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 15:12:28 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/25 17:40:15 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+#include "global.h"
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -38,7 +39,7 @@ int	check_exec(t_var *var, int *read_pipe, int *write_pipe, char **path)
 		i++;
 	}
 	if (!path[i])
-		printf("File not found !\n");
+		minishell_error(var->list->argv[0], CMD);
 	return (127);
 }
 
@@ -53,13 +54,10 @@ int	check_file(t_var *var, int *read_pipe, int *write_pipe)
 
 int	check_builtin(char *str)
 {
-	if (is_same_string(str, "cd")
-		|| is_same_string(str, "export")
-		|| is_same_string(str, "unset")
-		|| is_same_string(str, "exit"))
+	if (is_same_string(str, "cd") || is_same_string(str, "export")
+		|| is_same_string(str, "unset") || is_same_string(str, "exit"))
 		return (0);
-	else if (is_same_string(str, "echo")
-		|| is_same_string(str, "pwd")
+	else if (is_same_string(str, "echo") || is_same_string(str, "pwd")
 		|| is_same_string(str, "env"))
 		return (1);
 	return (-1);
@@ -70,7 +68,7 @@ int	function(t_var *var, int *read_pipe, int *write_pipe)
 	static char	**path;
 
 	if (!path)
-		path = ft_split(getenv("PATH"), ':');
+		path = ft_split(env_var_value(*(var->env), "$PATH"), ':');
 	if (!var->list)
 	{
 		free(path);

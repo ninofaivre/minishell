@@ -1,16 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   str_tab.c                                          :+:      :+:    :+:   */
+/*   str_tab_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 20:42:00 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 15:41:22 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/25 17:03:52 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <stdio.h>
+
+void	print_str_tab(char **str_tab)
+{
+	if (!str_tab)
+		return ;
+	while (*str_tab)
+		printf("%s\n", *str_tab++);
+}
 
 void	free_str_tab(char **str_tab)
 {

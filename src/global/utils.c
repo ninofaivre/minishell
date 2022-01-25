@@ -6,14 +6,14 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:00:41 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:42:04 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/25 17:26:15 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "global.h"
 #include <unistd.h>
 
-char	*search_env_var(char **env, char *str)
+char	*env_var_value(char **env, char *str)
 {
 	int	i;
 
@@ -23,9 +23,9 @@ char	*search_env_var(char **env, char *str)
 	while (*env)
 	{
 		i = 0;
-		while ((*env)[i] == str[i] && is_alnum(str[i]))
+		while ((*env)[i] == str[i] && is_env_var_name_allowed(str[i]))
 			i++;
-		if ((*env)[i] == '=' && is_alnum(str[i]) == false)
+		if ((*env)[i] == '=' && is_env_var_name_allowed(str[i]) == false)
 			return (&(*env)[i + 1]);
 		env++;
 	}
@@ -45,12 +45,12 @@ int	minishell_error(char *call, char *error)
 	return (0);
 }
 
-bool	is_alnum(char c)
+bool	is_env_var_name_allowed(char c)
 {
 	if (!c)
 		return (false);
 	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
-		|| (c >= '0' && c <= '9'))
+		|| (c >= '0' && c <= '9') || c == '_')
 		return (true);
 	else
 		return (false);

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:45:59 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/25 17:26:15 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ char	*itoa(int nbr)
 
 static char	*env_var_len(t_var *var, char *str, unsigned int *len)
 {
-	if (is_alnum(str[1]))
+	if (is_env_var_name_allowed(str[1]))
 	{
-		*len += str_len(search_env_var(*(var->env), str));
+		*len += str_len(env_var_value(*(var->env), str));
 		str = skip_var(str);
 	}
 	else if (str[1] == '?')

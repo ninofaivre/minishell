@@ -6,22 +6,13 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 11:12:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:49:57 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/25 17:31:29 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_error.h"
 #include "global.h"
 #include <stdlib.h>
-#include <stdio.h>
-
-static void	print_str_tab(char **str_tab)
-{
-	if (!str_tab)
-		return ;
-	while (*str_tab)
-		printf("%s\n", *str_tab++);
-}
 
 int	builtin_env(char **argv, char **env)
 {
@@ -34,7 +25,7 @@ int	builtin_env(char **argv, char **env)
 	return (0);
 }
 
-bool	comp_env_var_name(char *env_var, char *name)
+static bool	comp_env_var_name(char *env_var, char *name)
 {
 	while (*env_var && *name && *env_var == *name)
 	{
@@ -47,21 +38,16 @@ bool	comp_env_var_name(char *env_var, char *name)
 		return (false);
 }
 
-char	**search_in_env(char *name, char **env)
+static char	**search_in_env(char *name, char **env)
 {
 	int	i;
-	int	j;
 
 	while (*env)
 	{
 		i = 0;
-		j = 0;
-		while ((*env)[i] == name[j] && (*env)[i] && name[j] && name[j] != '=')
-		{
+		while ((*env)[i] == name[i] && (*env)[i] && name[i] && name[i] != '=')
 			i++;
-			j++;
-		}
-		if ((!name[j] || name[j] == '=') && (*env)[i] == '=')
+		if ((!name[i] || name[i] == '=') && (*env)[i] == '=')
 			return (&(*env));
 		env++;
 	}

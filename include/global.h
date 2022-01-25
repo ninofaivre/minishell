@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:34:51 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:48:26 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/25 17:26:15 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,12 @@ typedef struct s_var
 	int				status;
 }	t_var;
 
-char	*search_env_var(char **env, char *str);
-bool	is_alnum(char c);
+char	*env_var_value(char **env, char *str);
+bool	is_env_var_name_allowed(char c);
 bool	is_charset(char c, char *charset);
 int		str_len(char *str);
 
+void	print_str_tab(char **str_tab);
 void	free_str_tab(char **str_tab);
 int		str_tab_len(char **str_tab);
 char	**add_str_to_str_tab(char **str_tab, char *str);
