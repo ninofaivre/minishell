@@ -6,7 +6,7 @@
 /*   By: paboutel <paboutel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 18:45:12 by paboutel         ###   ########.fr       */
+/*   Updated: 2022/01/25 03:07:14 by paboutel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ void	take_input(t_redirection *input, int *read_pipe)
 	int	fd;
 	int	i;
 
-	i = 0;
+	i = -1;
 	close(read_pipe[0]);
-	while (input[i].content)
+	while (input[++i].content)
 	{
 		if (input[i].is_double == true)
 		{
@@ -80,7 +80,6 @@ void	take_input(t_redirection *input, int *read_pipe)
 				break ;
 			}
 		}
-		i++;
 	}
 }
 

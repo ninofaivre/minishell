@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
+/*   By: paboutel <paboutel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:41:00 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/25 03:08:42 by paboutel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,17 +115,16 @@ char	**ft_split(char const *s, char c)
 	tab = (char **)malloc(sizeof(char *) * (nb_strs + 1));
 	if (!(tab))
 		return (NULL);
-	i = 0;
+	i = -1;
 	next_str = (char *)s;
 	next_str_len = 0;
-	while (i < nb_strs)
+	while (++i < nb_strs)
 	{
 		ft_get_next_str(&next_str, &next_str_len, c);
 		tab[i] = (char *)malloc(sizeof(char) * (next_str_len + 2));
 		if (!(tab[i]))
 			return (ft_malloc_error(tab));
 		ft_strlcpy(tab[i], next_str, next_str_len + 1);
-		i++;
 	}
 	tab[i] = NULL;
 	return (tab);
