@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 14:57:05 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 12:37:56 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ static int	wait_childs(int pid, int n_cmd)
 	int	child_pid;
 	int	to_return;
 
+	to_return = -1;
 	while (n_cmd--)
 	{
 		child_pid = wait(&status);
@@ -58,6 +59,18 @@ static int	wait_childs(int pid, int n_cmd)
 			to_return = WEXITSTATUS(status);
 	}
 	return (to_return);
+}
+
+static void	free_pipes(int **pipes)
+{
+	int	i;
+
+	i = 0;
+	if (!pipes)
+		return ;
+	while (pipes[i])
+		free(pipes[i++]);
+	free(pipes);
 }
 
 int	execution(t_var *var)
@@ -69,6 +82,7 @@ int	execution(t_var *var)
 
 	i = -1;
 	pipes = init_pipes(var->list);
+	pid = 0;
 	while (var->list)
 	{
 		if (i == -1)
@@ -83,5 +97,6 @@ int	execution(t_var *var)
 	status = wait_childs(pid, ++i);
 	function (var, (int *) NULL, (int *) NULL);
 	var->list = var->ptr_start_list;
+	free_pipes(pipes);
 	return (status);
 }

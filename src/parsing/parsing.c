@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 14:03:01 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:45:45 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 12:43:42 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,9 @@ t_list	*parse(t_var *var, char *input)
 		return ((t_list *) NULL);
 	list = build_list(var, input);
 	if (!list)
+	{
 		minishell_error("parsing", ALLOC);
+		return ((t_list *) NULL);
+	}
 	return (list);
 }

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 18:08:13 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 12:44:55 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,18 +100,17 @@ static void	sig_handler(int sig)
 	}
 }
 
-static int	parsing(char ***env, char *input, int *status)
+static void	parsing(char ***env, char *input, int *status)
 {
 	t_var	var;
 
 	var.status = *status;
 	var.env = env;
-	var.list = build_list(&var, input);
+	var.list = parse(&var, input);
 	var.ptr_start_list = var.list;
 	print_list(var.list);
 	*status = execution(&var);
 	free_list(var.list);
-	return (0);
 }
 
 static void	malloc_env(char ***env)
@@ -132,15 +131,14 @@ static void	malloc_env(char ***env)
 
 int	main(int argc, char **argv, char **env)
 {
-	printf("PID : %i\n", getpid());
-	int		parsing_status;
 	char	*input;
-	int status = 0;
+	int		status;
 
+	printf("PID : %i\n", getpid());
 	(void)argc;
 	(void)argv;
-	parsing_status = 0;
-	input = NULL;
+	input = (char *) NULL;
+	status = 0;
 	malloc_env(&env);
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
@@ -150,15 +148,7 @@ int	main(int argc, char **argv, char **env)
 		if (!input)
 			builtin_exit(false, env);
 		add_history(input);
-		parsing_status = parsing(&env, input, &status);
+		parsing(&env, input, &status);
 		free(input);
-		if (parsing_status)
-		{
-			if (parsing_status == -1)
-			{
-				write(2, "Error\n", 6);
-				exit(EXIT_FAILURE);
-			}
-		}
 	}
 }

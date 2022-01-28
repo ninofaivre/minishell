@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 17:40:15 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 12:42:52 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,18 @@
 
 int	check_exec(t_var *var, int *read_pipe, int *write_pipe, char **path)
 {
+	int		status;
 	int		i;
 	char	*executable;
 
+	status = 127;
 	i = 0;
 	while (path[i])
 	{
 		executable = concat(path[i], var->list->argv[0]);
 		if (access(executable, X_OK) != -1)
 		{
-			return (test_fork(var, executable, read_pipe, write_pipe));
+			status = test_fork(var, executable, read_pipe, write_pipe);
 			free(executable);
 			break ;
 		}
@@ -40,7 +42,7 @@ int	check_exec(t_var *var, int *read_pipe, int *write_pipe, char **path)
 	}
 	if (!path[i])
 		minishell_error(var->list->argv[0], CMD);
-	return (127);
+	return (status);
 }
 
 int	check_file(t_var *var, int *read_pipe, int *write_pipe)
@@ -71,7 +73,7 @@ int	function(t_var *var, int *read_pipe, int *write_pipe)
 		path = ft_split(env_var_value(*(var->env), "$PATH"), ':');
 	if (!var->list)
 	{
-		free(path);
+		free_str_tab(path);
 		path = (char **) NULL;
 		return (0);
 	}
