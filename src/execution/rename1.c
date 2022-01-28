@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 14:46:30 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 16:26:04 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@
 #include <sys/wait.h>
 #include <readline/readline.h>
 
-static bool	pid_zero(t_redirection *input, t_redirection *output,
-int *read_pipe, int *write_pipe)
+static bool	pid_zero(t_redirection *redirection, int *read_pipe, int *write_pipe)
 {
 	if (read_pipe)
 	{
@@ -33,13 +32,10 @@ int *read_pipe, int *write_pipe)
 		close(write_pipe[0]);
 		dup2(write_pipe[1], 1);
 	}
-	if (input[0].content)
-		if (take_input(input, read_pipe))
-			return (true);
-	if (output[0].content)
-		if (take_output(output, write_pipe))
-			return (true);
-	return (false);
+	if (redirection->content)
+		return (take_redirection(redirection, read_pipe, write_pipe));
+	else
+		return (false);
 }
 
 pid_t	test_fork(t_var *var, char **path, int *read_pipe, int *write_pipe)
@@ -49,8 +45,7 @@ pid_t	test_fork(t_var *var, char **path, int *read_pipe, int *write_pipe)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (pid_zero(var->list->input, var->list->output,
-				read_pipe, write_pipe))
+		if (pid_zero(var->list->redirection, read_pipe, write_pipe))
 			_exit(EXIT_FAILURE);
 		if (check_builtin(var->list->argv[0]) == 1)
 			_exit(builtin(var, (int *) NULL));

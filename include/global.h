@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:34:51 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 17:26:15 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 15:55:48 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ typedef struct s_redirection
 {
 	char	*content;
 	bool	is_double;
+	char	guillemet;
 }	t_redirection;
 
 typedef struct s_list
 {
-	struct s_redirection	*input;
-	struct s_redirection	*output;
+	struct s_redirection	*redirection;
 	char					**argv;
 	struct s_list			*next;
 }	t_list;

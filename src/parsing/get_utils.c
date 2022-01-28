@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/31 13:50:35 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 12:00:17 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 15:54:14 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	add_str_word(char *word, char *str)
 	return (len);
 }
 
-int	count_redirection(char *str, char guillemet)
+int	count_redirection(char *str)
 {
 	int	n_redirection;
 
@@ -48,7 +48,7 @@ int	count_redirection(char *str, char guillemet)
 	{
 		if (is_charset(*str, "><"))
 		{
-			n_redirection += (*str == guillemet);
+			n_redirection++;
 			str += (is_charset(*str, "><")) + (is_charset(str[1], "><"));
 		}
 		str = skip_word(str);

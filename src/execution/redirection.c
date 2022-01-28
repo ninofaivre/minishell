@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 15:20:55 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 16:25:41 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,27 +19,7 @@
 #include <sys/wait.h>
 #include <readline/readline.h>
 
-static int	doubleinput_return(int *pipe_tab, char **str_tab,
-bool need_pipe, char *input)
-{
-	if (need_pipe == false)
-	{
-		free_str_tab(str_tab);
-		free(input);
-		return (0);
-	}
-	else
-	{
-		pipe(pipe_tab);
-		write_str_tab_to_fd(str_tab, pipe_tab[1]);
-		close(pipe_tab[1]);
-		free_str_tab(str_tab);
-		free(input);
-		return (pipe_tab[0]);
-	}
-}
-
-static int	doubleinput(char *eof, bool need_pipe)
+static int	doubleinput(char *eof)
 {
 	int		pipe_tab[2];
 	char	**str_tab;
@@ -52,61 +32,89 @@ static int	doubleinput(char *eof, bool need_pipe)
 		str_tab = add_str_to_str_tab(str_tab, input);
 		input = readline(">");
 	}
-	return (doubleinput_return(pipe_tab, str_tab, need_pipe, input));
+	pipe(pipe_tab);
+	write_str_tab_to_fd(str_tab, pipe_tab[1]);
+	close(pipe_tab[1]);
+	free_str_tab(str_tab);
+	free(input);
+	return (pipe_tab[0]);
 }
 
-bool	take_input(t_redirection *input, int *read_pipe)
+static int	take_input(char *content, bool is_double, int fd_input)
 {
 	int	fd;
-	int	i;
 
-	i = -1;
-	if (read_pipe)
-		close(read_pipe[0]);
-	while (input[++i].content)
+	fd = 0;
+	if (fd_input)
+		close(fd_input);
+	if (is_double == true)
+		fd = doubleinput(content);
+	else if (access(content, R_OK) == -1)
 	{
-		if (input[i].is_double == true)
-		{
-			fd = doubleinput(input[i].content, !input[i + 1].content);
-			if (fd != -1 && !input[i + 1].content)
-				dup2(fd, 0);
-		}
-		else if (access(input[i].content, R_OK) == -1)
-			return (minishell_error(input[i].content, INACCESSIBLE) + true);
-		else if (!input[i + 1].content)
-		{
-			fd = open(input[i].content, O_RDONLY);
-			dup2(fd, 0);
-			break ;
-		}
+		minishell_error(content, INACCESSIBLE);
+		return (-1);
 	}
-	return (false);
+	else
+		fd = open(content, O_RDONLY);
+	if (fd == -1)
+		minishell_error(content, INACCESSIBLE);
+	return (fd);
 }
 
-bool	take_output(t_redirection *output, int *write_pipe)
+static int	take_output(char *content, bool is_double, int fd_output)
 {
 	int	fd;
+
+	fd = 0;
+	if (fd_output)
+		close(fd_output);
+	if (is_double == true)
+		fd = open(content, O_APPEND | O_RDWR | O_CREAT, 0644);
+	else
+		fd = open(content, O_TRUNC | O_RDWR | O_CREAT, 0644);
+	if (fd == -1)
+		minishell_error(content, CREAT);
+	return (fd);
+}
+
+bool	take_redirection(t_redirection *redirection, int *read_pipe, int *write_pipe)
+{
+	int	fd_input;
+	int	fd_output;
 	int	i;
 
+	fd_input = 0;
+	fd_output = 0;
 	i = 0;
-	if (write_pipe)
-		close(write_pipe[1]);
-	while (output[i].content)
+	while (redirection[i].content)
 	{
-		if (output[i].is_double == true)
-			fd = open(output[i].content, O_APPEND | O_RDWR | O_CREAT, 0644);
-		else
-			fd = open(output[i].content, O_TRUNC | O_RDWR | O_CREAT, 0644);
-		if (fd != -1)
+		if (redirection[i].guillemet == '<')
 		{
-			if (!output[i + 1].content)
-				dup2(fd, 1);
-			else
-				close(fd);
+			if (read_pipe)
+			{
+				close(read_pipe[0]);
+				read_pipe = (int *) NULL;
+			}
+			fd_input = take_input(redirection[i].content, redirection[i].is_double, fd_input);
+			if (fd_input == -1)
+				return (true);
 		}
-		else
-			return (minishell_error(output[i].content, CREAT) + true);
+		else if (redirection[i].guillemet == '>')
+		{
+			if (write_pipe)
+			{
+				close(write_pipe[1]);
+				write_pipe = (int *) NULL;
+			}
+			fd_output = take_output(redirection[i].content, redirection[i].is_double, fd_output);
+			if (fd_output == -1)
+				return (true);
+		}
 		i++;
 	}
+	if (fd_input)
+		dup2(fd_input, 0);
+	if (fd_output)
+		dup2(fd_output, 1);
 	return (false);
 }

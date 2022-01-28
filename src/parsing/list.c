@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 12:16:07 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 16:32:49 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,8 @@ t_list	*free_list(t_list *list)
 
 	while (list)
 	{
-		if (list->input)
-			free_redirection(list->input);
-		if (list->output)
-			free_redirection(list->output);
+		if (list->redirection)
+			free_redirection(list->redirection);
 		if (list->argv)
 			free_str_tab(list->argv);
 		ptr_list = list;
@@ -50,10 +48,9 @@ t_list	*free_list(t_list *list)
 
 static bool	feel_data(t_var *var, t_list *list, char *input)
 {
-	list->output = get_redirection(var, input, '>');
-	list->input = get_redirection(var, input, '<');
+	list->redirection = get_redirection(var, input);
 	list->argv = get_argv(var, input);
-	if (!list->output || !list->input || !list->argv)
+	if (!list->redirection || !list->argv)
 		return (false);
 	else
 		return (true);

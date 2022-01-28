@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 12:44:55 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 16:31:27 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,23 @@
 #include <readline/history.h>
 #include <stdlib.h>
 
-static void	print_tab_redirection(t_redirection *redirection,
-char *name, char guillemet)
+static void	print_tab_redirection(t_redirection *redirection)
 {
 	int	i;
 
 	i = 0;
 	if (!redirection)
 	{
-		printf("%s : (t_redirection *) NULL\n", name);
+		printf("list->redirection : (t_redirection *) NULL\n");
 		return ;
 	}
 	while (redirection[i].content)
 	{
 		if (redirection[i].is_double == true)
-			printf("%s[%i] : %c%c%s\n", name, i, guillemet,
-				guillemet, redirection[i].content);
+			printf("list->redirection[%i] : %c%c%s", i, redirection->guillemet,
+					redirection->guillemet, redirection[i].content);
 		else
-			printf("%s[%i] : %c%s\n", name, i, guillemet,
+			printf("list->redirection[%i] : %c%s\n", i, redirection->guillemet,
 				redirection[i].content);
 		i++;
 	}
@@ -72,9 +71,7 @@ static void	print_list(t_list *list)
 	while (list)
 	{
 		printf("list %i\n\n", i);
-		print_tab_redirection(list->output, "list->output", '>');
-		printf("\n");
-		print_tab_redirection(list->input, "list->input", '<');
+		print_tab_redirection(list->redirection);
 		printf("\n");
 		print_tab_str(list->argv, "list->argv");
 		printf("\n\n");
