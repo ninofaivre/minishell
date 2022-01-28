@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 12:26:59 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 14:57:55 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,10 @@ char	**get_argv(t_var *var, char *input)
 {
 	char	**argv;
 
-	argv = (char **) NULL;
+	argv = (char **)malloc(sizeof(char *) * 1);
+	if (!argv)
+		return ((char **) NULL);
+	argv[0] = (char *) NULL;
 	while (*input && *input != '|')
 	{
 		input = skip_space(input);
