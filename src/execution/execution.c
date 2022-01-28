@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 12:37:56 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 18:54:07 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,29 +19,19 @@
 #include <sys/wait.h>
 #include <readline/readline.h>
 
-static int	**init_pipes(t_list *list)
+static int	**init_pipes(int n_list)
 {
-	int		n_cmd;
-	t_list	*ptr_list;
 	int		**pipes;
 
-	n_cmd = 0;
-	ptr_list = list;
-	while (list)
-	{
-		list = list->next;
-		n_cmd++;
-	}
-	if (n_cmd == 0)
+	pipes = (int **)malloc(sizeof(int *) * n_list);
+	if (!pipes)
 		return ((int **) NULL);
-	pipes = (int **)malloc(sizeof(int *) * n_cmd);
-	pipes[--n_cmd] = (int *) NULL;
-	while (n_cmd--)
+	pipes[--n_list] = (int *) NULL;
+	while (n_list--)
 	{
-		pipes[n_cmd] = (int *)malloc(sizeof(int) * 2);
-		pipe(pipes[n_cmd]);
+		pipes[n_list] = (int *)malloc(sizeof(int) * 2);
+		pipe(pipes[n_list]);
 	}
-	list = ptr_list;
 	return (pipes);
 }
 
@@ -77,16 +67,24 @@ int	execution(t_var *var)
 {
 	int		**pipes;
 	int		i;
+	int		n_list;
 	int		pid;
 	int		status;
 
 	i = -1;
-	pipes = init_pipes(var->list);
+	n_list = count_list(var);
+	if (n_list > 1)
+		pipes = init_pipes(n_list);
 	pid = 0;
 	while (var->list)
 	{
 		if (i == -1)
-			function(var, (int *) NULL, pipes[i + 1]);
+		{
+			if (n_list == 1)
+				function(var, (int *) NULL, (int *) NULL);
+			else
+				function(var, (int *) NULL, pipes[i + 1]);
+		}
 		else if (!var->list->next)
 			pid = function(var, pipes[i], (int *) NULL);
 		else
@@ -94,8 +92,8 @@ int	execution(t_var *var)
 		i++;
 		var->list = var->list->next;
 	}
-	status = wait_childs(pid, ++i);
-	function (var, (int *) NULL, (int *) NULL);
+	status = wait_childs(pid, n_list);
+	function ((t_var *) NULL, (int *) NULL, (int *) NULL);
 	var->list = var->ptr_start_list;
 	free_pipes(pipes);
 	return (status);

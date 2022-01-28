@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 16:31:27 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 18:56:22 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ static void	parsing(char ***env, char *input, int *status)
 	var.env = env;
 	var.list = parse(&var, input);
 	var.ptr_start_list = var.list;
+	free(input);
 	print_list(var.list);
 	*status = execution(&var);
 	free_list(var.list);
@@ -143,9 +144,8 @@ int	main(int argc, char **argv, char **env)
 	{
 		input = readline(PROMPT);
 		if (!input)
-			builtin_exit(false, env);
+			builtin_exit(false, env, (t_list *) NULL);
 		add_history(input);
 		parsing(&env, input, &status);
-		free(input);
 	}
 }

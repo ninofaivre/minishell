@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:41:12 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 18:51:41 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,18 @@ void	write_str_tab_to_fd(char **str_tab, int fd)
 		write(fd, "\n", 1);
 		str_tab++;
 	}
+}
+
+int	count_list(t_var *var)
+{
+	int n_list;
+
+	n_list = 0;
+	while (var->list)
+	{
+		n_list++;
+		var->list = var->list->next;
+	}
+	var->list = var->ptr_start_list;
+	return (n_list);
 }

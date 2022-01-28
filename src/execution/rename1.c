@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 16:26:04 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 18:30:58 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ pid_t	test_fork(t_var *var, char **path, int *read_pipe, int *write_pipe)
 	{
 		if (pid_zero(var->list->redirection, read_pipe, write_pipe))
 			_exit(EXIT_FAILURE);
-		if (check_builtin(var->list->argv[0]) == 1)
+		if (check_builtin(var) == 1)
 			_exit(builtin(var, (int *) NULL));
 		if (count_char_in_str(var->list->argv[0], '/'))
 			_exit(check_file(var));
@@ -78,8 +78,13 @@ int	builtin(t_var *var, int *read_pipe)
 		return (builtin_unset(var->list->argv, var->env));
 	else if (is_same_string(var->list->argv[0], "cd"))
 		return (builtin_cd(var->list->argv, var->env));
-	else if (is_same_string(var->list->argv[0], "exit"))
-		builtin_exit(false, *(var->env));
+	else if (is_same_string(var->ptr_start_list->argv[0], "exit"))
+	{
+		if (!var->ptr_start_list->next)
+			builtin_exit(false, *(var->env), var->ptr_start_list);
+		else
+			return (0);
+	}
 	else if (is_same_string(var->list->argv[0], "echo"))
 		return (builtin_echo(var->list->argv));
 	else if (is_same_string(var->list->argv[0], "pwd"))

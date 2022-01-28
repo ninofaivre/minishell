@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 14:49:08 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 18:38:44 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,22 @@ int	check_file(t_var *var)
 	return (127);
 }
 
-int	check_builtin(char *str)
+int	check_builtin(t_var *var)
 {
-	if (is_same_string(str, "cd") || is_same_string(str, "export")
-		|| is_same_string(str, "unset") || is_same_string(str, "exit"))
+	if (is_same_string(var->list->argv[0], "exit"))
+	{
+		if (is_same_string(var->ptr_start_list->argv[0], "exit") && !var->ptr_start_list->next)
+			return (0);
+		else
+			return (1);
+	}
+	if (is_same_string(var->list->argv[0], "cd")
+		|| is_same_string(var->list->argv[0], "export")
+		|| is_same_string(var->list->argv[0], "unset"))
 		return (0);
-	else if (is_same_string(str, "echo") || is_same_string(str, "pwd")
-		|| is_same_string(str, "env"))
+	else if (is_same_string(var->list->argv[0], "echo")
+		|| is_same_string(var->list->argv[0], "pwd")
+		|| is_same_string(var->list->argv[0], "env"))
 		return (1);
 	return (-1);
 }
@@ -69,15 +78,18 @@ int	function(t_var *var, int *read_pipe, int *write_pipe)
 {
 	static char	**path;
 
-	if (!path)
-		path = ft_split(env_var_value(*(var->env), "$PATH"), ':');
-	if (!var->list)
+	if (!var)
 	{
-		free_str_tab(path);
-		path = (char **) NULL;
+		if (path)
+		{
+			free_str_tab(path);
+			path = (char **) NULL;
+		}
 		return (0);
 	}
-	if (check_builtin(var->list->argv[0]) == 0)
+	if (!path)
+		path = ft_split(env_var_value(*(var->env), "$PATH"), ':');
+	if (check_builtin(var) == 0)
 		return (builtin(var, read_pipe));
 	else
 		return (test_fork(var, path, read_pipe, write_pipe));
