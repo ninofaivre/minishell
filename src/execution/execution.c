@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 18:54:07 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 18:59:02 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int	execution(t_var *var)
 	n_list = count_list(var);
 	if (n_list > 1)
 		pipes = init_pipes(n_list);
+	else
+		pipes = (int **) NULL;
 	pid = 0;
 	while (var->list)
 	{
