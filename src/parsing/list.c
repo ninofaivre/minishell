@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 11:55:57 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 12:07:25 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_redirection	*free_redirection(t_redirection *redirection)
 
 	i = 0;
 	if (!redirection)
-		return ;
+		return ((t_redirection *) NULL);
 	while (redirection[i].content)
 	{
 		free(redirection[i].content);
