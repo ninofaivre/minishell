@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 15:24:54 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 14:46:30 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int *read_pipe, int *write_pipe)
 	return (false);
 }
 
-pid_t	test_fork(t_var *var, char *executable, int *read_pipe, int *write_pipe)
+pid_t	test_fork(t_var *var, char **path, int *read_pipe, int *write_pipe)
 {
 	pid_t	pid;
 
@@ -54,8 +54,10 @@ pid_t	test_fork(t_var *var, char *executable, int *read_pipe, int *write_pipe)
 			_exit(EXIT_FAILURE);
 		if (check_builtin(var->list->argv[0]) == 1)
 			_exit(builtin(var, (int *) NULL));
-		execve(executable, var->list->argv, *(var->env));
-		_exit(EXIT_FAILURE);
+		if (count_char_in_str(var->list->argv[0], '/'))
+			_exit(check_file(var));
+		else
+			_exit(check_exec(var, path));
 	}
 	else
 	{

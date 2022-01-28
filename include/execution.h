@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 15:22:03 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 14:48:06 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,13 @@
 int		execution(t_var *var);
 int		function(t_var *var, int *read_pipe, int *write_pipe);
 
+int		check_file(t_var *var);
+int		check_exec(t_var *var, char **path);
+
 char	*str_dupe(char *str);
 void	write_str_tab_to_fd(char **str_tab, int fd);
 char	**ft_split(char const *s, char c);
-pid_t	test_fork(t_var *var, char *executable,
+pid_t	test_fork(t_var *var, char **path,
 			int *read_pipe, int *write_pipe);
 int		builtin(t_var *var, int *read_pipe);
 bool	take_input(t_redirection *input, int *read_pipe);
