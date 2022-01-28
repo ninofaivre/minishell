@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 20:42:00 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 17:03:52 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 12:04:21 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,17 @@ char	**add_str_to_str_tab(char **str_tab, char *str)
 	char	**new_str_tab;
 
 	i = 0;
+	if (!str)
+	{
+		if (str_tab)
+			free_str_tab(str_tab);
+		return ((char **) NULL);
+	}
 	new_str_tab = (char **)malloc(sizeof(char *) * (str_tab_len(str_tab) + 2));
 	if (!new_str_tab)
 	{
-		free_str_tab(str_tab);
+		if (str_tab)
+			free_str_tab(str_tab);
 		return ((char **) NULL);
 	}
 	while (str_tab && str_tab[i])

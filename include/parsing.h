@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:20:46 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:48:08 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 11:50:37 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 t_list			*parse(t_var *var, char *input);
 
+t_redirection	*free_redirection(t_redirection *redirection);
 t_list			*free_list(t_list *list);
 t_list			*build_list(t_var *var, char *input);
 

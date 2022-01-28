@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 17:26:15 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 12:04:48 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ t_redirection	*get_redirection(t_var *var, char *input, char guillemet)
 	i = 0;
 	redirection = (t_redirection *)malloc(sizeof(t_redirection)
 			* (count_redirection(input, guillemet) + 1));
+	if (!redirection)
+		return ((t_redirection *) NULL);
 	while (*input && *input != '|')
 	{
 		input = skip_space(input);
@@ -73,6 +75,8 @@ t_redirection	*get_redirection(t_var *var, char *input, char guillemet)
 			input += 1 + (input[1] == guillemet);
 			input = skip_space(input);
 			redirection[i++].content = get_one_word(var, input);
+			if (!redirection[i - 1].content)
+				return (free_redirection(redirection));
 		}
 		else if (is_charset(*input, "><"))
 				input += 1 + (is_charset(input[1], "><"));
@@ -98,6 +102,8 @@ char	**get_argv(t_var *var, char *input)
 		else
 		{
 			argv = add_str_to_str_tab(argv, get_one_word(var, input));
+			if (!argv)
+				return ((char **) NULL);
 			input = skip_word(input);
 		}
 	}

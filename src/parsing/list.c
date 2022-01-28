@@ -6,14 +6,14 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:45:21 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/28 11:55:57 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 #include <stdlib.h>
 
-static void	free_redirection(t_redirection *redirection)
+t_redirection	*free_redirection(t_redirection *redirection)
 {
 	int	i;
 
@@ -26,6 +26,7 @@ static void	free_redirection(t_redirection *redirection)
 		i++;
 	}
 	free(redirection);
+	return ((t_redirection *) NULL);
 }
 
 t_list	*free_list(t_list *list)
@@ -47,11 +48,15 @@ t_list	*free_list(t_list *list)
 	return ((t_list *) NULL);
 }
 
-static void	feel_data(t_var *var, t_list *list, char *input)
+static bool	feel_data(t_var *var, t_list *list, char *input)
 {
 	list->output = get_redirection(var, input, '>');
 	list->input = get_redirection(var, input, '<');
 	list->argv = get_argv(var, input);
+	if (!list->output || !list->input || !list->argv)
+		return (false);
+	else
+		return (true);
 }
 
 t_list	*build_list(t_var *var, char *input)
@@ -63,17 +68,19 @@ t_list	*build_list(t_var *var, char *input)
 	if (!list)
 		return ((t_list *) NULL);
 	ptr_list = list;
-	feel_data(var, list, input);
 	list->next = (t_list *) NULL;
+	if (feel_data(var, list, input) == false)
+		return (free_list(ptr_list));
 	while (*get_next_pipe(input))
 	{
 		list->next = (t_list *)malloc(sizeof(t_list));
 		if (!list->next)
 			return (free_list(ptr_list));
 		list = list->next;
-		input = get_next_pipe(input);
-		feel_data(var, list, input);
 		list->next = (t_list *) NULL;
+		input = get_next_pipe(input);
+		if (feel_data(var, list, input) == false)
+			return (free_list(ptr_list));
 	}
 	return (ptr_list);
 }
