@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 18:56:22 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/29 20:28:04 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ int	main(int argc, char **argv, char **env)
 	{
 		input = readline(PROMPT);
 		if (!input)
-			builtin_exit(false, env, (t_list *) NULL);
+			builtin_exit(false, env, (t_list *) NULL, false);
 		add_history(input);
 		parsing(&env, input, &status);
 	}

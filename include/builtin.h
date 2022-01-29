@@ -6,14 +6,14 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 17:04:03 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 18:09:07 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/29 20:27:37 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTIN_H
 # define BUILTIN_H
 
-void	builtin_exit(bool error, char **env, t_list *list);
+int		builtin_exit(bool error, char **env, t_list *list, bool child);
 
 int		builtin_pwd(void);
 char	*get_pwd(void);
