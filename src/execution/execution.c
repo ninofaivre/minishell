@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 18:59:02 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/30 19:46:56 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static int	wait_childs(int pid, int n_cmd)
 	return (to_return);
 }
 
-static void	free_pipes(int **pipes)
+void	free_pipes(int **pipes)
 {
 	int	i;
 
@@ -65,7 +65,6 @@ static void	free_pipes(int **pipes)
 
 int	execution(t_var *var)
 {
-	int		**pipes;
 	int		i;
 	int		n_list;
 	int		pid;
@@ -74,9 +73,9 @@ int	execution(t_var *var)
 	i = -1;
 	n_list = count_list(var);
 	if (n_list > 1)
-		pipes = init_pipes(n_list);
+		var->pipes = init_pipes(n_list);
 	else
-		pipes = (int **) NULL;
+		var->pipes = (int **) NULL;
 	pid = 0;
 	while (var->list)
 	{
@@ -85,18 +84,18 @@ int	execution(t_var *var)
 			if (n_list == 1)
 				function(var, (int *) NULL, (int *) NULL);
 			else
-				function(var, (int *) NULL, pipes[i + 1]);
+				function(var, (int *) NULL, var->pipes[i + 1]);
 		}
 		else if (!var->list->next)
-			pid = function(var, pipes[i], (int *) NULL);
+			pid = function(var, var->pipes[i], (int *) NULL);
 		else
-			function(var, pipes[i], pipes[i + 1]);
+			function(var, var->pipes[i], var->pipes[i + 1]);
 		i++;
 		var->list = var->list->next;
 	}
 	status = wait_childs(pid, n_list);
 	function ((t_var *) NULL, (int *) NULL, (int *) NULL);
 	var->list = var->ptr_start_list;
-	free_pipes(pipes);
+	free_pipes(var->pipes);
 	return (status);
 }

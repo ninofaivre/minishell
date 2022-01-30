@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 18:53:44 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/30 19:47:11 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 int		execution(t_var *var);
 int		function(t_var *var, int *read_pipe, int *write_pipe);
+void	free_pipes(int **pipes);
 
 int		check_file(t_var *var);
 int		check_exec(t_var *var, char **path);

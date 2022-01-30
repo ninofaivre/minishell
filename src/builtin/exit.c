@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 17:53:47 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/29 20:48:39 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/30 19:08:28 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,36 @@ static int	exit_atoi(char *str)
 	return (nbr % 256);
 }
 
+void	exit_clean(char **env, t_list *list)
+{
+	function ((t_var *) NULL, (int *) NULL, (int *) NULL);
+	free_str_tab(env);
+	free_list(list);
+	clear_history();
+	rl_clear_history();
+}
+
 int	builtin_exit(bool error, char **env, t_list *list, bool child)
 {
 	int	n_arg;
 	int	at_exit;
 
-	n_arg = str_tab_len(list->argv);
+	if (list)
+		n_arg = str_tab_len(list->argv);
+	else
+		n_arg = 0;
 	if (error == true)
 		at_exit = EXIT_FAILURE;
-	else if (n_arg > 2)
+	else
+		at_exit = EXIT_SUCCESS;
+	if (n_arg > 2)
 	{
 		minishell_error("exit", MAXARG);
 		at_exit = 1;
 	}
-	else if (!list->argv[1])
+	else if (n_arg == 1)
 		at_exit = EXIT_SUCCESS;
-	else
+	else if (n_arg == 2)
 	{
 		at_exit = exit_atoi(list->argv[1]);
 		if (at_exit < 0)
@@ -62,13 +76,7 @@ int	builtin_exit(bool error, char **env, t_list *list, bool child)
 			minishell_error("exit", CHARNOTINT);
 	}
 	if (child == false)
-	{
-		function ((t_var *) NULL, (int *) NULL, (int *) NULL);
-		free_str_tab(env);
-		free_list(list);
-		clear_history();
-		rl_clear_history();
-	}
+		exit_clean(env, list);
 	if ((child == true || n_arg > 2) && error == false)
 		return (at_exit);
 	else

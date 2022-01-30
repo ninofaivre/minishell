@@ -6,12 +6,13 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/29 20:03:54 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/30 19:55:09 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 #include "builtin.h"
+#include "parsing.h"
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -47,9 +48,14 @@ pid_t	test_fork(t_var *var, char **path, int *read_pipe, int *write_pipe)
 	{
 		if (pid_zero(var->list->redirection, read_pipe, write_pipe))
 			_exit(EXIT_FAILURE);
-		if (check_builtin(var) == 1)
-			_exit(builtin(var, (int *) NULL));
-		if (count_char_in_str(var->list->argv[0], '/'))
+		else if (check_builtin(var) == 1)
+		{
+			var->status = builtin(var, (int *) NULL);
+			exit_clean(*(var->env), var->ptr_start_list);
+			free_pipes(var->pipes);
+			_exit(var->status);
+		}
+		else if (count_char_in_str(var->list->argv[0], '/'))
 			_exit(check_file(var));
 		else
 			_exit(check_exec(var, path));
