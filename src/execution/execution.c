@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/30 19:46:56 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/30 23:41:41 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	execution(t_var *var)
 		if (i == -1)
 		{
 			if (n_list == 1)
-				function(var, (int *) NULL, (int *) NULL);
+				pid = function(var, (int *) NULL, (int *) NULL);
 			else
 				function(var, (int *) NULL, var->pipes[i + 1]);
 		}

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 18:38:44 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/30 23:38:38 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ int	check_exec(t_var *var, char **path)
 	while (path[i])
 	{
 		executable = concat(path[i], var->list->argv[0]);
+		if (!executable)
+			return (-1);
 		if (access(executable, X_OK) != -1)
 		{
 			execve(executable, var->list->argv, *(var->env));
@@ -89,6 +91,8 @@ int	function(t_var *var, int *read_pipe, int *write_pipe)
 	}
 	if (!path)
 		path = ft_split(env_var_value(*(var->env), "$PATH"), ':');
+	if (!path)
+		return (-1);
 	if (check_builtin(var) == 0)
 		return (builtin(var, read_pipe));
 	else

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 16:54:33 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/30 23:55:21 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ t_redirection	*get_redirection(t_var *var, char *input)
 		input = skip_space(input);
 		if (is_charset(*input, "><"))
 		{
+			redirection[i].is_double = false;
 			if (is_charset(input[1], "><"))
 				redirection[i].is_double = true;
 			redirection[i].guillemet = *input;

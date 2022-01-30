@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/30 19:55:09 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/31 00:03:10 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,13 @@ static bool	pid_zero(t_redirection *redirection, int *read_pipe, int *write_pipe
 		return (false);
 }
 
+static int	clean_fork(char **env, t_list *ptr_start_list, int **pipes, int status)
+{
+	exit_clean(env, ptr_start_list);
+	free_pipes(pipes);
+	return (status);
+}
+
 pid_t	test_fork(t_var *var, char **path, int *read_pipe, int *write_pipe)
 {
 	pid_t	pid;
@@ -47,14 +54,11 @@ pid_t	test_fork(t_var *var, char **path, int *read_pipe, int *write_pipe)
 	if (pid == 0)
 	{
 		if (pid_zero(var->list->redirection, read_pipe, write_pipe))
-			_exit(EXIT_FAILURE);
+			_exit(clean_fork(*(var->env), var->ptr_start_list, var->pipes, EXIT_FAILURE));
+		if (!var->list->argv[0])
+			_exit(clean_fork(*(var->env), var->ptr_start_list, var->pipes, EXIT_SUCCESS));
 		else if (check_builtin(var) == 1)
-		{
-			var->status = builtin(var, (int *) NULL);
-			exit_clean(*(var->env), var->ptr_start_list);
-			free_pipes(var->pipes);
-			_exit(var->status);
-		}
+			_exit(clean_fork(*(var->env), var->ptr_start_list, var->pipes, builtin(var, (int *) NULL)));
 		else if (count_char_in_str(var->list->argv[0], '/'))
 			_exit(check_file(var));
 		else
