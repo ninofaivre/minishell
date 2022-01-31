@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/30 23:41:41 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/31 14:04:03 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <readline/readline.h>
+#include <errno.h>
 
 static int	**init_pipes(int n_list)
 {
@@ -25,12 +26,28 @@ static int	**init_pipes(int n_list)
 
 	pipes = (int **)malloc(sizeof(int *) * n_list);
 	if (!pipes)
+	{
+		minishell_error("execution (pipes)", ALLOC);
 		return ((int **) NULL);
+	}
 	pipes[--n_list] = (int *) NULL;
 	while (n_list--)
 	{
 		pipes[n_list] = (int *)malloc(sizeof(int) * 2);
-		pipe(pipes[n_list]);
+		if (!pipes[n_list])
+		{
+			free_pipes(pipes);
+			return ((int **) NULL);
+		}
+		if (pipe(pipes[n_list]) == -1)
+		{
+			if (errno == EMFILE)
+				minishell_error("execution (pipes)", MAXFDPROC);
+			else if (errno == ENFILE)
+				minishell_error("execution (pipes)", MAXFDSYS);
+			free_pipes(pipes);
+			return ((int **) NULL);
+		}
 	}
 	return (pipes);
 }
@@ -38,14 +55,12 @@ static int	**init_pipes(int n_list)
 static int	wait_childs(int pid, int n_cmd)
 {
 	int	status;
-	int	child_pid;
 	int	to_return;
 
 	to_return = -1;
 	while (n_cmd--)
 	{
-		child_pid = wait(&status);
-		if (child_pid == pid)
+		if (wait(&status) == pid)
 			to_return = WEXITSTATUS(status);
 	}
 	return (to_return);
@@ -70,28 +85,34 @@ int	execution(t_var *var)
 	int		pid;
 	int		status;
 
-	i = -1;
+	i = 0;
 	n_list = count_list(var);
+	pid = 0;
 	if (n_list > 1)
+	{
 		var->pipes = init_pipes(n_list);
+		if (!var->pipes)
+			return (-1);
+	}
 	else
 		var->pipes = (int **) NULL;
-	pid = 0;
 	while (var->list)
 	{
-		if (i == -1)
+		if (i == 0)
 		{
 			if (n_list == 1)
 				pid = function(var, (int *) NULL, (int *) NULL);
 			else
-				function(var, (int *) NULL, var->pipes[i + 1]);
+				pid = function(var, (int *) NULL, var->pipes[i]);
 		}
 		else if (!var->list->next)
-			pid = function(var, var->pipes[i], (int *) NULL);
+			pid = function(var, var->pipes[i - 1], (int *) NULL);
 		else
-			function(var, var->pipes[i], var->pipes[i + 1]);
+			pid = function(var, var->pipes[i - 1], var->pipes[i]);
 		i++;
 		var->list = var->list->next;
+		if (pid == -1)
+			break ;
 	}
 	status = wait_childs(pid, n_list);
 	function ((t_var *) NULL, (int *) NULL, (int *) NULL);

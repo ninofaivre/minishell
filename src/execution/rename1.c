@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/31 13:29:16 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/31 14:16:39 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static bool	pid_zero(t_redirection *redirection, int *read_pipe, int *write_pipe
 		close(write_pipe[0]);
 		dup2(write_pipe[1], 1);
 	}
-	if (redirection->content)
+	if (redirection[0].content)
 		return (take_redirection(redirection, read_pipe, write_pipe));
 	else
 		return (false);

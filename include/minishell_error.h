@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 18:42:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/29 20:24:16 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/31 13:51:36 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,7 @@ int	minishell_error(char *call, char *error);
 # define CREAT "unable to create the file or directory specified"
 # define CHARNOTINT "int arg needed"
 # define INTTOOHIGH "int arg is too high (see limits.h LLONG_MAX)"
+# define MAXFDPROC "too many file descriptors are open by the process (there may be an fd leak or you tryed to run too many pipes at one time)"
+# define MAXFDSYS "too many file descriptors are open by the system"
 
 #endif

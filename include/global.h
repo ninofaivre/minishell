@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:34:51 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/30 19:45:37 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/31 14:48:15 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ bool	is_charset(char c, char *charset);
 int		str_len(char *str);
 
 void	print_str_tab(char **str_tab);
-void	free_str_tab(char **str_tab);
+char	**free_str_tab(char **str_tab);
 int		str_tab_len(char **str_tab);
 char	**add_str_to_str_tab(char **str_tab, char *str);
 

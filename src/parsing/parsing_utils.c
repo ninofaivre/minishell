@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 17:26:15 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/31 14:37:41 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@ static int	int_len(int nbr)
 	int	len;
 
 	len = 0;
+	if (nbr < 0)
+	{
+		len++;
+		nbr = -nbr;
+	}
 	while (nbr / 10)
 	{
 		len++;
@@ -36,6 +41,8 @@ char	*itoa(int nbr)
 	str = (char *)malloc(sizeof(char) * (i + 1));
 	if (!str)
 		return ((char *) NULL);
+	if (nbr < 0)
+		str[0] = '-';
 	str[i--] = '\0';
 	while (nbr / 10)
 	{

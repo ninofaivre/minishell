@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 16:25:41 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/31 14:46:48 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <readline/readline.h>
+#include <errno.h>
 
 static int	doubleinput(char *eof)
 {
@@ -27,14 +28,30 @@ static int	doubleinput(char *eof)
 
 	str_tab = (char **) NULL;
 	input = readline(">");
-	while (!is_same_string(input, eof))
+	while (!is_same_string(input, eof) && input)
 	{
 		str_tab = add_str_to_str_tab(str_tab, input);
+		if (!str_tab)
+		{
+			minishell_error("execution (here-doc)", ALLOC);
+			free(input);
+			return (-1);
+		}
 		input = readline(">");
 	}
-	pipe(pipe_tab);
-	write_str_tab_to_fd(str_tab, pipe_tab[1]);
-	close(pipe_tab[1]);
+	if (pipe(pipe_tab) == -1)
+	{
+		if (errno == EMFILE)
+			minishell_error("execution (here-doc)", MAXFDPROC);
+		else if (errno == ENFILE)
+			minishell_error("execution (here-doc)", MAXFDSYS);
+		pipe_tab[0] = -1;
+	}
+	else
+	{
+		write_str_tab_to_fd(str_tab, pipe_tab[1]);
+		close(pipe_tab[1]);
+	}
 	free_str_tab(str_tab);
 	free(input);
 	return (pipe_tab[0]);

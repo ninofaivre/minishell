@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/30 23:38:38 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/31 14:47:11 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,25 +23,36 @@
 int	check_exec(t_var *var, char **path)
 {
 	int		i;
+	int		status;
 	char	*executable;
 
 	i = 0;
+	status = 127;
 	while (path[i])
 	{
 		executable = concat(path[i], var->list->argv[0]);
 		if (!executable)
+		{
+			minishell_error("execution (concat)", ALLOC);
 			return (-1);
+		}
 		if (access(executable, X_OK) != -1)
 		{
 			execve(executable, var->list->argv, *(var->env));
 			return (EXIT_FAILURE);
 		}
+		else if (!access(executable, F_OK))
+			status = 126;
 		free(executable);
+		if (status == 126)
+			break ;
 		i++;
 	}
-	if (!path[i])
+	if (status == 127)
 		minishell_error(var->list->argv[0], CMD);
-	return (127);
+	else if (status == 126)
+		minishell_error(var->list->argv[0], INACCESSIBLE);
+	return (status);
 }
 
 int	check_file(t_var *var)
@@ -53,7 +64,7 @@ int	check_file(t_var *var)
 	}
 	else
 		minishell_error(var->list->argv[0], INACCESSIBLE);
-	return (127);
+	return (126 + !access(var->list->argv[0], F_OK));
 }
 
 int	check_builtin(t_var *var)
@@ -92,7 +103,10 @@ int	function(t_var *var, int *read_pipe, int *write_pipe)
 	if (!path)
 		path = ft_split(env_var_value(*(var->env), "$PATH"), ':');
 	if (!path)
+	{
+		minishell_error("execution (split_path)", ALLOC);
 		return (-1);
+	}
 	if (check_builtin(var) == 0)
 		return (builtin(var, read_pipe));
 	else

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 20:42:00 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 12:04:21 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/31 14:48:32 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,20 @@ void	print_str_tab(char **str_tab)
 		printf("%s\n", *str_tab++);
 }
 
-void	free_str_tab(char **str_tab)
+char	**free_str_tab(char **str_tab)
 {
 	int	i;
 
 	i = 0;
 	if (!str_tab)
-		return ;
+		return ((char **) NULL);
 	while (str_tab[i])
 	{
 		free(str_tab[i]);
 		i++;
 	}
 	free(str_tab);
+	return ((char **) NULL);
 }
 
 int	str_tab_len(char **str_tab)

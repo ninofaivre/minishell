@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 11:12:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 17:31:29 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/31 14:46:05 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static char	**search_in_env(char *name, char **env)
 	return ((char **) NULL);
 }
 
-static void	unset_one_var(char *name, char ***env)
+static bool	unset_one_var(char *name, char ***env)
 {
 	int		i;
 	int		j;
@@ -62,10 +62,14 @@ static void	unset_one_var(char *name, char ***env)
 
 	i = 0;
 	j = 0;
-	new_env = (char **) NULL;
 	if (!search_in_env(name, *env))
-		return ;
+		return (false);
 	new_env = (char **)malloc(sizeof(char *) * str_tab_len(*env));
+	if (!new_env)
+	{
+		minishell_error("unset", ALLOC);
+		return (true);
+	}
 	while ((*env)[j])
 	{
 		if (comp_env_var_name((*env)[j], name))
@@ -77,14 +81,36 @@ static void	unset_one_var(char *name, char ***env)
 	new_env[i] = (char *) NULL;
 	free(*env);
 	*env = new_env;
+	return (false);
 }
 
 int	builtin_unset(char **argv, char ***env)
 {
 	argv++;
 	while (*argv)
-		unset_one_var(*argv++, env);
+		if (unset_one_var(*argv++, env))
+			return (-1);
 	return (0);
+}
+
+bool	add_one_var(char ***env, char *str)
+{
+	int		i;
+	char	**new_env;
+
+	i = 0;
+	new_env = (char **)malloc(sizeof(char *) * (str_tab_len(*env) + 2));
+	if (!new_env)
+		return (true);
+	while (*env[i])
+	{
+		new_env[i] = *env[i];
+		i++;
+	}
+	new_env[i] = str;
+	new_env[i + 1] = (char *) NULL;
+	*env = new_env; 
+	return (false);
 }
 
 int	builtin_export(char **argv, char ***env)
@@ -102,15 +128,26 @@ int	builtin_export(char **argv, char ***env)
 			argv++;
 			continue ;
 		}
-		if ((ptr_env_var = search_in_env(*argv, *env)))
+		ptr_env_var = search_in_env(*argv, *env);
+		if (ptr_env_var)
 		{
+			str = str_dupe(*argv);
+			if (!str)
+			{
+				minishell_error("export", ALLOC);
+				return (-1);
+			}
 			free(*ptr_env_var);
-			*ptr_env_var = str_dupe(*argv);
+			*ptr_env_var = str;
 		}
 		else
 		{
 			str = str_dupe(*argv);
-			*env = add_str_to_str_tab(*env, str);
+			if (!str || add_one_var(env, str))
+			{
+				minishell_error("export", ALLOC);
+				return (-1);
+			}
 		}
 		argv++;
 	}

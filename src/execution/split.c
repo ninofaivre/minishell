@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: paboutel <paboutel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 03:11:18 by paboutel         ###   ########.fr       */
+/*   Updated: 2022/01/31 13:57:58 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,20 +42,6 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t dstsize)
 	dest[i] = '/';
 	dest[i + 1] = '\0';
 	return (src_len);
-}
-
-static char	**ft_malloc_error(char **tab)
-{
-	unsigned int	i;
-
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-	return (NULL);
 }
 
 static unsigned int	ft_get_nb_strs(char const *s, char c)
@@ -114,7 +100,7 @@ char	**ft_split(char const *s, char c)
 	nb_strs = ft_get_nb_strs(s, c);
 	tab = (char **)malloc(sizeof(char *) * (nb_strs + 1));
 	if (!(tab))
-		return (NULL);
+		return ((char **) NULL);
 	i = -1;
 	next_str = (char *)s;
 	next_str_len = 0;
@@ -123,7 +109,7 @@ char	**ft_split(char const *s, char c)
 		ft_get_next_str(&next_str, &next_str_len, c);
 		tab[i] = (char *)malloc(sizeof(char) * (next_str_len + 2));
 		if (!(tab[i]))
-			return (ft_malloc_error(tab));
+			return (free_str_tab(tab));
 		ft_strlcpy(tab[i], next_str, next_str_len + 1);
 	}
 	tab[i] = NULL;
