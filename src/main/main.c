@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/29 20:28:04 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/31 13:14:00 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ static void	print_tab_redirection(t_redirection *redirection)
 	while (redirection[i].content)
 	{
 		if (redirection[i].is_double == true)
-			printf("list->redirection[%i] : %c%c%s", i, redirection->guillemet,
-					redirection->guillemet, redirection[i].content);
+			printf("list->redirection[%i] : %c%c%s", i, redirection[i].guillemet,
+					redirection[i].guillemet, redirection[i].content);
 		else
-			printf("list->redirection[%i] : %c%s\n", i, redirection->guillemet,
+			printf("list->redirection[%i] : %c%s\n", i, redirection[i].guillemet,
 				redirection[i].content);
 		i++;
 	}
