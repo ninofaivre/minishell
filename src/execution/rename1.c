@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/31 21:19:27 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 15:51:23 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,12 @@ int	builtin(t_var *var, int *read_pipe)
 		return (builtin_unset(var->list->argv, var->env));
 	else if (is_same_string(var->list->argv[0], "cd"))
 		return (builtin_cd(var->list->argv, var->env));
-	else if (is_same_string(var->ptr_start_list->argv[0], "exit"))
+	else if (is_same_string(var->list->argv[0], "exit"))
 	{
 		if (!var->ptr_start_list->next)
 			return (builtin_exit(*(var->env), var->ptr_start_list, false));
 		else
-			return (builtin_exit(*(var->env), var->ptr_start_list, true));
+			return (builtin_exit(*(var->env), var->list, true));
 	}
 	else if (is_same_string(var->list->argv[0], "echo"))
 		return (builtin_echo(var->list->argv));

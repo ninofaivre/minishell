@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 17:53:47 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/31 21:16:38 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 15:51:09 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,16 @@
 static int	exit_atoi(char *str)
 {
 	long long int	nbr;
+	bool			is_negative;
 
 	nbr = 0;
+	if (*str == '-')
+	{
+		str++;
+		is_negative = true;
+	}
+	else
+		is_negative = false;
 	while (*str)
 	{
 		if (!is_charset(*str, "0123456789"))
@@ -33,6 +41,8 @@ static int	exit_atoi(char *str)
 		nbr = (nbr * 10) + (*str - '0');
 		str++;
 	}
+	if (is_negative)
+		return (256 - (nbr % 256));
 	return (nbr % 256);
 }
 
@@ -60,17 +70,15 @@ int	builtin_exit(char **env, t_list *list, bool child)
 		minishell_error("exit", MAXARG);
 		at_exit = 1;
 	}
-	else if (n_arg == 1)
-		at_exit = EXIT_SUCCESS;
 	else if (n_arg == 2)
 	{
 		at_exit = exit_atoi(list->argv[1]);
-		if (at_exit < 0)
-			at_exit = 2;
 		if (at_exit == -1)
 			minishell_error("exit", INTTOOHIGH);
 		else if (at_exit == -2)
 			minishell_error("exit", CHARNOTINT);
+		if (at_exit < 0)
+			at_exit = 2;
 	}
 	if (child == false)
 		exit_clean(env, list);
