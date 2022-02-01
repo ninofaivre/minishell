@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 17:53:47 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/30 19:08:28 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/31 21:16:38 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	exit_clean(char **env, t_list *list)
 	rl_clear_history();
 }
 
-int	builtin_exit(bool error, char **env, t_list *list, bool child)
+int	builtin_exit(char **env, t_list *list, bool child)
 {
 	int	n_arg;
 	int	at_exit;
@@ -54,10 +54,7 @@ int	builtin_exit(bool error, char **env, t_list *list, bool child)
 		n_arg = str_tab_len(list->argv);
 	else
 		n_arg = 0;
-	if (error == true)
-		at_exit = EXIT_FAILURE;
-	else
-		at_exit = EXIT_SUCCESS;
+	at_exit = EXIT_SUCCESS;
 	if (n_arg > 2)
 	{
 		minishell_error("exit", MAXARG);
@@ -77,7 +74,7 @@ int	builtin_exit(bool error, char **env, t_list *list, bool child)
 	}
 	if (child == false)
 		exit_clean(env, list);
-	if ((child == true || n_arg > 2) && error == false)
+	if (child == true || n_arg > 2)
 		return (at_exit);
 	else
 		exit(at_exit);

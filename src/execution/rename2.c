@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/31 14:47:11 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/31 20:59:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	check_exec(t_var *var, char **path)
 			execve(executable, var->list->argv, *(var->env));
 			return (EXIT_FAILURE);
 		}
-		else if (!access(executable, F_OK))
+		else if (access(executable, F_OK) == 0)
 			status = 126;
 		free(executable);
 		if (status == 126)
@@ -64,7 +64,7 @@ int	check_file(t_var *var)
 	}
 	else
 		minishell_error(var->list->argv[0], INACCESSIBLE);
-	return (126 + !access(var->list->argv[0], F_OK));
+	return (126 + (access(var->list->argv[0], F_OK) == -1));
 }
 
 int	check_builtin(t_var *var)

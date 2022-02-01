@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/31 13:14:00 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/01/31 21:19:29 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,20 +111,28 @@ static void	parsing(char ***env, char *input, int *status)
 	free_list(var.list);
 }
 
-static void	malloc_env(char ***env)
+static bool	malloc_env(char ***env)
 {
 	int		i;
 	char	**new_env;
 
 	i = 0;
 	new_env = (char **)malloc(sizeof(char *) * (str_tab_len(*env) + 1));
+	if (!new_env)
+		return (true);
 	while ((*env)[i])
 	{
 		new_env[i] = str_dupe((*env)[i]);
+		if (!new_env[i])
+		{
+			free_str_tab(new_env);
+			return (true);
+		}
 		i++;
 	}
 	new_env[i] = (char *) NULL;
 	*env = new_env;
+	return (false);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -137,14 +145,15 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	input = (char *) NULL;
 	status = 0;
-	malloc_env(&env);
+	if (malloc_env(&env))
+		exit(EXIT_FAILURE);
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
 	while (true)
 	{
 		input = readline(PROMPT);
 		if (!input)
-			builtin_exit(false, env, (t_list *) NULL, false);
+			builtin_exit(env, (t_list *) NULL, false);
 		add_history(input);
 		parsing(&env, input, &status);
 	}
