@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 16:25:38 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 19:27:11 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,12 @@
 #include <sys/wait.h>
 #include <readline/readline.h>
 
-int	check_exec(t_var *var, char **path)
+static int	exec_path(t_var *var, char **path)
 {
 	int		i;
-	int		status;
 	char	*executable;
 
 	i = 0;
-	status = 127;
 	while (path[i])
 	{
 		executable = concat(path[i], var->list->argv[0]);
@@ -42,12 +40,20 @@ int	check_exec(t_var *var, char **path)
 			return (EXIT_FAILURE);
 		}
 		else if (access(executable, F_OK) == 0)
-			status = 126;
-		free(executable);
-		if (status == 126)
-			break ;
+		{
+			free(executable);
+			return (126);
+		}
 		i++;
 	}
+	return (127);
+}
+
+int	check_exec(t_var *var, char **path)
+{
+	int		status;
+
+	status = exec_path(var, path);
 	if (status == 127)
 		minishell_error((char *) NULL, var->list->argv[0], CMD);
 	else if (status == 126)
@@ -71,7 +77,8 @@ int	check_builtin(t_var *var)
 {
 	if (is_same_string(var->list->argv[0], "exit"))
 	{
-		if (is_same_string(var->ptr_start_list->argv[0], "exit") && !var->ptr_start_list->next)
+		if (is_same_string(var->ptr_start_list->argv[0], "exit")
+			&& !var->ptr_start_list->next)
 			return (0);
 		else
 			return (1);

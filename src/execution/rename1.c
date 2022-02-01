@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 15:51:23 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 19:18:14 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@
 #include <sys/wait.h>
 #include <readline/readline.h>
 
-static bool	pid_zero(t_redirection *redirection, int *read_pipe, int *write_pipe)
+static bool	pid_zero(t_redirection *redirection,
+int *read_pipe, int *write_pipe)
 {
 	if (read_pipe)
 	{
@@ -68,11 +69,7 @@ pid_t	test_fork(t_var *var, char **path, int *read_pipe, int *write_pipe)
 	}
 	else
 	{
-		if (read_pipe)
-		{
-			close(read_pipe[0]);
-			close(read_pipe[1]);
-		}
+		close_pipe(read_pipe);
 		return (pid);
 	}
 }
@@ -93,9 +90,9 @@ int	builtin(t_var *var, int *read_pipe)
 	else if (is_same_string(var->list->argv[0], "exit"))
 	{
 		if (!var->ptr_start_list->next)
-			return (builtin_exit(*(var->env), var->ptr_start_list, false));
+			exit(builtin_exit(*(var->env), var->ptr_start_list));
 		else
-			return (builtin_exit(*(var->env), var->list, true));
+			return (builtin_exit(*(var->env), var->list));
 	}
 	else if (is_same_string(var->list->argv[0], "echo"))
 		return (builtin_echo(var->list->argv));

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/30 23:55:21 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 17:37:46 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,24 +65,21 @@ t_redirection	*get_redirection(t_var *var, char *input)
 			* (count_redirection(input) + 1));
 	if (!redirection)
 		return ((t_redirection *) NULL);
-	redirection[0].content = (char *) NULL;
 	while (*input && *input != '|')
 	{
 		input = skip_space(input);
 		if (is_charset(*input, "><"))
 		{
-			redirection[i].is_double = false;
-			if (is_charset(input[1], "><"))
-				redirection[i].is_double = true;
+			redirection[i].is_double = is_charset(input[1], "><");
 			redirection[i].guillemet = *input;
 			input = skip_space(&input[1 + (is_charset(input[1], "><"))]);
 			redirection[i++].content = get_one_word(var, input);
-			redirection[i].content = (char *) NULL;
 			if (!redirection[i - 1].content)
 				return (free_redirection(redirection));
 		}
 		input = skip_word(input);
 	}
+	redirection[i].content = (char *) NULL;
 	return (redirection);
 }
 

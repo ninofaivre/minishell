@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 17:53:47 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 16:27:48 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 17:55:29 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	exit_clean(char **env, t_list *list)
 	rl_clear_history();
 }
 
-int	builtin_exit(char **env, t_list *list, bool child)
+int	builtin_exit(char **env, t_list *list)
 {
 	int	n_arg;
 	int	at_exit;
@@ -80,10 +80,6 @@ int	builtin_exit(char **env, t_list *list, bool child)
 		if (at_exit < 0)
 			at_exit = 2;
 	}
-	if (child == false)
-		exit_clean(env, list);
-	if (child == true || n_arg > 2)
-		return (at_exit);
-	else
-		exit(at_exit);
+	exit_clean(env, list);
+	return (at_exit);
 }

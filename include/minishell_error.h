@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 18:42:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 16:19:07 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 17:27:04 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ int	minishell_error(char *call, char *arg, char *error);
 # define CREAT "unable to create the file or directory specified"
 # define CHARNOTINT "int arg needed"
 # define INTTOOHIGH "int arg is too high (see limits.h LLONG_MAX)"
-# define MAXFDPROC "too many file descriptors are open by the process (there may be an fd leak or you tryed to run too many pipes at one time)"
+# define MAXFDPROC "too many file descriptors are open by the process (there may be an fd leak or you\
+tryed to run too many pipes at one time)"
 # define MAXFDSYS "too many file descriptors are open by the system"
-# define WRONGENVVAR "env var should contain only underscore, digits and alphabetics char and not start by a digit"
+# define WRONGENVVAR "env var should contain only underscore, digits and alphabetics char and not\
+start by a digit"
 
 #endif

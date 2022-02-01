@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/30 19:47:11 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 19:17:56 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,17 @@ int		check_exec(t_var *var, char **path);
 
 int		count_list(t_var *var);
 
-char	*str_dupe(char *str);
 void	write_str_tab_to_fd(char **str_tab, int fd);
+void	close_pipe(int *pipe);
 char	**ft_split(char const *s, char c);
 pid_t	test_fork(t_var *var, char **path,
 			int *read_pipe, int *write_pipe);
 int		builtin(t_var *var, int *read_pipe);
+int		check_builtin(t_var *var);
+
 bool	take_redirection(t_redirection *redirection, int *read_pipe,
 			int *write_pipe);
-int		check_builtin(t_var *var);
+int		take_input(char *content, bool is_double, int fd_input);
+int		take_output(char *content, bool is_double, int fd_output);
 
 #endif

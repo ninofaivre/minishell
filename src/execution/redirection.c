@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 16:24:28 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 19:03:11 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,81 +20,41 @@
 #include <readline/readline.h>
 #include <errno.h>
 
-static int	doubleinput(char *eof)
+static int	one_redirection(t_redirection redirection,
+int *read_pipe, int *write_pipe, int fd)
 {
-	int		pipe_tab[2];
-	char	**str_tab;
-	char	*input;
-
-	str_tab = (char **) NULL;
-	input = readline(">");
-	while (!is_same_string(input, eof) && input)
+	if (redirection.guillemet == '<')
 	{
-		str_tab = add_str_to_str_tab(str_tab, input);
-		if (!str_tab)
+		if (read_pipe)
 		{
-			minishell_error("execution (here-doc)", (char *) NULL, ALLOC);
-			free(input);
-			return (-1);
+			close(read_pipe[0]);
+			read_pipe = (int *) NULL;
 		}
-		input = readline(">");
+		return (take_input(redirection.content, redirection.is_double, fd));
 	}
-	if (pipe(pipe_tab) == -1)
+	else if (redirection.guillemet == '>')
 	{
-		if (errno == EMFILE)
-			minishell_error("execution (here-doc)", (char *) NULL, MAXFDPROC);
-		else if (errno == ENFILE)
-			minishell_error("execution (here-doc)", (char *) NULL, MAXFDSYS);
-		pipe_tab[0] = -1;
+		if (write_pipe)
+		{
+			close(write_pipe[1]);
+			write_pipe = (int *) NULL;
+		}
+		return (take_output(redirection.content, redirection.is_double, fd));
 	}
-	else
-	{
-		write_str_tab_to_fd(str_tab, pipe_tab[1]);
-		close(pipe_tab[1]);
-	}
-	free_str_tab(str_tab);
-	free(input);
-	return (pipe_tab[0]);
+	return (-1);
 }
 
-static int	take_input(char *content, bool is_double, int fd_input)
+static bool	take_redirection_error(int fd_input, int fd_output)
 {
-	int	fd;
-
-	fd = 0;
-	if (fd_input)
-		close(fd_input);
-	if (is_double == true)
-		fd = doubleinput(content);
-	else if (access(content, R_OK) == -1)
-	{
-		minishell_error((char *) NULL, content, INACCESSIBLE);
-		return (-1);
-	}
-	else
-		fd = open(content, O_RDONLY);
-	if (fd == -1)
-		minishell_error((char *) NULL, content, INACCESSIBLE);
-	return (fd);
-}
-
-static int	take_output(char *content, bool is_double, int fd_output)
-{
-	int	fd;
-
-	fd = 0;
-	if (fd_output)
+	if (fd_input == -1)
 		close(fd_output);
-	if (is_double == true)
-		fd = open(content, O_APPEND | O_RDWR | O_CREAT, 0644);
-	else
-		fd = open(content, O_TRUNC | O_RDWR | O_CREAT, 0644);
-	if (fd == -1)
-		minishell_error((char *) NULL, content, CREAT);
-	return (fd);
+	else if (fd_output == -1)
+		close(fd_input);
+	return ((bool)(fd_input == -1 || fd_output == -1));
 }
 
-bool	take_redirection(t_redirection *redirection, int *read_pipe, int *write_pipe)
+bool	take_redirection(t_redirection *redirection,
+int *read_pipe, int *write_pipe)
 {
 	int	fd_input;
 	int	fd_output;
@@ -106,27 +66,13 @@ bool	take_redirection(t_redirection *redirection, int *read_pipe, int *write_pip
 	while (redirection[i].content)
 	{
 		if (redirection[i].guillemet == '<')
-		{
-			if (read_pipe)
-			{
-				close(read_pipe[0]);
-				read_pipe = (int *) NULL;
-			}
-			fd_input = take_input(redirection[i].content, redirection[i].is_double, fd_input);
-			if (fd_input == -1)
-				return (true);
-		}
-		else if (redirection[i].guillemet == '>')
-		{
-			if (write_pipe)
-			{
-				close(write_pipe[1]);
-				write_pipe = (int *) NULL;
-			}
-			fd_output = take_output(redirection[i].content, redirection[i].is_double, fd_output);
-			if (fd_output == -1)
-				return (true);
-		}
+			fd_input = one_redirection(redirection[i], read_pipe,
+					write_pipe, fd_input);
+		if (redirection[i].guillemet == '>')
+			fd_output = one_redirection(redirection[i], read_pipe,
+					write_pipe, fd_output);
+		if (take_redirection_error(fd_input, fd_output))
+			return (true);
 		i++;
 	}
 	if (fd_input)

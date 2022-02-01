@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 16:23:32 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 19:18:42 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,7 @@ void	free_pipes(int **pipes)
 		return ;
 	while (pipes[i])
 	{
-		close(pipes[i][0]);
-		close(pipes[i][1]);
+		close_pipe(pipes[i]);
 		free(pipes[i++]);
 	}
 	free(pipes);

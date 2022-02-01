@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 18:51:41 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 19:17:18 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,15 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <readline/readline.h>
+
+void	close_pipe(int *pipe)
+{
+	if (pipe)
+	{
+		close(pipe[0]);
+		close(pipe[1]);
+	}
+}
 
 void	write_str_tab_to_fd(char **str_tab, int fd)
 {
@@ -31,7 +40,7 @@ void	write_str_tab_to_fd(char **str_tab, int fd)
 
 int	count_list(t_var *var)
 {
-	int n_list;
+	int	n_list;
 
 	n_list = 0;
 	while (var->list)
