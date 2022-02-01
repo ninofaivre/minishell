@@ -6,14 +6,14 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 18:42:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/31 13:51:36 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 16:19:07 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_ERROR_H
 # define MINISHELL_ERROR_H
 
-int	minishell_error(char *call, char *error);
+int	minishell_error(char *call, char *arg, char *error);
 
 # define VOIDPIPE "syntax error near symbol \"|\""
 # define VOIDINPUT "syntax error near symbol \"<\""
@@ -28,5 +28,6 @@ int	minishell_error(char *call, char *error);
 # define INTTOOHIGH "int arg is too high (see limits.h LLONG_MAX)"
 # define MAXFDPROC "too many file descriptors are open by the process (there may be an fd leak or you tryed to run too many pipes at one time)"
 # define MAXFDSYS "too many file descriptors are open by the system"
+# define WRONGENVVAR "env var should contain only underscore, digits and alphabetics char and not start by a digit"
 
 #endif

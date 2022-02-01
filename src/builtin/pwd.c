@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 10:36:05 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 18:53:34 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 16:22:58 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	builtin_pwd(void)
 	pwd = get_pwd();
 	if (!pwd)
 	{
-		minishell_error("pwd", ALLOC);
+		minishell_error("pwd", (char *) NULL, ALLOC);
 		return (-1);
 	}
 	printf("%s\n", pwd);

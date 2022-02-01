@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 15:56:04 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 16:23:32 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	**init_pipes(int n_list)
 	pipes = (int **)malloc(sizeof(int *) * n_list);
 	if (!pipes)
 	{
-		minishell_error("execution (pipes)", ALLOC);
+		minishell_error("execution (pipes)", (char *) NULL, ALLOC);
 		return ((int **) NULL);
 	}
 	pipes[--n_list] = (int *) NULL;
@@ -36,16 +36,16 @@ static int	**init_pipes(int n_list)
 		pipes[n_list] = (int *)malloc(sizeof(int) * 2);
 		if (!pipes[n_list])
 		{
-			minishell_error("execution (pipes)", ALLOC);
+			minishell_error("execution (pipes)", (char *) NULL, ALLOC);
 			free_pipes(pipes);
 			return ((int **) NULL);
 		}
 		if (pipe(pipes[n_list]) == -1)
 		{
 			if (errno == EMFILE)
-				minishell_error("execution (pipes)", MAXFDPROC);
+				minishell_error("execution (pipes)", (char *) NULL, MAXFDPROC);
 			else if (errno == ENFILE)
-				minishell_error("execution (pipes)", MAXFDSYS);
+				minishell_error("execution (pipes)", (char *) NULL, MAXFDSYS);
 			free_pipes(pipes);
 			return ((int **) NULL);
 		}

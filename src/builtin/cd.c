@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:19:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 17:26:15 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 16:20:43 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char *export_argv_1, char *pwd)
 
 	if (!export_argv || !export_argv_0 || !export_argv_1 || !pwd)
 	{
-		minishell_error("cd (update_pwd)", ALLOC);
+		minishell_error("cd (update_pwd)", (char *) NULL, ALLOC);
 		to_return = -1;
 	}
 	else
@@ -71,15 +71,15 @@ int	builtin_cd(char **argv, char ***env)
 {
 	if (str_tab_len(argv) > 2)
 	{
-		minishell_error("cd", MAXARG);
+		minishell_error("cd", (char *) NULL, MAXARG);
 		return (1);
 	}
 	if (chdir(argv[1]) == -1)
 	{
 		if (errno == ENOTDIR)
-			minishell_error("cd", NOTDIR);
+			minishell_error("cd", argv[1], NOTDIR);
 		else
-			minishell_error("cd", INACCESSIBLE);
+			minishell_error("cd", argv[1], INACCESSIBLE);
 		return (1);
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/31 13:50:35 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 15:54:14 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 16:25:52 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	add_int_word(char *word, int status)
 	str_status = itoa(status);
 	if (!str_status)
 	{
-		minishell_error("parsing ($?)", ALLOC);
+		minishell_error("parsing ($?)", (char *) NULL, ALLOC);
 		return (0);
 	}
 	len = add_str_word(word, str_status);

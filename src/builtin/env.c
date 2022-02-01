@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 11:12:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/31 14:46:05 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 17:08:08 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	builtin_env(char **argv, char **env)
 {
 	if (str_tab_len(argv) != 1)
 	{
-		minishell_error("env", MAXARG);
+		minishell_error("env", (char *) NULL, MAXARG);
 		return (1);
 	}
 	print_str_tab(env);
@@ -67,7 +67,7 @@ static bool	unset_one_var(char *name, char ***env)
 	new_env = (char **)malloc(sizeof(char *) * str_tab_len(*env));
 	if (!new_env)
 	{
-		minishell_error("unset", ALLOC);
+		minishell_error("unset", (char *) NULL, ALLOC);
 		return (true);
 	}
 	while ((*env)[j])
@@ -102,14 +102,35 @@ bool	add_one_var(char ***env, char *str)
 	new_env = (char **)malloc(sizeof(char *) * (str_tab_len(*env) + 2));
 	if (!new_env)
 		return (true);
-	while (*env[i])
+	while ((*env)[i])
 	{
-		new_env[i] = *env[i];
+		new_env[i] = (*env)[i];
 		i++;
 	}
 	new_env[i] = str;
 	new_env[i + 1] = (char *) NULL;
+	if (*env)
+		free(*env);
 	*env = new_env; 
+	return (false);
+}
+
+static bool	export_parse(char *str)
+{
+	if (!str || is_charset(*str, "0123456789"))
+	{
+		minishell_error("export", str, WRONGENVVAR);
+		return (true);
+	}
+	while (*str && *str != '=')
+	{
+		if (!is_env_var_name_allowed(*str))
+		{
+			minishell_error("export", str, WRONGENVVAR);
+			return (true);
+		}
+		str++;
+	}
 	return (false);
 }
 
@@ -117,12 +138,22 @@ int	builtin_export(char **argv, char ***env)
 {
 	char	*str;
 	char	**ptr_env_var;
+	int		exit_status;
 
 	str = (char *) NULL;
-	ptr_env_var = (char **) NULL;
+	exit_status = EXIT_SUCCESS;
 	argv++;
 	while (*argv)
 	{
+		ptr_env_var = (char **) NULL;
+		if (export_parse(*argv))
+		{
+			exit_status = EXIT_FAILURE;
+			argv++;
+			continue ;
+		}
+		else
+			exit_status = EXIT_SUCCESS;
 		if (!(count_char_in_str(*argv, '=')))
 		{
 			argv++;
@@ -134,7 +165,7 @@ int	builtin_export(char **argv, char ***env)
 			str = str_dupe(*argv);
 			if (!str)
 			{
-				minishell_error("export", ALLOC);
+				minishell_error("export", (char *) NULL, ALLOC);
 				return (-1);
 			}
 			free(*ptr_env_var);
@@ -145,11 +176,11 @@ int	builtin_export(char **argv, char ***env)
 			str = str_dupe(*argv);
 			if (!str || add_one_var(env, str))
 			{
-				minishell_error("export", ALLOC);
+				minishell_error("export", (char *) NULL, ALLOC);
 				return (-1);
 			}
 		}
 		argv++;
 	}
-	return (0);
+	return (exit_status);
 }

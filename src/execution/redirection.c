@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/31 14:46:48 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 16:24:28 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	doubleinput(char *eof)
 		str_tab = add_str_to_str_tab(str_tab, input);
 		if (!str_tab)
 		{
-			minishell_error("execution (here-doc)", ALLOC);
+			minishell_error("execution (here-doc)", (char *) NULL, ALLOC);
 			free(input);
 			return (-1);
 		}
@@ -42,9 +42,9 @@ static int	doubleinput(char *eof)
 	if (pipe(pipe_tab) == -1)
 	{
 		if (errno == EMFILE)
-			minishell_error("execution (here-doc)", MAXFDPROC);
+			minishell_error("execution (here-doc)", (char *) NULL, MAXFDPROC);
 		else if (errno == ENFILE)
-			minishell_error("execution (here-doc)", MAXFDSYS);
+			minishell_error("execution (here-doc)", (char *) NULL, MAXFDSYS);
 		pipe_tab[0] = -1;
 	}
 	else
@@ -68,13 +68,13 @@ static int	take_input(char *content, bool is_double, int fd_input)
 		fd = doubleinput(content);
 	else if (access(content, R_OK) == -1)
 	{
-		minishell_error(content, INACCESSIBLE);
+		minishell_error((char *) NULL, content, INACCESSIBLE);
 		return (-1);
 	}
 	else
 		fd = open(content, O_RDONLY);
 	if (fd == -1)
-		minishell_error(content, INACCESSIBLE);
+		minishell_error((char *) NULL, content, INACCESSIBLE);
 	return (fd);
 }
 
@@ -90,7 +90,7 @@ static int	take_output(char *content, bool is_double, int fd_output)
 	else
 		fd = open(content, O_TRUNC | O_RDWR | O_CREAT, 0644);
 	if (fd == -1)
-		minishell_error(content, CREAT);
+		minishell_error((char *) NULL, content, CREAT);
 	return (fd);
 }
 

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:00:41 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/25 17:26:15 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 17:20:41 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,19 @@ char	*env_var_value(char **env, char *str)
 	return ((char *) NULL);
 }
 
-int	minishell_error(char *call, char *error)
+int	minishell_error(char *call, char *arg, char *error)
 {
 	write(2, "minishell : ", 12);
 	if (call)
 	{
 		write(2, call, str_len(call));
 		write(2, " : ", 3);
+	}
+	if (arg)
+	{
+		write(2, "« ", str_len("« "));
+		write(2, arg, str_len(arg));
+		write(2, " » : ", str_len(" » : "));
 	}
 	write(2, error, str_len(error));
 	write(2, "\n", 1);

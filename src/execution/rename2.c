@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 15:51:18 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/01 16:25:38 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	check_exec(t_var *var, char **path)
 		executable = concat(path[i], var->list->argv[0]);
 		if (!executable)
 		{
-			minishell_error("execution (concat)", ALLOC);
+			minishell_error("execution (concat)", (char *) NULL, ALLOC);
 			return (-1);
 		}
 		if (access(executable, X_OK) != -1)
@@ -49,9 +49,9 @@ int	check_exec(t_var *var, char **path)
 		i++;
 	}
 	if (status == 127)
-		minishell_error(var->list->argv[0], CMD);
+		minishell_error((char *) NULL, var->list->argv[0], CMD);
 	else if (status == 126)
-		minishell_error(var->list->argv[0], INACCESSIBLE);
+		minishell_error((char *) NULL, var->list->argv[0], INACCESSIBLE);
 	return (status);
 }
 
@@ -63,7 +63,7 @@ int	check_file(t_var *var)
 		return (EXIT_FAILURE);
 	}
 	else
-		minishell_error(var->list->argv[0], INACCESSIBLE);
+		minishell_error((char *) NULL, var->list->argv[0], INACCESSIBLE);
 	return (126 + (access(var->list->argv[0], F_OK) == -1));
 }
 
@@ -104,7 +104,7 @@ int	function(t_var *var, int *read_pipe, int *write_pipe)
 		path = ft_split(env_var_value(*(var->env), "$PATH"), ':');
 	if (!path)
 	{
-		minishell_error("execution (split_path)", ALLOC);
+		minishell_error("execution (split_path)", (char *) NULL, ALLOC);
 		return (-1);
 	}
 	if (check_builtin(var) == 0)
