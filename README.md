@@ -1,2 +1,2 @@
 # minishell
-![Diagram](https://github.com/ninofaivre/minishell/blob/master/minishell.pdf)
+![Diagram](https://github.com/ninofaivre/minishell/blob/master/minishell.jpg)
