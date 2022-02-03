@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:26:43 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 19:19:32 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/03 21:33:46 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,7 @@ static int	take_doubleinput(char *eof)
 
 	if (pipe(pipe_tab) == -1)
 	{
-		if (errno == EMFILE)
-			minishell_error("execution (here-doc)", (char *) NULL, MAXFDPROC);
-		else if (errno == ENFILE)
-			minishell_error("execution (here-doc)", (char *) NULL, MAXFDSYS);
+		pipe_error("execution (here-doc)", (char *) NULL);
 		return (-1);
 	}
 	doubleinput = get_doubleinput(eof);

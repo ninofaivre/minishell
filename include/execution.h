@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 19:17:56 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/03 21:42:37 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,7 @@ bool	take_redirection(t_redirection *redirection, int *read_pipe,
 			int *write_pipe);
 int		take_input(char *content, bool is_double, int fd_input);
 int		take_output(char *content, bool is_double, int fd_output);
+
+void	pipe_error(char *call, char *arg);
 
 #endif

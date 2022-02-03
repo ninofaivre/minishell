@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 19:17:18 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/03 21:32:21 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,15 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <readline/readline.h>
+#include <errno.h>
+
+void	pipe_error(char *call, char *arg)
+{
+	if (errno == EMFILE)
+		minishell_error(call, arg, MAXFDPROC);
+	else if (errno == ENFILE)
+		minishell_error(call, arg, MAXFDSYS);
+}
 
 void	close_pipe(int *pipe)
 {
