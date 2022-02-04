@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/31 14:37:41 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/04 18:54:53 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ char	*itoa(int nbr)
 	if (!str)
 		return ((char *) NULL);
 	if (nbr < 0)
+	{
+		nbr = -nbr;
 		str[0] = '-';
+	}
 	str[i--] = '\0';
 	while (nbr / 10)
 	{
