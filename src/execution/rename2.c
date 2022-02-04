@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 19:27:11 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/04 19:17:01 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ static int	exec_path(t_var *var, char **path)
 			free(executable);
 			return (126);
 		}
+		free(executable);
 		i++;
 	}
 	return (127);

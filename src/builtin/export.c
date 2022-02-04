@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 17:46:44 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 18:17:32 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/04 19:22:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,14 +92,9 @@ int	builtin_export(char **argv, char ***env)
 	argv++;
 	while (*argv)
 	{
-		if (export_parse(*argv) || !(count_char_in_str(*argv, '=')))
-		{
-			if (export_parse(*argv))
+		if (export_parse(*argv))
 				exit_status = EXIT_FAILURE;
-			argv++;
-			continue ;
-		}
-		if (export_one_var(*argv, env))
+		else if (count_char_in_str(*argv, '=') && export_one_var(*argv, env))
 			return (EXIT_FAILURE);
 		argv++;
 	}
