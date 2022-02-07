@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/07 13:57:34 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/07 15:49:27 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,25 +72,24 @@ int	check_file(t_var *var)
 	return (126 + (access(var->list->argv[0], F_OK) == -1));
 }
 
-int	check_builtin(t_var *var)
+bool	is_builtin(char *argv_0)
 {
-	if (is_same_string(var->list->argv[0], "exit"))
-	{
-		if (is_same_string(var->ptr_start_list->argv[0], "exit")
-			&& !var->ptr_start_list->next)
-			return (0);
-		else
-			return (1);
-	}
-	if (is_same_string(var->list->argv[0], "cd")
-		|| is_same_string(var->list->argv[0], "export")
-		|| is_same_string(var->list->argv[0], "unset"))
-		return (0);
-	else if (is_same_string(var->list->argv[0], "echo")
-		|| is_same_string(var->list->argv[0], "pwd")
-		|| is_same_string(var->list->argv[0], "env"))
-		return (1);
-	return (-1);
+	if (is_same_string(argv_0, "exit") || is_same_string(argv_0, "echo")
+		|| is_same_string(argv_0, "env") || is_same_string(argv_0, "pwd")
+		|| is_same_string(argv_0, "export") || is_same_string(argv_0, "unset")
+		|| is_same_string(argv_0, "cd"))
+		return (true);
+	else
+		return (false);
+}
+
+bool	need_a_child(char *argv_0)
+{
+	if (is_same_string(argv_0, "echo") || is_same_string(argv_0, "pwd")
+		|| is_same_string(argv_0, "env"))
+		return (true);
+	else
+		return (false);
 }
 
 int	function(t_var *var, int *read_pipe, int *write_pipe)
@@ -113,8 +112,8 @@ int	function(t_var *var, int *read_pipe, int *write_pipe)
 		minishell_error("execution (split_path)", (char *) NULL, ALLOC);
 		return (-1);
 	}
-	if (check_builtin(var) == 0)
-		return (builtin(var, read_pipe));
+	if (is_builtin(var->list->argv[0]) && !var->ptr_start_list->next && !need_a_child(var->list->argv[0]))
+		return (builtin_main(var));
 	else
 		return (test_fork(var, path, read_pipe, write_pipe));
 }

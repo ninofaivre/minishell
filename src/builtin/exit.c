@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 17:53:47 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 17:55:29 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/07 15:36:29 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	exit_clean(char **env, t_list *list)
 	rl_clear_history();
 }
 
-int	builtin_exit(char **env, t_list *list)
+int	builtin_exit(char **env, t_list *list, int status, bool is_child)
 {
 	int	n_arg;
 	int	at_exit;
@@ -64,11 +64,11 @@ int	builtin_exit(char **env, t_list *list)
 		n_arg = str_tab_len(list->argv);
 	else
 		n_arg = 0;
-	at_exit = EXIT_SUCCESS;
+	at_exit = status;
 	if (n_arg > 2)
 	{
 		minishell_error("exit", (char *) NULL, MAXARG);
-		at_exit = 1;
+		return (1);
 	}
 	else if (n_arg == 2)
 	{
@@ -78,8 +78,13 @@ int	builtin_exit(char **env, t_list *list)
 		else if (at_exit == -2)
 			minishell_error("exit", list->argv[1], CHARNOTINT);
 		if (at_exit < 0)
-			at_exit = 2;
+			return (2);
 	}
-	exit_clean(env, list);
-	return (at_exit);
+	if (is_child == false)
+	{
+		exit_clean(env, list);
+		exit (at_exit);
+	}
+	else
+		return (at_exit);
 }

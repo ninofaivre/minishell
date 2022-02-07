@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 19:03:11 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/07 16:51:53 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,15 @@ int *read_pipe, int *write_pipe, int fd)
 
 static bool	take_redirection_error(int fd_input, int fd_output)
 {
-	if (fd_input == -1)
+	if (fd_input == -1 && fd_output)
 		close(fd_output);
-	else if (fd_output == -1)
+	else if (fd_output == -1 && fd_input)
 		close(fd_input);
 	return ((bool)(fd_input == -1 || fd_output == -1));
 }
 
 bool	take_redirection(t_redirection *redirection,
-int *read_pipe, int *write_pipe)
+int *read_pipe, int *write_pipe, bool is_child)
 {
 	int	fd_input;
 	int	fd_output;
@@ -75,9 +75,23 @@ int *read_pipe, int *write_pipe)
 			return (true);
 		i++;
 	}
-	if (fd_input)
+	if (fd_input && is_child == true)
 		dup2(fd_input, 0);
-	if (fd_output)
+	else if (is_child == true)
+	{
+		if (read_pipe)
+			dup2(read_pipe[0], 0);
+	}
+	else if (fd_input)
+		close(fd_input);
+	if (fd_output && is_child == true)
 		dup2(fd_output, 1);
+	else if (is_child == true)
+	{
+		if (write_pipe)
+			dup2(write_pipe[1], 1);
+	}
+	else if (fd_output)
+		close(fd_output);
 	return (false);
 }

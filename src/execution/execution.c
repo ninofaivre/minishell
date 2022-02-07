@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/07 13:49:57 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/07 17:03:56 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,25 +50,17 @@ static int	wait_childs(int pid, t_var *var, int n_cmd)
 {
 	int		status;
 	int		to_return;
-	bool	is_last_cmd_a_child;
 
 	to_return = -1;
-	is_last_cmd_a_child = true;
-	while (var->list)
-	{
-		if (!var->list->next && check_builtin(var) == 0)
-			is_last_cmd_a_child = false;
-		var->list = var->list->next;
-	}
-	var->list = var->ptr_start_list;
 	while (n_cmd--)
 	{
-		if (wait(&status) == pid && is_last_cmd_a_child)
+		if (wait(&status) == pid)
 			to_return = WEXITSTATUS(status);
 	}
-	if (is_last_cmd_a_child == false)
+	if (is_builtin(var->ptr_start_list->argv[0]) && !need_a_child(var->ptr_start_list->argv[0]) && !var->ptr_start_list->next)
 		return (pid);
-	return (to_return);
+	else
+		return (to_return);
 }
 
 void	free_pipes(int **pipes)
