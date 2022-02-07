@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/04 19:10:34 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/07 13:49:57 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ int	execution(t_var *var)
 	}
 	else
 		var->pipes = (int **) NULL;
-	status = wait_childs(call_childs(var, n_list), var,  n_list);
+	status = wait_childs(call_childs(var, n_list), var, n_list);
 	function ((t_var *) NULL, (int *) NULL, (int *) NULL);
 	free_pipes(var->pipes);
 	return (status);

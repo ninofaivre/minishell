@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:19:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 16:20:43 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/07 13:48:17 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,15 @@ static int	update_pwd(char ***env)
 	return (free_update_pwd(export_argv, export_argv_0, export_argv_1, pwd));
 }
 
+static int	chdir_error(char *arg)
+{
+	if (errno == ENOTDIR)
+		minishell_error("cd", arg, NOTDIR);
+	else
+		minishell_error("cd", arg, INACCESSIBLE);
+	return (1);
+}
+
 int	builtin_cd(char **argv, char ***env)
 {
 	if (str_tab_len(argv) > 2)
@@ -74,14 +83,20 @@ int	builtin_cd(char **argv, char ***env)
 		minishell_error("cd", (char *) NULL, MAXARG);
 		return (1);
 	}
-	if (chdir(argv[1]) == -1)
+	else if (str_tab_len(argv) == 1)
 	{
-		if (errno == ENOTDIR)
-			minishell_error("cd", argv[1], NOTDIR);
+		if (env_var_value(*env, "$HOME"))
+		{
+			if (chdir(env_var_value(*env, "$HOME")) == -1)
+				return (chdir_error(env_var_value(*env, "$HOME")));
+		}
 		else
-			minishell_error("cd", argv[1], INACCESSIBLE);
-		return (1);
+		{
+			minishell_error("cd", "HOME", UNDEFINED);
+			return (1);
+		}
 	}
-	else
-		return (update_pwd(env));
+	else if (chdir(argv[1]) == -1)
+		return (chdir_error(argv[1]));
+	return (update_pwd(env));
 }
