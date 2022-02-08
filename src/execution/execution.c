@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/07 17:03:56 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/08 22:02:09 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,20 @@ static int	**init_pipes(int n_list)
 	return (pipes);
 }
 
-static int	wait_childs(int pid, t_var *var, int n_cmd)
+int	wait_childs(int pid, t_var *var)
 {
 	int		status;
 	int		to_return;
+	int		test = 0;
 
 	to_return = -1;
-	while (n_cmd--)
+	while (test != -1)
 	{
-		if (wait(&status) == pid)
+		test = wait(&status);
+		if (test == pid)
 			to_return = WEXITSTATUS(status);
 	}
-	if (is_builtin(var->ptr_start_list->argv[0]) && !need_a_child(var->ptr_start_list->argv[0]) && !var->ptr_start_list->next)
+	if (var && is_builtin(var->ptr_start_list->argv[0]) && !need_a_child(var->ptr_start_list->argv[0]) && !var->ptr_start_list->next)
 		return (pid);
 	else
 		return (to_return);
@@ -121,7 +123,7 @@ int	execution(t_var *var)
 	}
 	else
 		var->pipes = (int **) NULL;
-	status = wait_childs(call_childs(var, n_list), var, n_list);
+	status = wait_childs(call_childs(var, n_list), var);
 	function ((t_var *) NULL, (int *) NULL, (int *) NULL);
 	free_pipes(var->pipes);
 	return (status);

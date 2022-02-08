@@ -6,12 +6,34 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:57:22 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/07 19:44:07 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/08 18:25:25 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "global.h"
+#include <unistd.h>
+
+static void	ft_put_str(char *str)
+{
+	write(1, str, str_len(str));
+}
+
+static bool	is_n_parameter(char *str)
+{
+	if (*str == '-')
+		str++;
+	else
+		return (false);
+	if (!*str)
+		return (false);
+	while (*str && *str == 'n')
+		str++;
+	if (*str)
+		return (false);
+	else
+		return (true);
+}
 
 int	builtin_echo(char **argv)
 {
@@ -19,17 +41,19 @@ int	builtin_echo(char **argv)
 
 	backslash_n = true;
 	argv++;
+	if (is_n_parameter(*argv))
+	{
+			backslash_n = false;
+			argv++;
+	}
 	while (*argv)
 	{
-		if (is_same_string(*argv, "-n"))
-			backslash_n = false;
-		else
-			printf("%s", *argv);
+		ft_put_str(*argv);
 		if (argv[1])
-			printf(" ");
+			ft_put_str(" ");
 		argv++;
 	}
 	if (backslash_n == true)
-		printf("\n");
+		ft_put_str("\n");
 	return (0);
 }
