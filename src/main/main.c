@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/08 22:03:11 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/12 14:14:03 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,18 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <termios.h>
+
+int	g_status;
 
 static void	sig_handler(int sig, siginfo_t *info, void *context)
 {
 	(void)context;
 	wait_childs(-100, NULL);
+	if (sig == SIGINT)
+		g_status = 130;
+	else if (sig == SIGQUIT)
+		g_status = 131;
 	if (sig == SIGINT && info->si_pid != 0)
 	{
 		rl_replace_line("", 0);
@@ -33,25 +40,28 @@ static void	sig_handler(int sig, siginfo_t *info, void *context)
 		rl_on_new_line();
 		rl_redisplay();
 	}
-	else if (sig == SIGQUIT)
+	else if (sig == SIGQUIT && info->si_pid != 0)
 	{
 		rl_on_new_line();
 		rl_redisplay();
 	}
 }
 
-static void	parsing(char ***env, char *input, int *status)
+static void	parsing(char ***env, char *input, int *g_status)
 {
 	t_var	var;
+	int		new_status;
 
-	var.status = *status;
+	var.status = *g_status;
 	var.env = env;
 	var.list = parse(&var, input);
 	var.ptr_start_list = var.list;
 	free(input);
 	if (var.list)
 	{
-		*status = execution(&var);
+		new_status = execution(&var);
+		if (new_status != -2)
+			*g_status = new_status;
 		free_list(var.list);
 	}
 }
@@ -80,31 +90,38 @@ static bool	malloc_env(char ***env)
 	return (false);
 }
 
+static void	echo_ctrl_off(void)
+{
+	struct termios	tty;
+
+	tcgetattr(0, &tty);
+	tty.c_lflag &= ~ECHOCTL;
+	tcsetattr(0, TCSANOW, &tty);
+}
+
 int	main(int argc, char **argv, char **env)
 {
-	char	*input;
-	int		status;
+	char				*input;
+	struct sigaction	sa;
 
+	echo_ctrl_off();
 	printf("PID : %i\n", getpid());
 	(void)argc;
 	(void)argv;
 	input = (char *) NULL;
-	status = 0;
-	if (malloc_env(&env))
-		exit(EXIT_FAILURE);
-	//signal(SIGINT, test);
-	//signal(SIGINT, sig_handler);
-	//signal(SIGQUIT, sig_handler);
-	struct sigaction	sa;
 	sa.sa_flags = SA_SIGINFO;
 	sa.sa_sigaction = sig_handler;
+	g_status = 0;
+	if (malloc_env(&env))
+		exit(EXIT_FAILURE);
 	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
 	while (true)
 	{
 		input = readline(PROMPT);
 		if (!input)
-			exit(builtin_exit(env, (t_list *) NULL, status, false));
+			exit(builtin_exit(env, (t_list *) NULL, g_status, false));
 		add_history(input);
-		parsing(&env, input, &status);
+		parsing(&env, input, &g_status);
 	}
 }

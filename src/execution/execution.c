@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/08 22:02:09 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/09 22:02:37 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	wait_childs(int pid, t_var *var)
 	int		to_return;
 	int		test = 0;
 
-	to_return = -1;
+	to_return = -2;
 	while (test != -1)
 	{
 		test = wait(&status);
