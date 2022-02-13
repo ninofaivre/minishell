@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:19:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/07 13:48:17 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/13 15:37:28 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,11 @@ static int	update_pwd(char ***env)
 		export_argv[0] = export_argv_0;
 		export_argv[1] = export_argv_1;
 		export_argv[2] = (char *) NULL;
-		builtin_export(export_argv, env);
+		builtin_export(export_argv, env, NULL);
 		free(export_argv[1]);
 		export_argv[1] = concat("PWD=\0", pwd);
 		if (export_argv[1])
-			builtin_export(export_argv, env);
+			builtin_export(export_argv, env, NULL);
 	}
 	return (free_update_pwd(export_argv, export_argv_0, export_argv_1, pwd));
 }

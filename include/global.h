@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:34:51 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/31 14:48:15 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/13 12:55:48 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct s_var
 	struct s_list	*list;
 	struct s_list	*ptr_start_list;
 	char			***env;
+	char			***export_history;
 	int				**pipes;
 	int				status;
 }	t_var;

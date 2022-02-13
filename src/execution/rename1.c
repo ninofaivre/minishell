@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/09 22:11:43 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/13 17:34:05 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ int *read_pipe, int *write_pipe)
 	}
 }
 
-static void	clean_fork(char **env, t_list *ptr_start_list, int **pipes)
+static void	clean_fork(t_var *var)
 {
-	exit_clean(env, ptr_start_list);
-	free_pipes(pipes);
+	exit_clean(var);
+	free_pipes(var->pipes);
 }
 
 pid_t	test_fork(t_var *var, char **path, int *read_pipe, int *write_pipe)
@@ -64,7 +64,7 @@ pid_t	test_fork(t_var *var, char **path, int *read_pipe, int *write_pipe)
 			status = check_file(var);
 		else
 			status = check_exec(var, path);
-		clean_fork(*(var->env), var->ptr_start_list, var->pipes);
+		clean_fork(var);
 		_exit(status);
 	}
 	else
@@ -81,26 +81,26 @@ int	builtin_main(t_var *var)
 		if (take_redirection(var->list->redirection, (int *) NULL, (int *) NULL, false))
 			return (EXIT_FAILURE);
 	if (is_same_string(var->list->argv[0], "export"))
-		return (builtin_export(var->list->argv, var->env));
+		return (builtin_export(var->list->argv, var->env, var->export_history));
 	else if (is_same_string(var->list->argv[0], "unset"))
-		return (builtin_unset(var->list->argv, var->env));
+		return (builtin_unset(var->list->argv, var->env, var->export_history));
 	else if (is_same_string(var->list->argv[0], "cd"))
 		return (builtin_cd(var->list->argv, var->env));
 	else if (is_same_string(var->list->argv[0], "exit"))
-		return (builtin_exit(*(var->env), var->ptr_start_list, var->status, false));
+		return (builtin_exit(var, var->status, false));
 	return (-1);
 }
 
 int	builtin_child(t_var *var)
 {
 	if (is_same_string(var->list->argv[0], "export"))
-		return (builtin_export(var->list->argv, var->env));
+		return (builtin_export(var->list->argv, var->env, var->export_history));
 	else if (is_same_string(var->list->argv[0], "unset"))
-		return (builtin_unset(var->list->argv, var->env));
+		return (builtin_unset(var->list->argv, var->env, var->export_history));
 	else if (is_same_string(var->list->argv[0], "cd"))
 		return (builtin_cd(var->list->argv, var->env));
 	else if (is_same_string(var->list->argv[0], "exit"))
-		return (builtin_exit(*(var->env), var->ptr_start_list, var->status, true));
+		return (builtin_exit(var, var->status, true));
 	else if (is_same_string(var->list->argv[0], "echo"))
 		return (builtin_echo(var->list->argv));
 	else if (is_same_string(var->list->argv[0], "pwd"))

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 17:46:44 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/04 19:22:33 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/13 16:29:47 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,18 +84,98 @@ static bool	export_parse(char *str)
 	return (false);
 }
 
-int	builtin_export(char **argv, char ***env)
+bool	comp_export_history_var(char *str1, char *str2)
+{
+	str1 += 11;
+	while (*str2 && *str2 != '=' && *str1 && *str1 != '=' && *str1 == *str2)
+	{
+		str1++;
+		str2++;
+	}
+	if ((*str2 == '=' || !*str2) && (*str1 == '=' || !*str1))
+		return (true);
+	else
+		return (false);
+}
+
+bool	exist_in_export_history(char **export_history, char *argv)
+{
+	while (*export_history)
+	{
+		if (comp_export_history_var(*export_history, argv))
+			return (true);
+		export_history++;
+	}
+	return (false);
+}
+
+char	**update_export_history(char **export_history, char *argv)
+{
+	bool	exist;
+	char	**new_export_history;
+	char	*new_var;
+	int		i;
+
+	exist = exist_in_export_history(export_history, argv);
+	new_export_history = (char **)malloc(sizeof(char *) * (str_tab_len(export_history) + 1 + !exist));
+	new_var = NULL;
+	i = 0;
+	if (!new_export_history)
+		return (NULL);
+	while (export_history[i])
+	{
+		new_export_history[i] = NULL;
+		if (comp_export_history_var(export_history[i], argv) && count_char_in_str(argv, '='))
+		{
+			new_var = concat("declare -x ", argv);
+			if (!new_var)
+				return (free_str_tab(new_export_history));
+			free(export_history[i]);
+			new_export_history[i] = new_var;
+		}
+		else
+			new_export_history[i] = export_history[i];
+		i++;
+	}
+	if (!exist)
+		new_export_history[i++] = concat("declare -x ", argv);
+	if (!exist && !new_export_history[i - 1])
+		return (free_str_tab(new_export_history));
+	new_export_history[i] = NULL;
+	return (new_export_history);
+}
+
+int	builtin_export(char **argv, char ***env, char ***export_history)
 {
 	int		exit_status;
+	char	**new_export_history;
 
 	exit_status = EXIT_SUCCESS;
 	argv++;
+	if (!*argv)
+		print_str_tab(*export_history);
 	while (*argv)
 	{
 		if (export_parse(*argv))
 				exit_status = EXIT_FAILURE;
-		else if (count_char_in_str(*argv, '=') && export_one_var(*argv, env))
-			return (EXIT_FAILURE);
+		else
+		{
+			if (export_history)
+				new_export_history = update_export_history(*export_history, *argv);
+			if (export_history && !new_export_history)
+				return (EXIT_FAILURE);
+			else if (count_char_in_str(*argv, '=') && export_one_var(*argv, env))
+			{
+				if (export_history)
+					free_str_tab(new_export_history);
+				return (EXIT_FAILURE);
+			}
+			if (export_history)
+			{
+				free(*export_history);
+				*export_history = new_export_history;
+			}
+		}
 		argv++;
 	}
 	return (exit_status);

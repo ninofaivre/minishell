@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 17:53:47 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/07 15:36:29 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/13 17:05:38 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,22 +46,23 @@ static int	exit_atoi(char *str)
 	return (nbr % 256);
 }
 
-void	exit_clean(char **env, t_list *list)
+void	exit_clean(t_var *var)
 {
 	function ((t_var *) NULL, (int *) NULL, (int *) NULL);
-	free_str_tab(env);
-	free_list(list);
+	free_str_tab(*(var->env));
+	free_str_tab(*(var->export_history));
+	free_list(var->ptr_start_list);
 	clear_history();
 	rl_clear_history();
 }
 
-int	builtin_exit(char **env, t_list *list, int status, bool is_child)
+int	builtin_exit(t_var *var, int status, bool is_child)
 {
 	int	n_arg;
 	int	at_exit;
 
-	if (list)
-		n_arg = str_tab_len(list->argv);
+	if (var->list)
+		n_arg = str_tab_len(var->list->argv);
 	else
 		n_arg = 0;
 	at_exit = status;
@@ -72,17 +73,17 @@ int	builtin_exit(char **env, t_list *list, int status, bool is_child)
 	}
 	else if (n_arg == 2)
 	{
-		at_exit = exit_atoi(list->argv[1]);
+		at_exit = exit_atoi(var->list->argv[1]);
 		if (at_exit == -1)
-			minishell_error("exit", list->argv[1], INTTOOHIGH);
+			minishell_error("exit", var->list->argv[1], INTTOOHIGH);
 		else if (at_exit == -2)
-			minishell_error("exit", list->argv[1], CHARNOTINT);
+			minishell_error("exit", var->list->argv[1], CHARNOTINT);
 		if (at_exit < 0)
 			return (2);
 	}
 	if (is_child == false)
 	{
-		exit_clean(env, list);
+		exit_clean(var);
 		exit (at_exit);
 	}
 	else
