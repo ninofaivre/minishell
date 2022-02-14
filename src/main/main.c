@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/14 10:48:59 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/14 15:23:02 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ static void	sig_handler(int sig, siginfo_t *info, void *context)
 		g_status= 131;
 		rl_on_new_line();
 		rl_redisplay();
+		write(1, "a", 1);
 	}
 }
 

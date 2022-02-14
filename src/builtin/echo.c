@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:57:22 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/08 18:25:25 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/14 15:25:29 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ static void	ft_put_str(char *str)
 
 static bool	is_n_parameter(char *str)
 {
+	if (!str)
+		return (false);
 	if (*str == '-')
 		str++;
 	else

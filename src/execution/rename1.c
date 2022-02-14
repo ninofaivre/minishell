@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/14 11:26:41 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/14 15:24:00 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ pid_t	test_fork(t_var *var, char **path, int *read_pipe, int *write_pipe)
 	}
 	else
 	{
-		printf("je viens de créer un enfant, son pid : %i\n", pid);
 		close_pipe(read_pipe);
 		return (pid);
 	}

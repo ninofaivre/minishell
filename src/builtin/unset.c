@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 17:46:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/13 17:37:16 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/14 15:21:09 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,22 @@ static char	**update_export_history(char *name, char **export_history)
 {
 	char	**new_export_history;
 	int		i;
-	int		j;
 
 	if (!exist_in_export_history(export_history, name))
 		return (export_history);
 	new_export_history = (char **)malloc(sizeof(char *) * (str_tab_len(export_history)));
 	i = 0;
-	j = 0;
 	if (!new_export_history)
 		return (NULL);
-	while (export_history[i])
+	while (*export_history)
 	{
-		if (comp_export_history_var(export_history[i], name))
-			free(export_history[i++]);
+		if (comp_export_history_var(*export_history, name))
+			free(*export_history++);
 		else
 		{
-			new_export_history[j] = export_history[i];
-			j++;
+			new_export_history[i] = *export_history;
 			i++;
+			export_history++;
 		}
 	}
 	new_export_history[i] = NULL;
