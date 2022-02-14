@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/14 15:23:02 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/14 15:33:32 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ int	main(int argc, char **argv, char **env)
 	sa.sa_flags = SA_SIGINFO;
 	sa.sa_sigaction = sig_handler;
 	echo_ctrl_off();
-	printf("PID : %i\n", getpid());
+	printf("PID : %i\nReadline Version : %i\n", getpid(), RL_READLINE_VERSION);
 	(void)argc;
 	(void)argv;
 	input = (char *) NULL;
