@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/14 15:38:50 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/14 18:58:32 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static void	sig_handler(int sig, siginfo_t *info, void *context)
 	wait_childs(-100, NULL);
 	if (sig == SIGINT)
 		g_status = 130;
+	if (sig == SIGQUIT && info->si_pid == 0)
+		g_status= 131;
 	if (sig == SIGINT && info->si_pid != 0)
 	{
 		rl_replace_line("", 0);
@@ -38,14 +40,10 @@ static void	sig_handler(int sig, siginfo_t *info, void *context)
 		rl_on_new_line();
 		rl_redisplay();
 	}
-	else if (sig == SIGQUIT && info->si_pid != 0)
+	else if (sig == SIGQUIT && info->si_pid != 0 && RL_READLINE_VERSION == 2049)
 	{
-		g_status= 131;
-		if (RL_READLINE_VERSION == 2049)
-		{
-			rl_on_new_line();
-			rl_redisplay();
-		}
+		rl_on_new_line();
+		rl_redisplay();
 	}
 }
 
