@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/13 17:11:00 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/14 10:48:59 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ static char **init_export_history(char **env)
 		i++;
 	}
 	export_history[i] = NULL;
+	str_tab_sort(export_history);
 	return (export_history);
 }
 
@@ -125,7 +126,9 @@ int	main(int argc, char **argv, char **env)
 	char				*input;
 	char				**export_history;
 	t_var				var;
+	char				*leak = malloc(4);
 
+	(void)leak;
 	sa.sa_flags = SA_SIGINFO;
 	sa.sa_sigaction = sig_handler;
 	echo_ctrl_off();

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 17:29:34 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/24 17:41:40 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/14 10:11:47 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,14 @@ int	count_char_in_str(char *str, char c)
 		str++;
 	}
 	return (i);
+}
+
+int	str_cmp(char *str1, char *str2)
+{
+	while (*str1 && *str2 && *str1 == *str2)
+	{
+		str1++;
+		str2++;
+	}
+	return (*str1 - *str2);
 }

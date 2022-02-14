@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 17:46:44 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/13 16:29:47 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/14 10:10:12 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,5 +178,6 @@ int	builtin_export(char **argv, char ***env, char ***export_history)
 		}
 		argv++;
 	}
+	str_tab_sort(*export_history);
 	return (exit_status);
 }

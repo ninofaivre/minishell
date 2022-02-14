@@ -6,10 +6,11 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 20:42:00 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 17:44:31 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/14 10:12:55 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "global.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -72,4 +73,24 @@ char	**add_str_to_str_tab(char **str_tab, char *str)
 	if (str_tab)
 		free(str_tab);
 	return (new_str_tab);
+}
+
+void	str_tab_sort(char **export_history)
+{
+	int		i;
+	char	*tmp;
+
+	i = 0;
+	while (export_history[i + 1])
+	{
+		if (str_cmp(export_history[i], export_history[i + 1]) > 0)
+		{
+			tmp = export_history[i];
+			export_history[i] = export_history[i + 1];
+			export_history[i + 1] = tmp;
+			i = 0;
+		}
+		else
+			i++;
+	}
 }

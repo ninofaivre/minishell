@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:00:41 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 17:20:41 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/14 11:21:29 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*env_var_value(char **env, char *str)
 	while (*env)
 	{
 		i = 0;
-		while ((*env)[i] == str[i] && is_env_var_name_allowed(str[i]))
+		while ((*env)[i] && str[i] && (*env)[i] == str[i] && is_env_var_name_allowed(str[i]))
 			i++;
 		if ((*env)[i] == '=' && is_env_var_name_allowed(str[i]) == false)
 			return (&(*env)[i + 1]);

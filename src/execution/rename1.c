@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/13 17:34:05 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/14 11:26:41 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	builtin_main(t_var *var)
 	else if (is_same_string(var->list->argv[0], "unset"))
 		return (builtin_unset(var->list->argv, var->env, var->export_history));
 	else if (is_same_string(var->list->argv[0], "cd"))
-		return (builtin_cd(var->list->argv, var->env));
+		return (builtin_cd(var->list->argv, var->env, var->export_history));
 	else if (is_same_string(var->list->argv[0], "exit"))
 		return (builtin_exit(var, var->status, false));
 	return (-1);
@@ -98,7 +98,7 @@ int	builtin_child(t_var *var)
 	else if (is_same_string(var->list->argv[0], "unset"))
 		return (builtin_unset(var->list->argv, var->env, var->export_history));
 	else if (is_same_string(var->list->argv[0], "cd"))
-		return (builtin_cd(var->list->argv, var->env));
+		return (builtin_cd(var->list->argv, var->env, var->export_history));
 	else if (is_same_string(var->list->argv[0], "exit"))
 		return (builtin_exit(var, var->status, true));
 	else if (is_same_string(var->list->argv[0], "echo"))

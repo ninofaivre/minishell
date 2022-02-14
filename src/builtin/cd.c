@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:19:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/13 15:37:28 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/14 11:27:45 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char *export_argv_1, char *pwd)
 	return (to_return);
 }
 
-static int	update_pwd(char ***env)
+static int	update_pwd(char ***env, char ***export_history)
 {
 	char	**export_argv;
 	char	*export_argv_0;
@@ -58,11 +58,11 @@ static int	update_pwd(char ***env)
 		export_argv[0] = export_argv_0;
 		export_argv[1] = export_argv_1;
 		export_argv[2] = (char *) NULL;
-		builtin_export(export_argv, env, NULL);
+		builtin_export(export_argv, env, export_history);
 		free(export_argv[1]);
 		export_argv[1] = concat("PWD=\0", pwd);
 		if (export_argv[1])
-			builtin_export(export_argv, env, NULL);
+			builtin_export(export_argv, env, export_history);
 	}
 	return (free_update_pwd(export_argv, export_argv_0, export_argv_1, pwd));
 }
@@ -76,7 +76,7 @@ static int	chdir_error(char *arg)
 	return (1);
 }
 
-int	builtin_cd(char **argv, char ***env)
+int	builtin_cd(char **argv, char ***env, char ***export_history)
 {
 	if (str_tab_len(argv) > 2)
 	{
@@ -98,5 +98,5 @@ int	builtin_cd(char **argv, char ***env)
 	}
 	else if (chdir(argv[1]) == -1)
 		return (chdir_error(argv[1]));
-	return (update_pwd(env));
+	return (update_pwd(env, export_history));
 }

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 17:04:03 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/13 17:33:20 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/14 11:27:53 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	exit_clean(t_var *var);
 int		builtin_pwd(void);
 char	*get_pwd(void);
 
-int		builtin_cd(char **argv, char ***env);
+int		builtin_cd(char **argv, char ***env, char ***export_history);
 
 int		builtin_echo(char **argv);
 
