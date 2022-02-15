@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 18:42:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/13 14:57:05 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/15 21:33:45 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 
 int	minishell_error(char *call, char *arg, char *error);
 
-# define VOIDPIPE "syntax error near symbol \"|\""
-# define VOIDINPUT "syntax error near symbol \"<\""
-# define VOIDOUTPUT "syntax error near symbol \">\""
+# define VOIDPIPE "syntax error near symbol « | »"
+# define VOIDINPUT "syntax error near symbol « < »"
+# define VOIDOUTPUT "syntax error near symbol « > »"
+# define UNCLOSEDSINGLEQUOTE "syntax error near symbol « ' » (unclosed quote)"
+# define UNCLOSEDDOUBLEQUOTE "syntax error near symbol « \" » (unclosed quote)"
 # define CMD "command not found"
 # define ALLOC "allocation error (a malloc failed)"
 # define MAXARG "too many arguments"

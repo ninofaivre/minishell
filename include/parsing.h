@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:20:46 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 16:31:58 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/15 18:56:49 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include "global.h"
 
 t_list			*parse(t_var *var, char *input);
+
+bool			parse_error(t_var *var, char *str);
 
 t_redirection	*free_redirection(t_redirection *redirection);
 t_list			*free_list(t_list *list);
