@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/14 18:58:32 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/15 12:47:24 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static bool	malloc_env(char ***env)
 		new_env[i] = str_dupe((*env)[i]);
 		if (!new_env[i])
 		{
-			free_str_tab(new_env);
+			free_str_tab(&new_env);
 			return (true);
 		}
 		i++;
@@ -104,7 +104,7 @@ static char **init_export_history(char **env)
 	{
 		export_history[i] = concat("declare -x ", env[i]);
 		if (!export_history[i])
-			return (free_str_tab(export_history));
+			return (free_str_tab(&export_history));
 		i++;
 	}
 	export_history[i] = NULL;
@@ -127,11 +127,10 @@ int	main(int argc, char **argv, char **env)
 	char				*input;
 	char				**export_history;
 	t_var				var;
-	char				*leak = malloc(4);
 
-	(void)leak;
 	sa.sa_flags = SA_SIGINFO;
 	sa.sa_sigaction = sig_handler;
+	sigemptyset(&sa.sa_mask);
 	echo_ctrl_off();
 	printf("PID : %i\nReadline Version : %i\n", getpid(), RL_READLINE_VERSION);
 	(void)argc;
@@ -146,7 +145,7 @@ int	main(int argc, char **argv, char **env)
 	}
 	if (malloc_env(&env))
 	{
-		free_str_tab(export_history);
+		free_str_tab(&export_history);
 		minishell_error("main", NULL, ALLOC);
 		exit(EXIT_FAILURE);
 	}

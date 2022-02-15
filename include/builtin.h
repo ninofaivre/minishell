@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 17:04:03 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/14 11:27:53 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/15 15:26:48 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int		builtin_export(char **argv, char ***env, char ***export_history);
 int		builtin_unset(char **argv, char ***env, char ***export_history);
 bool	comp_export_history_var(char *str1, char *str2);
 bool	exist_in_export_history(char **export_history, char *argv);
+
 int		builtin_env(char **argv, char **env);
 bool	comp_env_var_name(char *env_var, char *name);
 char	**search_in_env(char *name, char **env);

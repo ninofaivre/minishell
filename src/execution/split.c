@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/31 13:57:58 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/15 12:46:41 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ char	**ft_split(char const *s, char c)
 		ft_get_next_str(&next_str, &next_str_len, c);
 		tab[i] = (char *)malloc(sizeof(char) * (next_str_len + 2));
 		if (!(tab[i]))
-			return (free_str_tab(tab));
+			return (free_str_tab(&tab));
 		ft_strlcpy(tab[i], next_str, next_str_len + 1);
 	}
 	tab[i] = NULL;

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:19:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/14 11:27:45 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/15 12:44:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char *export_argv_1, char *pwd)
 	else
 		to_return = 0;
 	if (export_argv)
-		free_str_tab(export_argv);
+		free_str_tab(&export_argv);
 	if (export_argv_0 && to_return == 1)
 		free(export_argv_0);
 	if (export_argv_1 && to_return == 1)

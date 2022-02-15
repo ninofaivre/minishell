@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/09 22:02:37 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/15 13:29:38 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	wait_childs(int pid, t_var *var)
 		if (test == pid)
 			to_return = WEXITSTATUS(status);
 	}
-	if (var && is_builtin(var->ptr_start_list->argv[0]) && !need_a_child(var->ptr_start_list->argv[0]) && !var->ptr_start_list->next)
+	if (var && is_builtin(var->ptr_start_list->argv[0]) && !need_a_child(var->ptr_start_list->argv) && !var->ptr_start_list->next)
 		return (pid);
 	else
 		return (to_return);

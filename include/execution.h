@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/08 22:02:40 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/15 13:29:09 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	close_pipe(int *pipe);
 char	**ft_split(char const *s, char c);
 pid_t	test_fork(t_var *var, char **path,
 			int *read_pipe, int *write_pipe);
-bool	need_a_child(char *argv_0);
+bool	need_a_child(char **argv);
 int		wait_childs(int pid, t_var *var);
 int		builtin_child(t_var *var);
 int		builtin_main(t_var *var);

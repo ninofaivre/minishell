@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/13 15:01:29 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/15 13:29:56 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,10 @@ bool	is_builtin(char *argv_0)
 		return (false);
 }
 
-bool	need_a_child(char *argv_0)
+bool	need_a_child(char **argv)
 {
-	if (is_same_string(argv_0, "echo") || is_same_string(argv_0, "pwd")
-		|| is_same_string(argv_0, "env"))
+	if (is_same_string(argv[0], "echo") || is_same_string(argv[0], "pwd")
+		|| is_same_string(argv[0], "env") || (is_same_string(argv[0], "export") && !argv[1]))
 		return (true);
 	else
 		return (false);
@@ -102,7 +102,7 @@ int	function(t_var *var, int *read_pipe, int *write_pipe)
 	{
 		if (path)
 		{
-			free_str_tab(path);
+			free_str_tab(&path);
 			path = (char **) NULL;
 		}
 		return (0);
@@ -114,7 +114,7 @@ int	function(t_var *var, int *read_pipe, int *write_pipe)
 		minishell_error("execution (split_path)", (char *) NULL, ALLOC);
 		return (-1);
 	}
-	if (is_builtin(var->list->argv[0]) && !var->ptr_start_list->next && !need_a_child(var->list->argv[0]))
+	if (is_builtin(var->list->argv[0]) && !var->ptr_start_list->next && !need_a_child(var->list->argv))
 		return (builtin_main(var));
 	else
 		return (test_fork(var, path, read_pipe, write_pipe));

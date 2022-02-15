@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:26:43 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/07 16:29:51 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/15 12:46:11 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int	take_doubleinput(char *eof)
 		return (-1);
 	write_str_tab_to_fd(doubleinput, pipe_tab[1]);
 	close(pipe_tab[1]);
-	free_str_tab(doubleinput);
+	free_str_tab(&doubleinput);
 	return (pipe_tab[0]);
 }
 

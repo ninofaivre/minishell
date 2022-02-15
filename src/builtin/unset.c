@@ -6,13 +6,14 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 17:46:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/14 15:21:09 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/15 15:26:34 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "global.h"
 #include "builtin.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 static void	cpy_env_in_new_env(char **env, char **new_env, char *name)
 {
@@ -37,8 +38,6 @@ static char	**update_export_history(char *name, char **export_history)
 	char	**new_export_history;
 	int		i;
 
-	if (!exist_in_export_history(export_history, name))
-		return (export_history);
 	new_export_history = (char **)malloc(sizeof(char *) * (str_tab_len(export_history)));
 	i = 0;
 	if (!new_export_history)
@@ -46,7 +45,7 @@ static char	**update_export_history(char *name, char **export_history)
 	while (*export_history)
 	{
 		if (comp_export_history_var(*export_history, name))
-			free(*export_history++);
+			export_history++;
 		else
 		{
 			new_export_history[i] = *export_history;
@@ -58,33 +57,56 @@ static char	**update_export_history(char *name, char **export_history)
 	return (new_export_history);
 }
 
+static void	free_replaced_export(char **export_history, char *argv)
+{
+	while (*export_history)
+	{
+		if (comp_export_history_var(*export_history, argv))
+		{
+			free(*export_history);
+			return ;
+		}
+		export_history++;
+	}
+}
+
 static bool	unset_one_var(char *name, char ***env, char ***export_history)
 {
 	char	**new_env;
 	char	**new_export_history;
 
-	new_export_history = update_export_history(name, *export_history);
-	if (!new_export_history)
+	new_export_history = NULL;
+	if (exist_in_export_history(*export_history, name))
 	{
-		minishell_error("unset", (char *) NULL, ALLOC);
-		return (true);
+		printf("update export history\n");
+		new_export_history = update_export_history(name, *export_history);
+		if (!new_export_history)
+		{
+			minishell_error("unset", (char *) NULL, ALLOC);
+			return (true);
+		}
 	}
-	if (!search_in_env(name, *env))
-		return (false);
-	new_env = (char **)malloc(sizeof(char *) * str_tab_len(*env));
-	if (!new_env)
+	if (search_in_env(name, *env))
 	{
-		free_str_tab(new_export_history);
-		minishell_error("unset", (char *) NULL, ALLOC);
-		return (true);
+		new_env = (char **)malloc(sizeof(char *) * str_tab_len(*env));
+		if (!new_env)
+		{
+			free(new_export_history);
+			minishell_error("unset", (char *) NULL, ALLOC);
+			return (true);
+		}
+		cpy_env_in_new_env(*env, new_env, name);
+		if (*env)
+			free(*env);
+		*env = new_env;
 	}
-	cpy_env_in_new_env(*env, new_env, name);
-	if (*env)
-		free(*env);
-	*env = new_env;
-	if (*export_history)
+	if (*new_export_history)
+	{
+		printf("free export_history\n");
+		free_replaced_export(*export_history, name);
 		free(*export_history);
-	*export_history = new_export_history;
+		*export_history = new_export_history;
+	}
 	return (false);
 }
 

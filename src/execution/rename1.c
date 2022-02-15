@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/14 15:24:00 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/15 12:38:26 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ pid_t	test_fork(t_var *var, char **path, int *read_pipe, int *write_pipe)
 	pid = fork();
 	if (pid == 0)
 	{
+		printf("fork\n");
 		if (pid_zero(var->list->redirection, read_pipe, write_pipe))
 			status = EXIT_FAILURE;
 		else if (!var->list->argv[0])

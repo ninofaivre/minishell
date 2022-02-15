@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/01/28 18:01:05 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/15 12:47:44 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_list	*free_list(t_list *list)
 		if (list->redirection)
 			free_redirection(list->redirection);
 		if (list->argv)
-			free_str_tab(list->argv);
+			free_str_tab(&list->argv);
 		ptr_list = list;
 		list = list->next;
 		free(ptr_list);
