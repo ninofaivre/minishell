@@ -6,16 +6,18 @@
 #    By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/24 10:25:16 by nfaivre           #+#    #+#              #
-#    Updated: 2022/02/14 18:59:01 by nfaivre          ###   ########.fr        #
+#    Updated: 2022/02/16 15:18:45 by nfaivre          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 .DEFAULT_GOAL = all
 
 NAME = minishell
+PROMPT ?= 'minishell $$> '
 
 CC = clang
 CFLAGS = -Wall -Werror -Wextra
+DEFINE_PROMPT = -D PROMPT=\"$(PROMPT)\"
 
 DIR_SRC = src
 DIR_OBJ = .obj
@@ -29,7 +31,7 @@ mkdir_DIR_OBJ:
 	mkdir -p $(DIR_OBJ)
 
 $(DIR_OBJ)/%.o : $(DIR_SRC)/*/%.c
-	$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDE)
+	$(CC) $(CFLAGS) $(DEFINE_PROMPT) -o $@ -c $< $(INCLUDE)
 
 $(NAME):
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -lreadline
