@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/15 13:29:56 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/16 17:36:24 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,35 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <readline/readline.h>
+#include <sys/stat.h>
+#include <errno.h>
 
-static int	exec_path(t_var *var, char **path)
+static int	try_exec(char *executable, t_var *var)
 {
-	char	*executable;
+	struct stat	stat_executable;
+	
+	stat(executable, &stat_executable);
+	if (S_ISDIR(stat_executable.st_mode))
+	{
+		free(executable);
+		minishell_error(NULL, var->list->argv[0], NOTFILE);
+		return (126);
+	}
+	execve(executable, var->list->argv, *(var->env));
+	free(executable);
+	minishell_error(NULL, var->list->argv[0], UNEXECUTABLE);
+	return (126);
+}
 
-	if (!path)
+int	check_exec(t_var *var, char **path)
+{
+	char		*executable;
+
+	if (!path || !var->list->argv[0][0])
+	{
+		minishell_error(NULL, var->list->argv[0], CMD);
 		return (127);
+	}
 	while (*path)
 	{
 		executable = concat(*path, var->list->argv[0]);
@@ -35,42 +57,38 @@ static int	exec_path(t_var *var, char **path)
 			return (-1);
 		}
 		if (access(executable, X_OK) != -1)
-		{
-			execve(executable, var->list->argv, *(var->env));
-			return (EXIT_FAILURE);
-		}
+			return (try_exec(executable, var));
 		else if (access(executable, F_OK) == 0)
 		{
 			free(executable);
+			minishell_error(NULL, var->list->argv[0], RIGHT);
 			return (126);
 		}
 		free(executable);
 		path++;
 	}
+	minishell_error(NULL, var->list->argv[0], CMD);
 	return (127);
-}
-
-int	check_exec(t_var *var, char **path)
-{
-	int		status;
-
-	status = exec_path(var, path);
-	if (status == 127)
-		minishell_error((char *) NULL, var->list->argv[0], CMD);
-	else if (status == 126)
-		minishell_error((char *) NULL, var->list->argv[0], INACCESSIBLE);
-	return (status);
 }
 
 int	check_file(t_var *var)
 {
+	struct stat	stat_path_executable;
+
 	if (access(var->list->argv[0], X_OK) != -1)
 	{
+		stat(var->list->argv[0], &stat_path_executable);
+		if (S_ISDIR(stat_path_executable.st_mode))
+		{
+			minishell_error(NULL, var->list->argv[0], NOTFILE);
+			return (126);
+		}
 		execve(var->list->argv[0], var->list->argv, *(var->env));
-		return (EXIT_FAILURE);
+		minishell_error(NULL, var->list->argv[0], UNEXECUTABLE);
+		return (126);
 	}
 	else
-		minishell_error((char *) NULL, var->list->argv[0], INACCESSIBLE);
+		minishell_error((char *) NULL, var->list->argv[0], RIGHT);
 	return (126 + (access(var->list->argv[0], F_OK) == -1));
 }
 
