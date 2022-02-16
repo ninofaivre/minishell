@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 17:37:46 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/16 17:03:12 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,27 @@ t_redirection	*get_redirection(t_var *var, char *input)
 	return (redirection);
 }
 
+static bool	null_word(char *input)
+{
+	bool	is_there_doll;
+	bool	is_there_quote;
+
+	if (!input)
+		return (false);
+	while (*input && !is_charset(*input, "! ><"))
+	{
+		if (*input == '$')
+			is_there_doll = true;
+		else if (*input == '"')
+			is_there_quote = true;
+		input++;
+	}
+	if (is_there_doll == true && is_there_quote == false)
+		return (true);
+	else
+		return (false);
+}
+
 char	**get_argv(t_var *var, char *input)
 {
 	char	**argv;
@@ -95,15 +116,15 @@ char	**get_argv(t_var *var, char *input)
 	{
 		input = skip_space(input);
 		if (is_charset(*input, "><"))
-		{
-			input += 1 + is_charset(input[1], "><");
-			input = skip_word(input);
-		}
+			input = skip_word(&input[1 + is_charset(input[1], "><")]);
 		else
 		{
-			argv = add_str_to_str_tab(argv, get_one_word(var, input));
-			if (!argv)
-				return ((char **) NULL);
+			if (!(!word_len(var, input) && null_word(input)))
+			{
+				argv = add_str_to_str_tab(argv, get_one_word(var, input));
+				if (!argv)
+					return ((char **) NULL);
+			}
 			input = skip_word(input);
 		}
 	}
