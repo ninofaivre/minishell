@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:19:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/15 12:44:33 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:26:57 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char *export_argv_1, char *pwd)
 
 	if (!export_argv || !export_argv_0 || !export_argv_1 || !pwd)
 	{
-		minishell_error("cd (update_pwd)", (char *) NULL, ALLOC);
+		minishell_error("cd (update_pwd)", NULL, ALLOC);
 		to_return = -1;
 	}
 	else
@@ -47,9 +47,9 @@ static int	update_pwd(char ***env, char ***export_history)
 	char	*export_argv_1;
 	char	*pwd;
 
-	export_argv = (char **)malloc(sizeof(char *) * 3);
+	export_argv = malloc(sizeof(char *) * 3);
 	if (export_argv)
-		export_argv[0] = (char *) NULL;
+		export_argv[0] = NULL;
 	export_argv_0 = str_dupe("export\0");
 	pwd = get_pwd();
 	export_argv_1 = concat("OLDPWD=\0", env_var_value(*env, "$PWD"));
@@ -57,7 +57,7 @@ static int	update_pwd(char ***env, char ***export_history)
 	{
 		export_argv[0] = export_argv_0;
 		export_argv[1] = export_argv_1;
-		export_argv[2] = (char *) NULL;
+		export_argv[2] = NULL;
 		builtin_export(export_argv, env, export_history);
 		free(export_argv[1]);
 		export_argv[1] = concat("PWD=\0", pwd);
@@ -80,7 +80,7 @@ int	builtin_cd(char **argv, char ***env, char ***export_history)
 {
 	if (str_tab_len(argv) > 2)
 	{
-		minishell_error("cd", (char *) NULL, MAXARG);
+		minishell_error("cd", NULL, MAXARG);
 		return (1);
 	}
 	else if (str_tab_len(argv) == 1)

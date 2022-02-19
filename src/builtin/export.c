@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 17:46:44 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/15 15:30:04 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:26:57 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static bool	add_one_var(char ***env, char *str)
 	char	**new_env;
 
 	i = 0;
-	new_env = (char **)malloc(sizeof(char *) * (str_tab_len(*env) + 2));
+	new_env = malloc(sizeof(char *) * (str_tab_len(*env) + 2));
 	if (!new_env)
 		return (true);
 	while ((*env)[i])
@@ -29,7 +29,7 @@ static bool	add_one_var(char ***env, char *str)
 		i++;
 	}
 	new_env[i] = str;
-	new_env[i + 1] = (char *) NULL;
+	new_env[i + 1] = NULL;
 	if (*env)
 		free(*env);
 	*env = new_env;
@@ -49,7 +49,7 @@ static bool	export_one_var(char *argv, char ***env)
 		str = str_dupe(argv);
 		if (!str)
 		{
-			minishell_error("export", (char *) NULL, ALLOC);
+			minishell_error("export", NULL, ALLOC);
 			return (true);
 		}
 		free(*ptr_env_var);
@@ -60,7 +60,7 @@ static bool	export_one_var(char *argv, char ***env)
 		str = str_dupe(argv);
 		if (!str || add_one_var(env, str))
 		{
-			minishell_error("export", (char *) NULL, ALLOC);
+			minishell_error("export", NULL, ALLOC);
 			return (true);
 		}
 	}
@@ -119,7 +119,7 @@ char	**update_export_history(char **export_history, char *argv)
 	int		i;
 
 	exist = exist_in_export_history(export_history, argv);
-	new_export_history = (char **)malloc(sizeof(char *) * (str_tab_len(export_history) + 1 + !exist));
+	new_export_history = malloc(sizeof(char *) * (str_tab_len(export_history) + 1 + !exist));
 	new_var = NULL;
 	i = 0;
 	if (!new_export_history)

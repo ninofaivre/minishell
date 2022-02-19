@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 18:15:33 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:26:57 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	exec_cmd(t_var *var, char **path)
 		executable = concat(*path, var->list->argv[0]);
 		if (!executable)
 		{
-			minishell_error("execution (concat)", (char *) NULL, ALLOC);
+			minishell_error("execution (concat)", NULL, ALLOC);
 			return (-1);
 		}
 		status = try_exec(executable, var);

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 17:17:05 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 17:24:17 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:27:14 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	builtin_main(t_var *var)
 {
 	if (var->list->redirection[0].content)
 		if (take_redirection(var->list->redirection,
-				(int *) NULL, (int *) NULL, false))
+				NULL, NULL, false))
 			return (EXIT_FAILURE);
 	if (is_same_string(var->list->argv[0], "export"))
 		return (builtin_export(var->list->argv, var->env, var->export_history));

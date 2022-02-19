@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:00:41 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 18:17:15 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:26:57 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*env_var_value(char **env, char *str)
 	int	i;
 
 	if (!str || *str != '$' || !str[1])
-		return ((char *) NULL);
+		return (NULL);
 	str++;
 	while (*env)
 	{
@@ -30,7 +30,7 @@ char	*env_var_value(char **env, char *str)
 			return (&(*env)[i + 1]);
 		env++;
 	}
-	return ((char *) NULL);
+	return (NULL);
 }
 
 int	minishell_error(char *call, char *arg, char *error)

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:26:43 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 18:16:53 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:27:03 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,16 @@ static char	**get_doubleinput(char *eof)
 	char	**doubleinput;
 	char	*input;
 
-	doubleinput = (char **) NULL;
+	doubleinput = NULL;
 	input = readline(">");
 	while (!is_same_string(input, eof) && input)
 	{
 		doubleinput = add_str_to_str_tab(doubleinput, input);
 		if (!doubleinput)
 		{
-			minishell_error("execution (here-doc)", (char *) NULL, ALLOC);
+			minishell_error("execution (here-doc)", NULL, ALLOC);
 			free(input);
-			return ((char **) NULL);
+			return (NULL);
 		}
 		input = readline(">");
 	}
@@ -49,7 +49,7 @@ static int	take_doubleinput(char *eof)
 
 	if (pipe(pipe_tab) == -1)
 	{
-		pipe_error("execution (here-doc)", (char *) NULL);
+		pipe_error("execution (here-doc)", NULL);
 		return (-1);
 	}
 	doubleinput = get_doubleinput(eof);
@@ -73,16 +73,16 @@ int	take_input(char *content, bool is_double, int fd_input)
 	else if (access(content, R_OK) == -1)
 	{
 		if (access(content, F_OK) != -1)
-			minishell_error((char *) NULL, content, RIGHT);
+			minishell_error(NULL, content, RIGHT);
 		else
-			minishell_error((char *) NULL, content, INACCESSIBLE);
+			minishell_error(NULL, content, INACCESSIBLE);
 		return (-1);
 	}
 	else
 	{
 		fd = open(content, O_RDONLY);
 		if (fd == -1)
-			minishell_error((char *) NULL, content, INACCESSIBLE);
+			minishell_error(NULL, content, INACCESSIBLE);
 	}
 	return (fd);
 }
@@ -104,6 +104,6 @@ int	take_output(char *content, bool is_double, int fd_output)
 	else
 		fd = open(content, O_TRUNC | O_WRONLY | O_CREAT, 0644);
 	if (fd == -1)
-		minishell_error((char *) NULL, content, CREAT);
+		minishell_error(NULL, content, CREAT);
 	return (fd);
 }

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 17:09:28 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:27:14 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int *read_pipe, int *write_pipe, int fd)
 		if (read_pipe)
 		{
 			close(read_pipe[0]);
-			read_pipe = (int *) NULL;
+			read_pipe = NULL;
 		}
 		return (take_input(redirection.content, redirection.is_double, fd));
 	}
@@ -37,7 +37,7 @@ int *read_pipe, int *write_pipe, int fd)
 		if (write_pipe)
 		{
 			close(write_pipe[1]);
-			write_pipe = (int *) NULL;
+			write_pipe = NULL;
 		}
 		return (take_output(redirection.content, redirection.is_double, fd));
 	}

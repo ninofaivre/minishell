@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 20:42:00 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/15 12:43:40 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:27:03 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	**free_str_tab(char ***str_tab)
 
 	i = 0;
 	if (!*str_tab)
-		return ((char **) NULL);
+		return (NULL);
 	while ((*str_tab)[i])
 	{
 		free((*str_tab)[i]);
@@ -37,7 +37,7 @@ char	**free_str_tab(char ***str_tab)
 	}
 	free(*str_tab);
 	*str_tab = NULL;
-	return ((char **) NULL);
+	return (NULL);
 }
 
 int	str_tab_len(char **str_tab)
@@ -58,12 +58,12 @@ char	**add_str_to_str_tab(char **str_tab, char *str)
 	char	**new_str_tab;
 
 	i = 0;
-	new_str_tab = (char **)malloc(sizeof(char *) * (str_tab_len(str_tab) + 2));
+	new_str_tab = malloc(sizeof(char *) * (str_tab_len(str_tab) + 2));
 	if (!new_str_tab)
 	{
 		if (str_tab)
 			free(str_tab);
-		return ((char **) NULL);
+		return (NULL);
 	}
 	while (str_tab && str_tab[i])
 	{
@@ -71,7 +71,7 @@ char	**add_str_to_str_tab(char **str_tab, char *str)
 		i++;
 	}
 	new_str_tab[i] = str;
-	new_str_tab[i + 1] = (char *) NULL;
+	new_str_tab[i + 1] = NULL;
 	if (str_tab)
 		free(str_tab);
 	return (new_str_tab);

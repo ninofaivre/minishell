@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 18:15:33 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:27:03 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	call_fork_cmd(t_var *var, int *read_pipe, int *write_pipe)
 		if (path)
 		{
 			free_str_tab(&path);
-			path = (char **) NULL;
+			path = NULL;
 		}
 		return (0);
 	}
@@ -91,7 +91,7 @@ int	call_fork_cmd(t_var *var, int *read_pipe, int *write_pipe)
 		path = ft_split(env_var_value(*(var->env), "$PATH"), ':');
 	if (!path && env_var_value(*(var->env), "$PATH"))
 	{
-		minishell_error("execution (split_path)", (char *) NULL, ALLOC);
+		minishell_error("execution (split_path)", NULL, ALLOC);
 		return (-1);
 	}
 	if (is_builtin(var->list->argv[0])

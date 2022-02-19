@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 17:29:34 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/14 10:11:47 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:26:57 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ char	*str_dupe(char *str)
 
 	i = 0;
 	if (!str)
-		return ((char *) NULL);
-	new_str = (char *)malloc(sizeof(char) * (str_len(str) + 1));
+		return (NULL);
+	new_str = malloc(sizeof(char) * (str_len(str) + 1));
 	if (!new_str)
-		return ((char *) NULL);
+		return (NULL);
 	while (*str)
 		new_str[i++] = *str++;
 	new_str[i] = '\0';
@@ -36,10 +36,10 @@ char	*concat(char *str1, char *str2)
 	char	*new_str;
 
 	i = str_len(str1) + str_len(str2) + 1;
-	new_str = (char *)malloc(sizeof(char) * (i));
+	new_str = malloc(sizeof(char) * (i));
 	i = 0;
 	if (!new_str)
-		return ((char *) NULL);
+		return (NULL);
 	while (str1 && *str1)
 		new_str[i++] = *str1++;
 	while (str2 && *str2)

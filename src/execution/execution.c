@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 17:30:07 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:27:50 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,21 +26,21 @@ static int	**init_pipes(int n_list)
 	pipes = (int **)malloc(sizeof(int *) * n_list);
 	if (!pipes)
 	{
-		minishell_error("execution (pipes)", (char *) NULL, ALLOC);
-		return ((int **) NULL);
+		minishell_error("execution (pipes)", NULL, ALLOC);
+		return (NULL);
 	}
-	pipes[--n_list] = (int *) NULL;
+	pipes[--n_list] = NULL;
 	while (n_list--)
 	{
-		pipes[n_list] = (int *)malloc(sizeof(int) * 2);
+		pipes[n_list] = malloc(sizeof(int) * 2);
 		if (!pipes[n_list] || pipe(pipes[n_list]) == -1)
 		{
 			if (!pipes[n_list])
-				minishell_error("execution (pipes)", (char *) NULL, ALLOC);
+				minishell_error("execution (pipes)", NULL, ALLOC);
 			else
-				pipe_error("execution (pipes)", (char *) NULL);
+				pipe_error("execution (pipes)", NULL);
 			free_pipes(pipes);
-			return ((int **) NULL);
+			return (NULL);
 		}
 	}
 	return (pipes);
@@ -95,12 +95,12 @@ static int	call_childs(t_var *var)
 		if (i == 0)
 		{
 			if (!var->list->next)
-				pid = call_fork_cmd(var, (int *) NULL, (int *) NULL);
+				pid = call_fork_cmd(var, NULL, NULL);
 			else
-				pid = call_fork_cmd(var, (int *) NULL, var->pipes[i]);
+				pid = call_fork_cmd(var, NULL, var->pipes[i]);
 		}
 		else if (!var->list->next)
-			pid = call_fork_cmd(var, var->pipes[i - 1], (int *) NULL);
+			pid = call_fork_cmd(var, var->pipes[i - 1], NULL);
 		else
 			pid = call_fork_cmd(var, var->pipes[i - 1], var->pipes[i]);
 		i++;
@@ -125,9 +125,9 @@ int	execution(t_var *var)
 			return (-1);
 	}
 	else
-		var->pipes = (int **) NULL;
+		var->pipes = NULL;
 	status = wait_childs(call_childs(var), var);
-	call_fork_cmd((t_var *) NULL, (int *) NULL, (int *) NULL);
+	call_fork_cmd(NULL, NULL, NULL);
 	free_pipes(var->pipes);
 	return (status);
 }

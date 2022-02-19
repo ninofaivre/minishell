@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 17:53:47 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 17:29:55 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:27:50 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	exit_atoi(char *str)
 
 void	exit_clean(t_var *var)
 {
-	call_fork_cmd((t_var *) NULL, (int *) NULL, (int *) NULL);
+	call_fork_cmd(NULL, NULL, NULL);
 	free_str_tab(var->env);
 	free_str_tab(var->export_history);
 	free_list(var->ptr_start_list);
@@ -68,7 +68,7 @@ int	builtin_exit(t_var *var, int status, bool is_child)
 	at_exit = status;
 	if (n_arg > 2)
 	{
-		minishell_error("exit", (char *) NULL, MAXARG);
+		minishell_error("exit", NULL, MAXARG);
 		return (1);
 	}
 	else if (n_arg == 2)

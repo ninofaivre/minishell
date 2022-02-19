@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/16 17:03:12 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:27:30 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ static char	*get_one_word(t_var *var, char *str)
 	char	*word;
 
 	quote = update_quote_status('\0', *str);
-	word = (char *)malloc(sizeof(char) * (word_len(var, str) + 1));
+	word = malloc(sizeof(char) * (word_len(var, str) + 1));
 	if (!word)
-		return ((char *) NULL);
+		return (NULL);
 	cpy_word(var, word, str, quote);
 	return (word);
 }
@@ -61,10 +61,10 @@ t_redirection	*get_redirection(t_var *var, char *input)
 	t_redirection	*redirection;
 
 	i = 0;
-	redirection = (t_redirection *)malloc(sizeof(t_redirection)
+	redirection = malloc(sizeof(t_redirection)
 			* (count_redirection(input) + 1));
 	if (!redirection)
-		return ((t_redirection *) NULL);
+		return (NULL);
 	while (*input && *input != '|')
 	{
 		input = skip_space(input);
@@ -79,7 +79,7 @@ t_redirection	*get_redirection(t_var *var, char *input)
 		}
 		input = skip_word(input);
 	}
-	redirection[i].content = (char *) NULL;
+	redirection[i].content = NULL;
 	return (redirection);
 }
 
@@ -108,10 +108,10 @@ char	**get_argv(t_var *var, char *input)
 {
 	char	**argv;
 
-	argv = (char **)malloc(sizeof(char *) * 1);
+	argv = malloc(sizeof(char *) * 1);
 	if (!argv)
-		return ((char **) NULL);
-	argv[0] = (char *) NULL;
+		return (NULL);
+	argv[0] = NULL;
 	while (*input && *input != '|')
 	{
 		input = skip_space(input);
@@ -123,7 +123,7 @@ char	**get_argv(t_var *var, char *input)
 			{
 				argv = add_str_to_str_tab(argv, get_one_word(var, input));
 				if (!argv)
-					return ((char **) NULL);
+					return (NULL);
 			}
 			input = skip_word(input);
 		}

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/16 19:04:51 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:26:57 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static bool	malloc_env(char ***env)
 	char	**new_env;
 
 	i = 0;
-	new_env = (char **)malloc(sizeof(char *) * (str_tab_len(*env) + 1));
+	new_env = malloc(sizeof(char *) * (str_tab_len(*env) + 1));
 	if (!new_env)
 		return (true);
 	while ((*env)[i])
@@ -86,7 +86,7 @@ static bool	malloc_env(char ***env)
 		}
 		i++;
 	}
-	new_env[i] = (char *) NULL;
+	new_env[i] = NULL;
 	*env = new_env;
 	return (false);
 }
@@ -97,7 +97,7 @@ static char **init_export_history(char **env)
 	int		i;
 
 	i = 0;
-	export_history = (char **)malloc(sizeof(char *) * (str_tab_len(env) + 1));
+	export_history = malloc(sizeof(char *) * (str_tab_len(env) + 1));
 	if (!export_history)
 		return (NULL);
 	while (env[i])
@@ -135,7 +135,7 @@ int	main(int argc, char **argv, char **env)
 	printf("PID : %i\nReadline Version : %i\n", getpid(), RL_READLINE_VERSION);
 	(void)argc;
 	(void)argv;
-	input = (char *) NULL;
+	input = NULL;
 	g_status = 0;
 	export_history = init_export_history(env);
 	if (!export_history)

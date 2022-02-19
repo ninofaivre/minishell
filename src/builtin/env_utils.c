@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 17:48:57 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 17:52:03 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:27:03 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,5 @@ char	**search_in_env(char *name, char **env)
 			return (&(*env));
 		env++;
 	}
-	return ((char **) NULL);
+	return (NULL);
 }

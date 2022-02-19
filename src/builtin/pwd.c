@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 10:36:05 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 16:22:58 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:26:57 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,17 @@ char	*get_pwd(void)
 	char	*buffer;
 
 	to_malloc = 0;
-	buffer = (char *) NULL;
+	buffer = NULL;
 	while (!buffer)
 	{
 		to_malloc++;
-		buffer = (char *)malloc(sizeof(char) * (to_malloc + 1));
+		buffer = malloc(sizeof(char) * (to_malloc + 1));
 		if (!buffer)
-			return ((char *) NULL);
+			return (NULL);
 		else if (!getcwd(buffer, to_malloc))
 		{
 			free (buffer);
-			buffer = (char *) NULL;
+			buffer = NULL;
 		}
 	}
 	return (buffer);
@@ -44,7 +44,7 @@ int	builtin_pwd(void)
 	pwd = get_pwd();
 	if (!pwd)
 	{
-		minishell_error("pwd", (char *) NULL, ALLOC);
+		minishell_error("pwd", NULL, ALLOC);
 		return (-1);
 	}
 	printf("%s\n", pwd);

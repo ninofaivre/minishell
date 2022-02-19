@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 11:12:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/01 17:51:48 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:26:57 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	builtin_env(char **argv, char **env)
 {
 	if (str_tab_len(argv) != 1)
 	{
-		minishell_error("env", (char *) NULL, MAXARG);
+		minishell_error("env", NULL, MAXARG);
 		return (1);
 	}
 	print_str_tab(env);

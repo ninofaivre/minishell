@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 17:46:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/15 15:26:34 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 20:26:57 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	cpy_env_in_new_env(char **env, char **new_env, char *name)
 			new_env[i++] = env[j];
 		j++;
 	}
-	new_env[i] = (char *) NULL;
+	new_env[i] = NULL;
 }
 
 static char	**update_export_history(char *name, char **export_history)
@@ -38,7 +38,7 @@ static char	**update_export_history(char *name, char **export_history)
 	char	**new_export_history;
 	int		i;
 
-	new_export_history = (char **)malloc(sizeof(char *) * (str_tab_len(export_history)));
+	new_export_history = malloc(sizeof(char *) * (str_tab_len(export_history)));
 	i = 0;
 	if (!new_export_history)
 		return (NULL);
@@ -82,17 +82,17 @@ static bool	unset_one_var(char *name, char ***env, char ***export_history)
 		new_export_history = update_export_history(name, *export_history);
 		if (!new_export_history)
 		{
-			minishell_error("unset", (char *) NULL, ALLOC);
+			minishell_error("unset", NULL, ALLOC);
 			return (true);
 		}
 	}
 	if (search_in_env(name, *env))
 	{
-		new_env = (char **)malloc(sizeof(char *) * str_tab_len(*env));
+		new_env = malloc(sizeof(char *) * str_tab_len(*env));
 		if (!new_env)
 		{
 			free(new_export_history);
-			minishell_error("unset", (char *) NULL, ALLOC);
+			minishell_error("unset", NULL, ALLOC);
 			return (true);
 		}
 		cpy_env_in_new_env(*env, new_env, name);
