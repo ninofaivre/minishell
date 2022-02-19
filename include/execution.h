@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/15 13:29:09 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 18:15:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,18 @@
 # include <sys/types.h>
 
 int		execution(t_var *var);
-int		function(t_var *var, int *read_pipe, int *write_pipe);
+int		call_fork_cmd(t_var *var, int *read_pipe, int *write_pipe);
 void	free_pipes(int **pipes);
 
-int		check_file(t_var *var);
-int		check_exec(t_var *var, char **path);
+int		exec_file(t_var *var);
+int		exec_cmd(t_var *var, char **path);
 
 int		count_list(t_var *var);
 
 void	write_str_tab_to_fd(char **str_tab, int fd);
 void	close_pipe(int *pipe);
 char	**ft_split(char const *s, char c);
-pid_t	test_fork(t_var *var, char **path,
+pid_t	fork_cmd(t_var *var, char **path,
 			int *read_pipe, int *write_pipe);
 bool	need_a_child(char **argv);
 int		wait_childs(int pid, t_var *var);

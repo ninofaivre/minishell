@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:26:43 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/15 12:46:11 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 18:16:53 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,18 @@ int	take_input(char *content, bool is_double, int fd_input)
 		fd = take_doubleinput(content);
 	else if (access(content, R_OK) == -1)
 	{
-		minishell_error((char *) NULL, content, INACCESSIBLE);
+		if (access(content, F_OK) != -1)
+			minishell_error((char *) NULL, content, RIGHT);
+		else
+			minishell_error((char *) NULL, content, INACCESSIBLE);
 		return (-1);
 	}
 	else
+	{
 		fd = open(content, O_RDONLY);
-	if (fd == -1)
-		minishell_error((char *) NULL, content, INACCESSIBLE);
+		if (fd == -1)
+			minishell_error((char *) NULL, content, INACCESSIBLE);
+	}
 	return (fd);
 }
 
@@ -89,10 +94,15 @@ int	take_output(char *content, bool is_double, int fd_output)
 	fd = 0;
 	if (fd_output)
 		close(fd_output);
+	if (access(content, F_OK) != -1 && access(content, W_OK) == -1)
+	{
+		minishell_error(NULL, content, RIGHT);
+		return (-1);
+	}
 	if (is_double == true)
-		fd = open(content, O_APPEND | O_RDWR | O_CREAT, 0644);
+		fd = open(content, O_APPEND | O_WRONLY | O_CREAT, 0644);
 	else
-		fd = open(content, O_TRUNC | O_RDWR | O_CREAT, 0644);
+		fd = open(content, O_TRUNC | O_WRONLY | O_CREAT, 0644);
 	if (fd == -1)
 		minishell_error((char *) NULL, content, CREAT);
 	return (fd);

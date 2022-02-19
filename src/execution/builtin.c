@@ -6,9 +6,13 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 17:17:05 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 17:19:12 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 17:24:17 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "execution.h"
+#include "builtin.h"
+#include <stdlib.h>
 
 int	builtin_main(t_var *var)
 {

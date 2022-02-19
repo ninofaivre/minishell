@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 17:14:52 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 17:30:07 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int	wait_childs(int pid, t_var *var)
 	int	wait_status;
 
 	to_return = -2;
+	wait_status = 0;
 	while (wait_status != -1)
 	{
 		wait_status = wait(&status);
@@ -94,14 +95,14 @@ static int	call_childs(t_var *var)
 		if (i == 0)
 		{
 			if (!var->list->next)
-				pid = function(var, (int *) NULL, (int *) NULL);
+				pid = call_fork_cmd(var, (int *) NULL, (int *) NULL);
 			else
-				pid = function(var, (int *) NULL, var->pipes[i]);
+				pid = call_fork_cmd(var, (int *) NULL, var->pipes[i]);
 		}
 		else if (!var->list->next)
-			pid = function(var, var->pipes[i - 1], (int *) NULL);
+			pid = call_fork_cmd(var, var->pipes[i - 1], (int *) NULL);
 		else
-			pid = function(var, var->pipes[i - 1], var->pipes[i]);
+			pid = call_fork_cmd(var, var->pipes[i - 1], var->pipes[i]);
 		i++;
 		var->list = var->list->next;
 		if (pid == -1)
@@ -126,7 +127,7 @@ int	execution(t_var *var)
 	else
 		var->pipes = (int **) NULL;
 	status = wait_childs(call_childs(var), var);
-	function ((t_var *) NULL, (int *) NULL, (int *) NULL);
+	call_fork_cmd((t_var *) NULL, (int *) NULL, (int *) NULL);
 	free_pipes(var->pipes);
 	return (status);
 }

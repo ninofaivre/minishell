@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 18:42:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/16 17:57:14 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 18:16:03 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ int	minishell_error(char *call, char *arg, char *error);
 # define MAXARG "too many arguments"
 # define NOTDIR "the file you are trying to access is not a directory"
 # define NOTFILE "the directory you are trying to access is not a file"
-# define INACCESSIBLE "unable to access to the file or directory specified"
+# define INACCESSIBLE "unable to access to the file or directory specified\
+ (make sure it exist)"
 # define UNEXECUTABLE "unable to execute the binary file, format error for\
  exec()"
 # define RIGHT "unable to execute the file or directory specified\
