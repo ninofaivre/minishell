@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 17:53:47 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 20:27:50 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 22:31:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,12 @@ int	builtin_exit(t_var *var, int status, bool is_child)
 	int	n_arg;
 	int	at_exit;
 
+	n_arg = 0;
 	if (var->list)
 		n_arg = str_tab_len(var->list->argv);
-	else
-		n_arg = 0;
 	at_exit = status;
 	if (n_arg > 2)
-	{
-		minishell_error("exit", NULL, MAXARG);
-		return (1);
-	}
+		return (minishell_error("exit", NULL, MAXARG) + 1);
 	else if (n_arg == 2)
 	{
 		at_exit = exit_atoi(var->list->argv[1]);
@@ -86,6 +82,5 @@ int	builtin_exit(t_var *var, int status, bool is_child)
 		exit_clean(var);
 		exit (at_exit);
 	}
-	else
-		return (at_exit);
+	return (at_exit);
 }
