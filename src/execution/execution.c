@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/15 13:29:38 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 17:14:52 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,20 @@ static int	**init_pipes(int n_list)
 
 int	wait_childs(int pid, t_var *var)
 {
-	int		status;
-	int		to_return;
-	int		test = 0;
+	int	status;
+	int	to_return;
+	int	wait_status;
 
 	to_return = -2;
-	while (test != -1)
+	while (wait_status != -1)
 	{
-		test = wait(&status);
-		if (test == pid)
+		wait_status = wait(&status);
+		if (wait_status == pid)
 			to_return = WEXITSTATUS(status);
 	}
-	if (var && is_builtin(var->ptr_start_list->argv[0]) && !need_a_child(var->ptr_start_list->argv) && !var->ptr_start_list->next)
+	if (var && is_builtin(var->ptr_start_list->argv[0])
+		&& !need_a_child(var->ptr_start_list->argv)
+		&& !var->ptr_start_list->next)
 		return (pid);
 	else
 		return (to_return);
@@ -80,7 +82,7 @@ void	free_pipes(int **pipes)
 	free(pipes);
 }
 
-int	call_childs(t_var *var, int n_list)
+static int	call_childs(t_var *var)
 {
 	int	pid;
 	int	i;
@@ -91,7 +93,7 @@ int	call_childs(t_var *var, int n_list)
 	{
 		if (i == 0)
 		{
-			if (n_list == 1)
+			if (!var->list->next)
 				pid = function(var, (int *) NULL, (int *) NULL);
 			else
 				pid = function(var, (int *) NULL, var->pipes[i]);
@@ -123,7 +125,7 @@ int	execution(t_var *var)
 	}
 	else
 		var->pipes = (int **) NULL;
-	status = wait_childs(call_childs(var, n_list), var);
+	status = wait_childs(call_childs(var), var);
 	function ((t_var *) NULL, (int *) NULL, (int *) NULL);
 	free_pipes(var->pipes);
 	return (status);
