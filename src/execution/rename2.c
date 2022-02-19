@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/16 17:36:24 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 17:17:54 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,26 +90,6 @@ int	check_file(t_var *var)
 	else
 		minishell_error((char *) NULL, var->list->argv[0], RIGHT);
 	return (126 + (access(var->list->argv[0], F_OK) == -1));
-}
-
-bool	is_builtin(char *argv_0)
-{
-	if (is_same_string(argv_0, "exit") || is_same_string(argv_0, "echo")
-		|| is_same_string(argv_0, "env") || is_same_string(argv_0, "pwd")
-		|| is_same_string(argv_0, "export") || is_same_string(argv_0, "unset")
-		|| is_same_string(argv_0, "cd"))
-		return (true);
-	else
-		return (false);
-}
-
-bool	need_a_child(char **argv)
-{
-	if (is_same_string(argv[0], "echo") || is_same_string(argv[0], "pwd")
-		|| is_same_string(argv[0], "env") || (is_same_string(argv[0], "export") && !argv[1]))
-		return (true);
-	else
-		return (false);
 }
 
 int	function(t_var *var, int *read_pipe, int *write_pipe)

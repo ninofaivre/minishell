@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/15 19:14:12 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 17:17:16 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,39 +72,4 @@ pid_t	test_fork(t_var *var, char **path, int *read_pipe, int *write_pipe)
 		close_pipe(read_pipe);
 		return (pid);
 	}
-}
-
-int	builtin_main(t_var *var)
-{
-	if (var->list->redirection[0].content)
-		if (take_redirection(var->list->redirection, (int *) NULL, (int *) NULL, false))
-			return (EXIT_FAILURE);
-	if (is_same_string(var->list->argv[0], "export"))
-		return (builtin_export(var->list->argv, var->env, var->export_history));
-	else if (is_same_string(var->list->argv[0], "unset"))
-		return (builtin_unset(var->list->argv, var->env, var->export_history));
-	else if (is_same_string(var->list->argv[0], "cd"))
-		return (builtin_cd(var->list->argv, var->env, var->export_history));
-	else if (is_same_string(var->list->argv[0], "exit"))
-		return (builtin_exit(var, var->status, false));
-	return (-1);
-}
-
-int	builtin_child(t_var *var)
-{
-	if (is_same_string(var->list->argv[0], "export"))
-		return (builtin_export(var->list->argv, var->env, var->export_history));
-	else if (is_same_string(var->list->argv[0], "unset"))
-		return (builtin_unset(var->list->argv, var->env, var->export_history));
-	else if (is_same_string(var->list->argv[0], "cd"))
-		return (builtin_cd(var->list->argv, var->env, var->export_history));
-	else if (is_same_string(var->list->argv[0], "exit"))
-		return (builtin_exit(var, var->status, true));
-	else if (is_same_string(var->list->argv[0], "echo"))
-		return (builtin_echo(var->list->argv));
-	else if (is_same_string(var->list->argv[0], "pwd"))
-		return (builtin_pwd());
-	else if (is_same_string(var->list->argv[0], "env"))
-		return (builtin_env(var->list->argv, *(var->env)));
-	return (-1);
 }
