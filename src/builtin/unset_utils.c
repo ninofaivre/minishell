@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 22:52:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 22:58:04 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 23:08:21 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-static void	free_unseted_export(char **export_history, char *argv)
+static void	free_unseted_export(char **export_history, char *arg)
 {
 	while (*export_history)
 	{
-		if (comp_export_history_var(*export_history, argv))
+		if (comp_export_history_var(*export_history, arg))
 		{
 			free(*export_history);
 			return ;
@@ -42,6 +42,8 @@ bool	unset_one_var_error(char **new_env, char **new_export_history)
 void	replace_old_export_history(char ***export_history,
 char **new_export_history, char *name)
 {
+	if (!new_export_history)
+		return ;
 	free_unseted_export(*export_history, name);
 	free(*export_history);
 	*export_history = new_export_history;

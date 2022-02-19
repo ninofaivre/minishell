@@ -6,35 +6,13 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 17:46:44 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 20:26:57 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 23:15:37 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "global.h"
 #include "builtin.h"
 #include <stdlib.h>
-
-static bool	add_one_var(char ***env, char *str)
-{
-	int		i;
-	char	**new_env;
-
-	i = 0;
-	new_env = malloc(sizeof(char *) * (str_tab_len(*env) + 2));
-	if (!new_env)
-		return (true);
-	while ((*env)[i])
-	{
-		new_env[i] = (*env)[i];
-		i++;
-	}
-	new_env[i] = str;
-	new_env[i + 1] = NULL;
-	if (*env)
-		free(*env);
-	*env = new_env;
-	return (false);
-}
 
 static bool	export_one_var(char *argv, char ***env)
 {
@@ -67,51 +45,7 @@ static bool	export_one_var(char *argv, char ***env)
 	return (false);
 }
 
-static bool	export_parse(char *str)
-{
-	if (!str || is_charset(*str, "0123456789="))
-	{
-		minishell_error("export", str, WRONGENVVAR);
-		return (true);
-	}
-	while (*str && *str != '=')
-	{
-		if (!is_env_var_name_allowed(*str))
-		{
-			minishell_error("export", str, WRONGENVVAR);
-			return (true);
-		}
-		str++;
-	}
-	return (false);
-}
-
-bool	comp_export_history_var(char *str1, char *str2)
-{
-	str1 += 11;
-	while (*str2 && *str2 != '=' && *str1 && *str1 != '=' && *str1 == *str2)
-	{
-		str1++;
-		str2++;
-	}
-	if ((*str2 == '=' || !*str2) && (*str1 == '=' || !*str1))
-		return (true);
-	else
-		return (false);
-}
-
-bool	exist_in_export_history(char **export_history, char *argv)
-{
-	while (*export_history)
-	{
-		if (comp_export_history_var(*export_history, argv))
-			return (true);
-		export_history++;
-	}
-	return (false);
-}
-
-char	**update_export_history(char **export_history, char *argv)
+static char	**update_export_history(char **export_history, char *argv)
 {
 	bool	exist;
 	char	**new_export_history;
@@ -150,19 +84,6 @@ char	**update_export_history(char **export_history, char *argv)
 	}
 	new_export_history[i] = NULL;
 	return (new_export_history);
-}
-
-static void	free_replaced_export(char **export_history, char *argv)
-{
-	while (*export_history)
-	{
-		if (comp_export_history_var(*export_history, argv) && count_char_in_str(argv, '='))
-		{
-			free(*export_history);
-			return ;
-		}
-		export_history++;
-	}
 }
 
 int	builtin_export(char **argv, char ***env, char ***export_history)

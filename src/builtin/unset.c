@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 17:46:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 22:52:15 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 23:07:26 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static bool	unset_one_var(char *name, char ***env, char ***export_history)
 		free(*env);
 		*env = new_env;
 	}
-	if (*new_export_history)
+	if (new_export_history)
 		replace_old_export_history(export_history, new_export_history, name);
 	return (false);
 }

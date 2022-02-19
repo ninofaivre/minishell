@@ -1,43 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_utils.c                                        :+:      :+:    :+:   */
+/*   export_history_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/01 17:48:57 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 23:05:03 by nfaivre          ###   ########.fr       */
+/*   Created: 2022/02/19 23:04:49 by nfaivre           #+#    #+#             */
+/*   Updated: 2022/02/19 23:11:42 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdbool.h>
-#include <stdlib.h>
 
-bool	comp_env_var_name(char *env_var, char *name)
+bool	comp_export_history_var(char *str1, char *str2)
 {
-	while (*env_var && *name && *env_var == *name)
+	str1 += 11;
+	while (*str2 && *str2 != '=' && *str1 && *str1 != '=' && *str1 == *str2)
 	{
-		env_var++;
-		name++;
+		str1++;
+		str2++;
 	}
-	if (*env_var == '=' && !*name)
+	if ((*str2 == '=' || !*str2) && (*str1 == '=' || !*str1))
 		return (true);
 	else
 		return (false);
 }
 
-char	**search_in_env(char *name, char **env)
+bool	exist_in_export_history(char **export_history, char *argv)
 {
-	int	i;
-
-	while (*env)
+	while (*export_history)
 	{
-		i = 0;
-		while ((*env)[i] == name[i] && (*env)[i] && name[i] && name[i] != '=')
-			i++;
-		if ((!name[i] || name[i] == '=') && (*env)[i] == '=')
-			return (&(*env));
-		env++;
+		if (comp_export_history_var(*export_history, argv))
+			return (true);
+		export_history++;
 	}
-	return (NULL);
+	return (false);
 }
