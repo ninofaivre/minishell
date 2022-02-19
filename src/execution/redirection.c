@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/07 16:51:53 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/19 17:09:28 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,19 @@ static bool	take_redirection_error(int fd_input, int fd_output)
 	return ((bool)(fd_input == -1 || fd_output == -1));
 }
 
+static void	take_redirection_dupe(int *pipe, int fd, int duped, bool is_child)
+{
+	if (fd && is_child)
+		dup2(fd, duped);
+	else if (is_child)
+	{
+		if (pipe)
+			dup2(pipe[duped], duped);
+	}
+	else if (fd)
+		close(fd);
+}
+
 bool	take_redirection(t_redirection *redirection,
 int *read_pipe, int *write_pipe, bool is_child)
 {
@@ -75,23 +88,7 @@ int *read_pipe, int *write_pipe, bool is_child)
 			return (true);
 		i++;
 	}
-	if (fd_input && is_child == true)
-		dup2(fd_input, 0);
-	else if (is_child == true)
-	{
-		if (read_pipe)
-			dup2(read_pipe[0], 0);
-	}
-	else if (fd_input)
-		close(fd_input);
-	if (fd_output && is_child == true)
-		dup2(fd_output, 1);
-	else if (is_child == true)
-	{
-		if (write_pipe)
-			dup2(write_pipe[1], 1);
-	}
-	else if (fd_output)
-		close(fd_output);
+	take_redirection_dupe(read_pipe, fd_input, 0, is_child);
+	take_redirection_dupe(write_pipe, fd_output, 1, is_child);
 	return (false);
 }
