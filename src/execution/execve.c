@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/20 18:37:57 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/20 23:28:48 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,29 +22,33 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-static int	try_exec(char *executable, t_var *var)
+static int	try_exec_x_ok(char *executable, t_var *var)
 {
 	struct stat	stat_executable;
 	char		**env;
 
-	if (access(executable, X_OK) != -1)
+	stat(executable, &stat_executable);
+	if (S_ISDIR(stat_executable.st_mode))
 	{
-		stat(executable, &stat_executable);
-		if (S_ISDIR(stat_executable.st_mode))
-		{
-			minishell_error(NULL, executable, NOTFILE);
-			return (126);
-		}
-		env = convert_env_in_str_tab(var->minishell_env);
-		if (!env)
-		{
-			minishell_error("execution", "env", ALLOC);
-			return (-1);
-		}
-		execve(executable, var->list->argv, env);
-		minishell_error(NULL, executable, UNEXECUTABLE);
+		minishell_error(NULL, executable, NOTFILE);
 		return (126);
 	}
+	env = convert_env_in_str_tab(var->minishell_env);
+	if (!env)
+	{
+		minishell_error("execution", "env", ALLOC);
+		return (-1);
+	}
+	execve(executable, var->list->argv, env);
+	free_str_tab(&env);
+	minishell_error(NULL, executable, UNEXECUTABLE);
+	return (126);
+}
+
+static int	try_exec(char *executable, t_var *var)
+{
+	if (access(executable, X_OK) != -1)
+		return (try_exec_x_ok(executable, var));
 	else if (access(executable, F_OK) != -1)
 	{
 		minishell_error(NULL, executable, RIGHT);

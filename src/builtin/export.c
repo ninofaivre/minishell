@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 17:46:44 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/20 22:51:18 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/21 00:09:16 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 
 static void	print_one_export_history(t_env *minishell_env)
 {
+	if (!minishell_env->name)
+		return ;
 	printf("declare -x %s", minishell_env->name);
 	if (minishell_env->value)
 		printf("=\"%s\"", minishell_env->value);
@@ -91,10 +93,23 @@ static bool parse_export_arg(char *arg)
 	return (false);
 }
 
+static int	no_env_export(char *arg, t_env *minishell_env)
+{
+	if (fill_one_minishell_env(minishell_env, arg))
+	{
+		minishell_error("export", arg, ALLOC);
+		return (-1);
+	}
+	else
+		return (0);
+}
+
 static int	export_one(char *arg, t_env *minishell_env)
 {
 	t_env	*ptr_start_minishell_env;
 
+	if (!minishell_env->name)
+		return (no_env_export(arg, minishell_env));
 	ptr_start_minishell_env = minishell_env;
 	while (minishell_env->next)
 		minishell_env = minishell_env->next;
@@ -108,7 +123,6 @@ static int	export_one(char *arg, t_env *minishell_env)
 	init_one_minishell_env(minishell_env->next);
 	if (fill_one_minishell_env(minishell_env->next, arg))
 	{
-		free_one_minishell_env(minishell_env->next);
 		free(minishell_env->next);
 		minishell_error("export", arg, ALLOC);
 		minishell_env = ptr_start_minishell_env;

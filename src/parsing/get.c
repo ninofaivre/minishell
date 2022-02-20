@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/20 17:41:00 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/21 00:45:05 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 static void	cpy_word(t_var *var, char *word, char *str, char quote)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (*str && (!is_charset(*str, "| ><") || quote != '\0'))
@@ -90,7 +90,9 @@ static bool	null_word(char *input)
 
 	if (!input)
 		return (false);
-	while (*input && !is_charset(*input, "! ><"))
+	is_there_doll = false;
+	is_there_quote = false;
+	while (*input && !is_charset(*input, "| ><"))
 	{
 		if (*input == '$')
 			is_there_doll = true;

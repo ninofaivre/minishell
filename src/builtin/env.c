@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 11:12:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/20 18:42:23 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/21 00:03:14 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@
 int	builtin_env(char **argv, t_env *minishell_env)
 {
 	t_env	*ptr_start_minishell_env;
-	bool	backslash_n;
 
+	if (!minishell_env->name)
+		return (0);
 	ptr_start_minishell_env = minishell_env;
-	backslash_n = false;
 	if (str_tab_len(argv) != 1)
 	{
 		minishell_error("env", NULL, MAXARG);
@@ -33,12 +33,9 @@ int	builtin_env(char **argv, t_env *minishell_env)
 		{
 			printf("%s=", minishell_env->name);
 			printf("%s\n", minishell_env->value);
-			backslash_n = true;
 		}
 		minishell_env = minishell_env->next;
 	}
-	if (!backslash_n)
-		printf("\n");
 	minishell_env = ptr_start_minishell_env;
 	return (0);
 }

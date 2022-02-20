@@ -6,13 +6,26 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 13:49:36 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/20 18:37:37 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/21 00:42:08 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "global.h"
 #include <unistd.h>
 #include <stdlib.h>
+
+static bool	is_same_name(char *minishell_name, char *name)
+{
+	while (*minishell_name && *name && *minishell_name == *name)
+	{
+		minishell_name++;
+		name++;
+	}
+	if (!*minishell_name && (!*name || !is_env_var_name_allowed(*name)))
+		return (true);
+	else
+		return (false);
+}
 
 char	*get_env_var_value(t_env *minishell_env, char *name)
 {
@@ -23,7 +36,7 @@ char	*get_env_var_value(t_env *minishell_env, char *name)
 	ptr_start_minishell_env = minishell_env;
 	while (minishell_env)
 	{
-		if (is_same_string(minishell_env->name, name))
+		if (is_same_name(minishell_env->name, name))
 		{
 			value = minishell_env->value;
 			break ;
@@ -63,6 +76,23 @@ bool	is_existing_in_env(t_env *minishell_env, char *name)
 	return (false);
 }
 
+static int	minishell_env_len(t_env *minishell_env)
+{
+	int		len;
+	t_env	*ptr_start_minishell_env;
+
+	len = 0;
+	ptr_start_minishell_env = minishell_env;
+	while (minishell_env)
+	{
+		if (minishell_env->value)
+			len++;
+		minishell_env = minishell_env->next;
+	}
+	minishell_env = ptr_start_minishell_env;
+	return (len);
+}
+
 char	**convert_env_in_str_tab(t_env *minishell_env)
 {
 	int		i;
@@ -73,17 +103,9 @@ char	**convert_env_in_str_tab(t_env *minishell_env)
 	i = 0;
 	env = NULL;
 	ptr_start_minishell_env = minishell_env;
-	while (minishell_env)
-	{
-		if (minishell_env->value)
-			i++;
-		minishell_env = minishell_env->next;
-	}
-	env = malloc(sizeof(char *) * (i + 1));
+	env = malloc(sizeof(char *) * (minishell_env_len(minishell_env) + 1));
 	if (!env)
 		return (NULL);
-	i = 0;
-	minishell_env = ptr_start_minishell_env;
 	while (minishell_env)
 	{
 		env[i] = NULL;

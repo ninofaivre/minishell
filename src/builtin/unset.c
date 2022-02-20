@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 17:46:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/20 22:58:21 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/20 23:08:19 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ static void	unset_one_var(char *name, t_env *minishell_env)
 			minishell_env->next = ptr_shunt_minishell_env;
 			break ;
 		}
-		else
-			minishell_env = minishell_env->next;
+		minishell_env = minishell_env->next;
 	}
 	minishell_env = ptr_start_minishell_env;
 }

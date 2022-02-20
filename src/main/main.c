@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/20 18:18:34 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/20 23:11:17 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ static void	init(char **env, struct sigaction *sa, t_var *var)
 		minishell_error("main", "get_env", ALLOC);
 		exit(EXIT_FAILURE);
 	}
-	var->ptr_start_minishell_env = var->minishell_env;
 }
 
 int	main(int argc, char **argv, char **env)
