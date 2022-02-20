@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 20:27:03 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/20 18:37:17 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,8 @@ int	call_fork_cmd(t_var *var, int *read_pipe, int *write_pipe)
 		return (0);
 	}
 	if (!path)
-		path = ft_split(env_var_value(*(var->env), "$PATH"), ':');
-	if (!path && env_var_value(*(var->env), "$PATH"))
+		path = ft_split(get_env_var_value(var->minishell_env, "PATH"), ':');
+	if (!path && get_env_var_value(var->minishell_env, "PATH"))
 	{
 		minishell_error("execution (split_path)", NULL, ALLOC);
 		return (-1);

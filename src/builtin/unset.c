@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 17:46:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 23:07:26 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/20 22:58:21 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,80 +15,40 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static void	cpy_env_in_new_env(char **env, char **new_env, char *name)
+static void	unset_one_var(char *name, t_env *minishell_env)
 {
-	int	i;
-	int	j;
+	t_env	*ptr_start_minishell_env;
+	t_env	*ptr_shunt_minishell_env;
 
-	i = 0;
-	j = 0;
-	while (env[j])
+	ptr_start_minishell_env = minishell_env;
+	if (is_same_string(minishell_env->name, name))
 	{
-		if (comp_env_var_name(env[j], name))
-			free(env[j]);
-		else
-			new_env[i++] = env[j];
-		j++;
+		ptr_start_minishell_env = minishell_env->next;
+		free_one_minishell_env(minishell_env);
+		free(minishell_env);
+		minishell_env = ptr_start_minishell_env;
+		return ;
 	}
-	new_env[i] = NULL;
-}
-
-static char	**update_export_history(char *name, char **export_history)
-{
-	char	**new_export_history;
-	int		i;
-
-	new_export_history = malloc(sizeof(char *) * (str_tab_len(export_history)));
-	i = 0;
-	if (!new_export_history)
-		return (NULL);
-	while (*export_history)
+	while (minishell_env->next)
 	{
-		if (comp_export_history_var(*export_history, name))
-			export_history++;
-		else
+		if (is_same_string(minishell_env->next->name, name))
 		{
-			new_export_history[i] = *export_history;
-			i++;
-			export_history++;
+			ptr_shunt_minishell_env = minishell_env->next->next;
+			free_one_minishell_env(minishell_env->next);
+			free(minishell_env->next);
+			minishell_env->next = ptr_shunt_minishell_env;
+			break ;
 		}
+		else
+			minishell_env = minishell_env->next;
 	}
-	new_export_history[i] = NULL;
-	return (new_export_history);
+	minishell_env = ptr_start_minishell_env;
 }
 
-static bool	unset_one_var(char *name, char ***env, char ***export_history)
-{
-	char	**new_env;
-	char	**new_export_history;
-
-	new_env = NULL;
-	new_export_history = NULL;
-	if (exist_in_export_history(*export_history, name))
-	{
-		new_export_history = update_export_history(name, *export_history);
-		if (!new_export_history)
-			return (unset_one_var_error(new_env, new_export_history));
-	}
-	if (search_in_env(name, *env))
-	{
-		new_env = malloc(sizeof(char *) * str_tab_len(*env));
-		if (!new_env)
-			return (unset_one_var_error(new_env, new_export_history));
-		cpy_env_in_new_env(*env, new_env, name);
-		free(*env);
-		*env = new_env;
-	}
-	if (new_export_history)
-		replace_old_export_history(export_history, new_export_history, name);
-	return (false);
-}
-
-int	builtin_unset(char **argv, char ***env, char ***export_history)
+int	builtin_unset(char **argv, t_env *minishell_env)
 {
 	argv++;
 	while (*argv)
-		if (unset_one_var(*argv++, env, export_history))
-			return (-1);
+		unset_one_var(*argv++, minishell_env);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 17:29:34 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 20:26:57 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/20 17:37:53 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,28 +65,32 @@ bool	is_same_string(char *str1, char *str2)
 		return (false);
 }
 
-int	count_char_in_str(char *str, char c)
-{
-	int	i;
-
-	i = 0;
-	if (!str)
-		return (0);
-	while (*str)
-	{
-		if (*str == c)
-			i++;
-		str++;
-	}
-	return (i);
-}
-
 int	str_cmp(char *str1, char *str2)
 {
+	if (!str1 && !str2)
+		return (0);
+	else if (!str1)
+		return (-1);
+	else if (!str2)
+		return (1);
 	while (*str1 && *str2 && *str1 == *str2)
 	{
 		str1++;
 		str2++;
 	}
 	return (*str1 - *str2);
+}
+
+void	str_ncpy(char *dest, char *src, int n_char)
+{
+	int	i;
+
+	i = 0;
+	if (!src || !dest)
+		return ;
+	while (i < n_char && src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
 }

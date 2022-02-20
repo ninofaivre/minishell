@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 20:50:18 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/20 18:18:34 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "builtin.h"
 #include "execution.h"
 #include "parsing.h"
-#include "main.h"
 #include <signal.h>
 #include <stdio.h>
 #include <readline/readline.h>
@@ -25,6 +24,15 @@
 #include <termios.h>
 
 int	g_status;
+
+void	echo_ctrl_off(void)
+{
+	struct termios	tty;
+
+	tcgetattr(0, &tty);
+	tty.c_lflag &= ~ECHOCTL;
+	tcsetattr(0, TCSANOW, &tty);
+}
 
 static void	sig_handler(int sig, siginfo_t *info, void *context)
 {
@@ -48,64 +56,52 @@ static void	sig_handler(int sig, siginfo_t *info, void *context)
 	}
 }
 
-static void	parse_execute(char ***env, char ***export_history,
-char *input, int *g_status)
+static void	parse_execute(t_var *var, char *input)
 {
-	t_var	var;
 	int		new_status;
 
-	var.status = *g_status;
-	var.env = env;
-	var.export_history = export_history;
-	var.list = parse(&var, input);
-	var.ptr_start_list = var.list;
+	var->status = g_status;
+	var->list = parse(var, input);
+	var->ptr_start_list = var->list;
 	free(input);
-	if (var.list)
+	if (var->list)
 	{
-		new_status = execution(&var);
+		new_status = execution(var);
 		if (new_status != -2)
-			*g_status = new_status;
-		free_list(var.list);
+			g_status = new_status;
+		free_list(var->list);
+		var->list = NULL;
 	}
 }
 
-static void	init(char ***export_history, char ***env,
-struct sigaction *sa, t_var *var)
+static void	init(char **env, struct sigaction *sa, t_var *var)
 {
-	*export_history = init_export_history(*env);
-	if (!*export_history)
-	{
-		minishell_error("main", "export_history", ALLOC);
-		exit(EXIT_FAILURE);
-	}
-	if (malloc_env(env))
-	{
-		free_str_tab(export_history);
-		minishell_error("main", "env", ALLOC);
-		exit(EXIT_FAILURE);
-	}
 	echo_ctrl_off();
 	sa->sa_flags = SA_SIGINFO;
 	sa->sa_sigaction = sig_handler;
 	sigemptyset(&sa->sa_mask);
-	var->env = env;
-	var->export_history = export_history;
 	var->ptr_start_list = NULL;
 	var->list = NULL;
+	var->minishell_env = get_minishell_env(env);
+	if (!var->minishell_env)
+	{
+		minishell_error("main", "get_env", ALLOC);
+		exit(EXIT_FAILURE);
+	}
+	var->ptr_start_minishell_env = var->minishell_env;
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	struct sigaction	sa;
 	char				*input;
-	char				**export_history;
 	t_var				var;
 
 	(void)argc;
 	(void)argv;
 	input = NULL;
 	g_status = 0;
-	init(&export_history, &env, &sa, &var);
+	init(env, &sa, &var);
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
 	while (true)
@@ -114,6 +110,6 @@ int	main(int argc, char **argv, char **env)
 		if (!input)
 			exit(builtin_exit(&var, g_status, false));
 		add_history(input);
-		parse_execute(&env, &export_history, input, &g_status);
+		parse_execute(&var, input);
 	}
 }

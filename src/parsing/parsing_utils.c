@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:58:59 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 20:26:57 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/20 17:41:16 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static char	*env_var_len(t_var *var, char *str, unsigned int *len)
 {
 	if (is_env_var_name_allowed(str[1]))
 	{
-		*len += str_len(env_var_value(*(var->env), str));
+		*len += str_len(get_env_var_value(var->minishell_env, &str[1]));
 		str = skip_var(str);
 	}
 	else if (str[1] == '?')

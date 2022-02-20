@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 17:17:05 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 20:27:14 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/20 16:10:06 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ int	builtin_main(t_var *var)
 				NULL, NULL, false))
 			return (EXIT_FAILURE);
 	if (is_same_string(var->list->argv[0], "export"))
-		return (builtin_export(var->list->argv, var->env, var->export_history));
+		return (builtin_export(var->list->argv, var->minishell_env));
 	else if (is_same_string(var->list->argv[0], "unset"))
-		return (builtin_unset(var->list->argv, var->env, var->export_history));
+		return (builtin_unset(var->list->argv, var->minishell_env));
 	else if (is_same_string(var->list->argv[0], "cd"))
-		return (builtin_cd(var->list->argv, var->env, var->export_history));
+		return (builtin_cd(var->list->argv, var->minishell_env));
 	else if (is_same_string(var->list->argv[0], "exit"))
 		return (builtin_exit(var, var->status, false));
 	return (-1);
@@ -34,11 +34,11 @@ int	builtin_main(t_var *var)
 int	builtin_child(t_var *var)
 {
 	if (is_same_string(var->list->argv[0], "export"))
-		return (builtin_export(var->list->argv, var->env, var->export_history));
+		return (builtin_export(var->list->argv, var->minishell_env));
 	else if (is_same_string(var->list->argv[0], "unset"))
-		return (builtin_unset(var->list->argv, var->env, var->export_history));
+		return (builtin_unset(var->list->argv, var->minishell_env));
 	else if (is_same_string(var->list->argv[0], "cd"))
-		return (builtin_cd(var->list->argv, var->env, var->export_history));
+		return (builtin_cd(var->list->argv, var->minishell_env));
 	else if (is_same_string(var->list->argv[0], "exit"))
 		return (builtin_exit(var, var->status, true));
 	else if (is_same_string(var->list->argv[0], "echo"))
@@ -46,7 +46,7 @@ int	builtin_child(t_var *var)
 	else if (is_same_string(var->list->argv[0], "pwd"))
 		return (builtin_pwd());
 	else if (is_same_string(var->list->argv[0], "env"))
-		return (builtin_env(var->list->argv, *(var->env)));
+		return (builtin_env(var->list->argv, var->minishell_env));
 	return (-1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:19:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 20:26:57 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/20 16:01:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char *export_argv_1, char *pwd)
 	return (to_return);
 }
 
-static int	update_pwd(char ***env, char ***export_history)
+static int	update_pwd(t_env *minishell_env)
 {
 	char	**export_argv;
 	char	*export_argv_0;
@@ -52,17 +52,17 @@ static int	update_pwd(char ***env, char ***export_history)
 		export_argv[0] = NULL;
 	export_argv_0 = str_dupe("export\0");
 	pwd = get_pwd();
-	export_argv_1 = concat("OLDPWD=\0", env_var_value(*env, "$PWD"));
+	export_argv_1 = concat("OLDPWD=\0", get_env_var_value(minishell_env, "PWD"));
 	if (export_argv && export_argv_0 && export_argv_1 && pwd)
 	{
 		export_argv[0] = export_argv_0;
 		export_argv[1] = export_argv_1;
 		export_argv[2] = NULL;
-		builtin_export(export_argv, env, export_history);
+		builtin_export(export_argv, minishell_env);
 		free(export_argv[1]);
 		export_argv[1] = concat("PWD=\0", pwd);
 		if (export_argv[1])
-			builtin_export(export_argv, env, export_history);
+			builtin_export(export_argv, minishell_env);
 	}
 	return (free_update_pwd(export_argv, export_argv_0, export_argv_1, pwd));
 }
@@ -76,7 +76,7 @@ static int	chdir_error(char *arg)
 	return (1);
 }
 
-int	builtin_cd(char **argv, char ***env, char ***export_history)
+int	builtin_cd(char **argv, t_env *minishell_env)
 {
 	if (str_tab_len(argv) > 2)
 	{
@@ -85,10 +85,10 @@ int	builtin_cd(char **argv, char ***env, char ***export_history)
 	}
 	else if (str_tab_len(argv) == 1)
 	{
-		if (env_var_value(*env, "$HOME"))
+		if (get_env_var_value(minishell_env, "HOME"))
 		{
-			if (chdir(env_var_value(*env, "$HOME")) == -1)
-				return (chdir_error(env_var_value(*env, "$HOME")));
+			if (chdir(get_env_var_value(minishell_env, "HOME")) == -1)
+				return (chdir_error(get_env_var_value(minishell_env, "HOME")));
 		}
 		else
 		{
@@ -98,5 +98,5 @@ int	builtin_cd(char **argv, char ***env, char ***export_history)
 	}
 	else if (chdir(argv[1]) == -1)
 		return (chdir_error(argv[1]));
-	return (update_pwd(env, export_history));
+	return (update_pwd(minishell_env));
 }

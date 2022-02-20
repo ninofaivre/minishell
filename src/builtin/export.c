@@ -6,125 +6,178 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 17:46:44 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 23:15:37 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/20 22:51:18 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "global.h"
 #include "builtin.h"
 #include <stdlib.h>
+#include <stdio.h>
 
-static bool	export_one_var(char *argv, char ***env)
+static void	print_one_export_history(t_env *minishell_env)
 {
-	char	**ptr_env_var;
-	char	*str;
+	printf("declare -x %s", minishell_env->name);
+	if (minishell_env->value)
+		printf("=\"%s\"", minishell_env->value);
+	printf("\n");
+}
 
-	ptr_env_var = search_in_env(argv, *env);
-	if (!count_char_in_str(argv, '='))
-		return (false);
-	if (ptr_env_var)
+char	*find_biggest_name(t_env *minishell_env)
+{
+	char	*biggest_name;
+	t_env	*ptr_start_minishell_env;
+
+	ptr_start_minishell_env = minishell_env;
+	biggest_name = minishell_env->name;
+	while (minishell_env)
 	{
-		str = str_dupe(argv);
-		if (!str)
+		if (str_cmp(minishell_env->name, biggest_name) > 0 && !is_same_string(minishell_env->name, "_"))
 		{
-			minishell_error("export", NULL, ALLOC);
-			return (true);
+			biggest_name = minishell_env->name;
+			minishell_env = ptr_start_minishell_env;
 		}
-		free(*ptr_env_var);
-		*ptr_env_var = str;
+		else
+			minishell_env = minishell_env->next;
 	}
-	else
+	minishell_env = ptr_start_minishell_env;
+	return (biggest_name);
+}
+
+t_env	*find_lowest_name(t_env *minishell_env, t_env	*old_lowest_name)
+{
+	t_env	*lowest_name;
+	t_env	*ptr_start_minishell_env;
+
+	ptr_start_minishell_env = minishell_env;
+	lowest_name = NULL;
+	while (minishell_env)
 	{
-		str = str_dupe(argv);
-		if (!str || add_one_var(env, str))
+		if (( !lowest_name || str_cmp(minishell_env->name, lowest_name->name) < 0) && (!old_lowest_name || str_cmp(minishell_env->name, old_lowest_name->name) > 0))
 		{
-			minishell_error("export", NULL, ALLOC);
-			return (true);
+			lowest_name = minishell_env;
+			minishell_env = ptr_start_minishell_env;
 		}
+		else
+			minishell_env = minishell_env->next;
+	}
+	minishell_env = ptr_start_minishell_env;
+	return (lowest_name);
+}
+
+static void	print_export_history(t_env *minishell_env)
+{
+	t_env	*ptr_printed_minishell_env;
+
+	ptr_printed_minishell_env = find_lowest_name(minishell_env, NULL);
+	print_one_export_history(ptr_printed_minishell_env);
+	while (!is_same_string(ptr_printed_minishell_env->name, find_biggest_name(minishell_env)))
+	{
+		ptr_printed_minishell_env = find_lowest_name(minishell_env, ptr_printed_minishell_env);
+		print_one_export_history(ptr_printed_minishell_env);
+	}
+}
+
+static bool parse_export_arg(char *arg)
+{
+	if (is_charset(*arg, "0123456789"))
+		return (true);
+	while (*arg && *arg != '=')
+	{
+		if (!is_env_var_name_allowed(*arg))
+			return (true);
+		arg++;
 	}
 	return (false);
 }
 
-static char	**update_export_history(char **export_history, char *argv)
+static int	export_one(char *arg, t_env *minishell_env)
 {
-	bool	exist;
-	char	**new_export_history;
-	char	*new_var;
-	int		i;
+	t_env	*ptr_start_minishell_env;
 
-	exist = exist_in_export_history(export_history, argv);
-	new_export_history = malloc(sizeof(char *) * (str_tab_len(export_history) + 1 + !exist));
-	new_var = NULL;
-	i = 0;
-	if (!new_export_history)
-		return (NULL);
-	while (export_history[i])
+	ptr_start_minishell_env = minishell_env;
+	while (minishell_env->next)
+		minishell_env = minishell_env->next;
+	minishell_env->next = malloc(sizeof(t_env));
+	if (!minishell_env->next)
 	{
-		new_export_history[i] = NULL;
-		if (comp_export_history_var(export_history[i], argv) && count_char_in_str(argv, '='))
-		{
-			new_var = concat("declare -x ", argv);
-			if (!new_var)
-			{
-				free(new_export_history);
-				return (NULL);
-			}
-			new_export_history[i] = new_var;
-		}
-		else
-			new_export_history[i] = export_history[i];
-		i++;
+		minishell_error("export", arg, ALLOC);
+		minishell_env = ptr_start_minishell_env;
+		return (-1);
 	}
-	if (!exist)
-		new_export_history[i++] = concat("declare -x ", argv);
-	if (!exist && !new_export_history[i - 1])
+	init_one_minishell_env(minishell_env->next);
+	if (fill_one_minishell_env(minishell_env->next, arg))
 	{
-		free(new_export_history);
-		return (NULL);
+		free_one_minishell_env(minishell_env->next);
+		free(minishell_env->next);
+		minishell_error("export", arg, ALLOC);
+		minishell_env = ptr_start_minishell_env;
+		return (-1);
 	}
-	new_export_history[i] = NULL;
-	return (new_export_history);
+	minishell_env = ptr_start_minishell_env;
+	return (0);
 }
 
-int	builtin_export(char **argv, char ***env, char ***export_history)
+static int	replace_one(char *arg, t_env *minishell_env)
 {
-	int		exit_status;
-	char	**new_export_history;
+	t_env	*ptr_start_minishell_env;
+	char	*new_value;
 
-	exit_status = EXIT_SUCCESS;
-	new_export_history = NULL;
+	ptr_start_minishell_env = minishell_env;
+	if (!count_char_in_str(arg, '='))
+		return (0);
+	arg[str_chr(arg, '=')] = '\0';
+	while (minishell_env && !is_same_string(minishell_env->name, arg))
+		minishell_env = minishell_env->next;
+	arg[str_chr(arg, '\0')] = '=';
+	new_value = get_value_arg(arg);
+	if (!new_value)
+	{
+		minishell_error("export", arg, ALLOC);
+		return (-1);
+	}
+	free(minishell_env->value);
+	minishell_env->value = new_value;
+	minishell_env = ptr_start_minishell_env;
+	return (0);
+}
+
+static bool	is_arg_existing_in_env(t_env *minishell_env, char *arg)
+{
+	bool	exist;
+
+	if (count_char_in_str(arg, '='))
+	{
+		arg[str_chr(arg, '=')] = '\0';
+		exist = is_existing_in_env(minishell_env, arg);
+		arg[str_chr(arg, '\0')] = '=';
+	}
+	else
+		exist = is_existing_in_env(minishell_env, arg);
+	return (exist);
+}
+
+int	builtin_export(char **argv, t_env *minishell_env)
+{
+	int	status;
+
+	status = 0;
 	argv++;
 	if (!*argv)
-		print_str_tab(*export_history);
+		print_export_history(minishell_env);
 	while (*argv)
 	{
-		if (export_parse(*argv))
-				exit_status = EXIT_FAILURE;
-		else
+		if (parse_export_arg(*argv))
 		{
-			if (export_history)
-				new_export_history = update_export_history(*export_history, *argv);
-			if (export_history && !new_export_history)
-			{
-				minishell_error("export", "export_history", ALLOC);
-				return (EXIT_FAILURE);
-			}
-			else if (export_one_var(*argv, env))
-			{
-				free_replaced_export(new_export_history, *argv);
-				if (new_export_history)
-					free(new_export_history);
-				return (EXIT_FAILURE);
-			}
-			if (export_history)
-			{
-				free_replaced_export(*export_history, *argv);
-				free(*export_history);
-				*export_history = new_export_history;
-			}
+			minishell_error("export", *argv, WRONGENVVAR);
+			status = 1;
+			continue ;
 		}
+		if (is_arg_existing_in_env(minishell_env, *argv))
+			status = replace_one(*argv, minishell_env);
+		else
+			status = export_one(*argv, minishell_env);
 		argv++;
 	}
-	str_tab_sort(*export_history);
-	return (exit_status);
+	return (status);
 }
