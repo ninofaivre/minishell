@@ -6,7 +6,7 @@
 #    By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/24 10:25:16 by nfaivre           #+#    #+#              #
-#    Updated: 2022/02/20 20:52:21 by nfaivre          ###   ########.fr        #
+#    Updated: 2022/02/22 00:10:45 by nfaivre          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ NAME = minishell
 PROMPT ?= 'minishell $$> '
 
 CC = clang
-CFLAGS = -g
+CFLAGS = -Wall -Wextra -Werror -g
 DEFINE_PROMPT = -D PROMPT=\"$(PROMPT)\"
 
 DIR_SRC = src

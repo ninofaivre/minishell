@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 20:43:34 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/20 23:55:21 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/22 00:11:06 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 bool	fill_one_minishell_env(t_env *minishell_env, char *str)
 {
-	int		i;
 	char	*name;
 	char	*value;
 

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:20:46 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/15 18:56:49 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/21 16:01:04 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ char			*skip_var(char *str);
 char			*skip_word(char *str);
 char			*get_next_pipe(char *str);
 
-char			*itoa(int nbr);
 unsigned int	word_len(t_var *var, char *str);
 char			update_quote_status(char quote, char c);
 

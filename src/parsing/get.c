@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/21 00:45:05 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/21 14:42:21 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,29 @@
 
 static void	cpy_word(t_var *var, char *word, char *str, char quote)
 {
-	int	i;
-
-	i = 0;
 	while (*str && (!is_charset(*str, "| ><") || quote != '\0'))
 	{
 		if (!(is_charset(*str, "'\"") && (quote == '\0' || quote == *str)))
 		{
 			if (*str == '$' && quote != '\'' && is_env_var_name_allowed(str[1]))
 			{
-				i += add_str_word(&word[i], get_env_var_value(var->minishell_env, &str[1]));
+				word += add_str_word(word, \
+				get_env_var_value(var->minishell_env, &str[1]));
 				str = skip_var(str);
 			}
 			else if (*str == '$' && quote != '\'' && str[1] == '?')
 			{
-				i += add_int_word(&word[i], var->status);
+				word += add_int_word(word, var->status);
 				str += 2;
 			}
 			else
-				word[i++] = *str++;
+				*word++ = *str++;
 		}
 		else
 			str++;
 		quote = update_quote_status(quote, *str);
 	}
-	word[i] = '\0';
+	*word = '\0';
 }
 
 static char	*get_one_word(t_var *var, char *str)
@@ -83,12 +81,12 @@ t_redirection	*get_redirection(t_var *var, char *input)
 	return (redirection);
 }
 
-static bool	null_word(char *input)
+static bool	null_word(t_var *var, char *input)
 {
 	bool	is_there_doll;
 	bool	is_there_quote;
 
-	if (!input)
+	if (!input || word_len(var, input))
 		return (false);
 	is_there_doll = false;
 	is_there_quote = false;
@@ -121,7 +119,7 @@ char	**get_argv(t_var *var, char *input)
 			input = skip_word(&input[1 + is_charset(input[1], "><")]);
 		else
 		{
-			if (!(!word_len(var, input) && null_word(input)))
+			if (!null_word(var, input))
 			{
 				argv = add_str_to_str_tab(argv, get_one_word(var, input));
 				if (!argv)

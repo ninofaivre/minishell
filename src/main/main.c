@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/20 23:11:17 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/21 23:39:40 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,7 @@
 
 int	g_status;
 
-void	echo_ctrl_off(void)
-{
-	struct termios	tty;
-
-	tcgetattr(0, &tty);
-	tty.c_lflag &= ~ECHOCTL;
-	tcsetattr(0, TCSANOW, &tty);
-}
-
-static void	sig_handler(int sig, siginfo_t *info, void *context)
+void	sig_handler(int sig, siginfo_t *info, void *context)
 {
 	(void)context;
 	wait_childs(-100, NULL);
@@ -71,22 +62,6 @@ static void	parse_execute(t_var *var, char *input)
 			g_status = new_status;
 		free_list(var->list);
 		var->list = NULL;
-	}
-}
-
-static void	init(char **env, struct sigaction *sa, t_var *var)
-{
-	echo_ctrl_off();
-	sa->sa_flags = SA_SIGINFO;
-	sa->sa_sigaction = sig_handler;
-	sigemptyset(&sa->sa_mask);
-	var->ptr_start_list = NULL;
-	var->list = NULL;
-	var->minishell_env = get_minishell_env(env);
-	if (!var->minishell_env)
-	{
-		minishell_error("main", "get_env", ALLOC);
-		exit(EXIT_FAILURE);
 	}
 }
 

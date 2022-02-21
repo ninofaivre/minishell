@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:34:51 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/20 23:49:32 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/21 23:48:48 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "minishell_error.h"
 # include <stdbool.h>
+# include <signal.h>
 
 # ifndef PROMPT
 #  define PROMPT "minishell$> "
@@ -50,6 +51,8 @@ typedef struct s_var
 	int				status;
 }	t_var;
 
+void	init(char **env, struct sigaction *sa, t_var *var);
+
 t_env	*get_minishell_env(char **env);
 void	*free_minishell_env(t_env *minishell_env);
 bool	fill_one_minishell_env(t_env *minishell_env, char *str);
@@ -63,6 +66,9 @@ char	*get_env_var_value(t_env *minishell_env, char *name);
 bool	is_env_var_name_allowed(char c);
 bool	is_existing_in_env(t_env *minishell_env, char *name);
 char	**convert_env_in_str_tab(t_env *minishell_env);
+
+char	*minishell_env_to_string(t_env *minishell_env);
+bool	is_same_name(char *minishell_name, char *name);
 
 char	**free_str_tab(char ***str_tab);
 int		str_tab_len(char **str_tab);
@@ -78,5 +84,9 @@ bool	is_charset(char c, char *charset);
 int		str_len(char *str);
 int		count_char_in_str(char *str, char c);
 int		str_chr(char *str, char c);
+
+int		int_len(int nbr);
+char	*itoa(int nbr);
+int		ft_atoi(char *str);
 
 #endif
