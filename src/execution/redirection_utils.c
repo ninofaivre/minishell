@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:26:43 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 20:27:03 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/22 16:31:38 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ static char	**get_doubleinput(char *eof)
 	doubleinput = NULL;
 	input = readline(">");
 	while (!is_same_string(input, eof) && input)
-	{
-		doubleinput = add_str_to_str_tab(doubleinput, input);
+	{		doubleinput = add_str_to_str_tab(doubleinput, input);
 		if (!doubleinput)
 		{
 			minishell_error("execution (here-doc)", NULL, ALLOC);
@@ -38,7 +37,8 @@ static char	**get_doubleinput(char *eof)
 		}
 		input = readline(">");
 	}
-	free(input);
+	if (input)
+		free(input);
 	return (doubleinput);
 }
 
