@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 20:27:40 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/23 00:00:28 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ t_list	*free_list(t_list *list)
 			free_redirection(list->redirection);
 		if (list->argv)
 			free_str_tab(&list->argv);
+		if (list->heredoc)
+			free_str_tab(&list->heredoc);
 		ptr_list = list;
 		list = list->next;
 		free(ptr_list);
@@ -50,10 +52,11 @@ static bool	feel_data(t_var *var, t_list *list, char *input)
 {
 	list->redirection = get_redirection(var, input);
 	list->argv = get_argv(var, input);
-	if (!list->redirection || !list->argv)
-		return (false);
-	else
+	list->heredoc = get_heredoc(list->redirection);
+	if (!list->redirection || !list->argv || !list->heredoc)
 		return (true);
+	else
+		return (false);
 }
 
 t_list	*build_list(t_var *var, char *input)
@@ -66,7 +69,7 @@ t_list	*build_list(t_var *var, char *input)
 		return (NULL);
 	ptr_list = list;
 	list->next = NULL;
-	if (feel_data(var, list, input) == false)
+	if (feel_data(var, list, input))
 		return (free_list(ptr_list));
 	while (*get_next_pipe(input))
 	{
@@ -76,7 +79,7 @@ t_list	*build_list(t_var *var, char *input)
 		list = list->next;
 		list->next = NULL;
 		input = get_next_pipe(input);
-		if (feel_data(var, list, input) == false)
+		if (feel_data(var, list, input))
 			return (free_list(ptr_list));
 	}
 	return (ptr_list);

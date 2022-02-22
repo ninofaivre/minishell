@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:26:43 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/22 16:43:15 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/22 23:41:11 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,57 +20,27 @@
 #include <readline/readline.h>
 #include <errno.h>
 
-static char	**get_doubleinput(char *eof)
-{
-	char	**doubleinput;
-	char	*input;
-
-	doubleinput = NULL;
-	input = readline(">");
-	while (!is_same_string(input, eof) && input)
-	{	
-		doubleinput = add_str_to_str_tab(doubleinput, input);
-		if (!doubleinput)
-		{
-			minishell_error("execution (here-doc)", NULL, ALLOC);
-			free(input);
-			return (NULL);
-		}
-		input = readline(">");
-	}
-	if (input)
-		free(input);
-	return (doubleinput);
-}
-
-static int	take_doubleinput(char *eof)
+int	take_heredoc(char **heredoc)
 {
 	int		pipe_tab[2];
-	char	**doubleinput;
 
 	if (pipe(pipe_tab) == -1)
 	{
 		pipe_error("execution (here-doc)", NULL);
 		return (-1);
 	}
-	doubleinput = get_doubleinput(eof);
-	if (!doubleinput)
-		return (-1);
-	write_str_tab_to_fd(doubleinput, pipe_tab[1]);
+	write_str_tab_to_fd(heredoc, pipe_tab[1]);
 	close(pipe_tab[1]);
-	free_str_tab(&doubleinput);
 	return (pipe_tab[0]);
 }
 
-int	take_input(char *content, bool is_double, int fd_input)
+int	take_input(char *content, int fd_input)
 {
 	int	fd;
 
 	fd = 0;
 	if (fd_input)
 		close(fd_input);
-	if (is_double == true)
-		fd = take_doubleinput(content);
 	else if (access(content, R_OK) == -1)
 	{
 		if (access(content, F_OK) != -1)

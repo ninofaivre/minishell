@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 18:15:33 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/22 23:41:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,10 @@ int		builtin_child(t_var *var);
 int		builtin_main(t_var *var);
 bool	is_builtin(char *argv_0);
 
-bool	take_redirection(t_redirection *redirection, int *read_pipe,
+bool	take_redirection(t_list *list, int *read_pipe,
 			int *write_pipe, bool is_child);
-int		take_input(char *content, bool is_double, int fd_input);
+int		take_heredoc(char **heredoc);
+int		take_input(char *content, int fd_input);
 int		take_output(char *content, bool is_double, int fd_output);
 
 void	pipe_error(char *call, char *arg);

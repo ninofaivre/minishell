@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 20:27:14 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/23 00:16:07 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int *read_pipe, int *write_pipe, int fd)
 			close(read_pipe[0]);
 			read_pipe = NULL;
 		}
-		return (take_input(redirection.content, redirection.is_double, fd));
+		return (take_input(redirection.content, fd));
 	}
 	else if (redirection.guillemet == '>')
 	{
@@ -66,7 +66,7 @@ static void	take_redirection_dupe(int *pipe, int fd, int duped, bool is_child)
 		close(fd);
 }
 
-bool	take_redirection(t_redirection *redirection,
+bool	take_redirection(t_list *list,
 int *read_pipe, int *write_pipe, bool is_child)
 {
 	int	fd_input;
@@ -76,13 +76,21 @@ int *read_pipe, int *write_pipe, bool is_child)
 	fd_input = 0;
 	fd_output = 0;
 	i = 0;
-	while (redirection[i].content)
+	if ((list->heredoc)[0])
 	{
-		if (redirection[i].guillemet == '<')
-			fd_input = one_redirection(redirection[i], read_pipe,
+		if (is_child)
+			close(0);
+		fd_input = take_heredoc(list->heredoc);
+		if (fd_input == -1)
+			return (true);
+	}
+	while (list->redirection[i].content)
+	{
+		if (!*(list->heredoc) && list->redirection[i].guillemet == '<' && list->redirection[i].is_double == false)
+			fd_input = one_redirection(list->redirection[i], read_pipe,
 					write_pipe, fd_input);
-		if (redirection[i].guillemet == '>')
-			fd_output = one_redirection(redirection[i], read_pipe,
+		if (list->redirection[i].guillemet == '>')
+			fd_output = one_redirection(list->redirection[i], read_pipe,
 					write_pipe, fd_output);
 		if (take_redirection_error(fd_input, fd_output))
 			return (true);
