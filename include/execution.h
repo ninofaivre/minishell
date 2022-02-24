@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/22 23:41:33 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:21:11 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ bool	is_builtin(char *argv_0);
 
 bool	take_redirection(t_list *list, int *read_pipe,
 			int *write_pipe, bool is_child);
-int		take_heredoc(char **heredoc);
+int		take_heredoc(char **heredoc, int *read_pipe);
 int		take_input(char *content, int fd_input);
 int		take_output(char *content, bool is_double, int fd_output);
 

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:26:43 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/22 23:41:11 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:24:01 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,17 @@
 #include <readline/readline.h>
 #include <errno.h>
 
-int	take_heredoc(char **heredoc)
+int	take_heredoc(char **heredoc, int *read_pipe)
 {
 	int		pipe_tab[2];
 
+	if (!heredoc)
+		return (0);
+	if (read_pipe)
+	{
+		close(read_pipe[0]);
+		read_pipe = NULL;
+	}
 	if (pipe(pipe_tab) == -1)
 	{
 		pipe_error("execution (here-doc)", NULL);
