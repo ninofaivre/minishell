@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:05:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/23 00:00:28 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 12:43:54 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,9 @@ static bool	feel_data(t_var *var, t_list *list, char *input)
 {
 	list->redirection = get_redirection(var, input);
 	list->argv = get_argv(var, input);
-	list->heredoc = get_heredoc(list->redirection);
-	if (!list->redirection || !list->argv || !list->heredoc)
+	list->heredoc = NULL;
+	if (!list->redirection || !list->argv
+		|| get_heredoc(list->redirection, &(list->heredoc)))
 		return (true);
 	else
 		return (false);

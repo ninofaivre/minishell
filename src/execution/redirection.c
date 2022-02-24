@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/23 00:16:07 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 12:36:03 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,17 +76,20 @@ int *read_pipe, int *write_pipe, bool is_child)
 	fd_input = 0;
 	fd_output = 0;
 	i = 0;
-	if ((list->heredoc)[0])
+	if (list->heredoc)
 	{
-		if (is_child)
-			close(0);
+		if (read_pipe)
+		{
+			close(read_pipe[0]);
+			read_pipe = NULL;
+		}
 		fd_input = take_heredoc(list->heredoc);
 		if (fd_input == -1)
 			return (true);
 	}
 	while (list->redirection[i].content)
 	{
-		if (!*(list->heredoc) && list->redirection[i].guillemet == '<' && list->redirection[i].is_double == false)
+		if (!list->heredoc && list->redirection[i].guillemet == '<' && list->redirection[i].is_double == false)
 			fd_input = one_redirection(list->redirection[i], read_pipe,
 					write_pipe, fd_input);
 		if (list->redirection[i].guillemet == '>')

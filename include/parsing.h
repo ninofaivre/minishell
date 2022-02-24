@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:20:46 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/22 23:44:58 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 12:41:25 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_list			*build_list(t_var *var, char *input);
 
 t_redirection	*get_redirection(t_var *var, char *input);
 char			**get_argv(t_var *var, char *input);
-char			**get_heredoc(t_redirection *redirection);
+bool			get_heredoc(t_redirection *redirection, char ***heredoc);
 
 int				add_int_word(char *word, int status);
 int				add_str_word(char *word, char *str);

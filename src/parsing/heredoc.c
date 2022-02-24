@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 20:09:39 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/22 23:59:13 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 13:19:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,30 +50,23 @@ static char	**get_one_heredoc(char *eof)
 	return (heredoc);
 }
 
-char	**get_heredoc(t_redirection *redirection)
+bool	get_heredoc(t_redirection *redirection, char ***heredoc)
 {
-	int		i;
-	char	**heredoc;
-
-	i = 0;
-	heredoc = NULL;
-	while (redirection[i].content)
+	*heredoc = NULL;
+	while (redirection->content)
 	{
-		if (redirection[i].guillemet == '<')
+		if (redirection->guillemet == '<')
 		{
-			if (heredoc)
-				free_str_tab(&heredoc);
-			if (redirection[i].is_double)
+			if (*heredoc)
+				free_str_tab(heredoc);
+			if (redirection->is_double)
 			{
-				heredoc = get_one_heredoc(redirection[i].content);
-				if (!heredoc)
-					return (NULL);
+				*heredoc = get_one_heredoc(redirection->content);
+				if (!*heredoc)
+					return (true);
 			}
 		}
-		i++;
+		redirection++;
 	}
-	if (heredoc)
-		return (heredoc);
-	else
-		return (init_heredoc());
+	return (false);
 }

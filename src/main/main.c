@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/21 23:39:40 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 12:42:10 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,14 @@ void	sig_handler(int sig, siginfo_t *info, void *context)
 	}
 }
 
-static void	parse_execute(t_var *var, char *input)
+static void	parse_execute(t_var *var, char *input, struct sigaction *sa)
 {
 	int		new_status;
 
 	var->status = g_status;
 	var->list = parse(var, input);
+	sigaction(SIGINT, sa, NULL);
+	sigaction(SIGQUIT, sa, NULL);
 	var->ptr_start_list = var->list;
 	free(input);
 	if (var->list)
@@ -84,6 +86,6 @@ int	main(int argc, char **argv, char **env)
 		if (!input)
 			exit(builtin_exit(&var, g_status, false));
 		add_history(input);
-		parse_execute(&var, input);
+		parse_execute(&var, input, &sa);
 	}
 }
