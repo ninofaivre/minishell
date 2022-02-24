@@ -6,14 +6,14 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/24 16:04:18 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 16:27:58 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 #include <stdlib.h>
 
-size_t	ft_strlcpy(char *dest, const char *src, size_t dstsize)
+static size_t	ft_strlcpy(char *dest, const char *src, size_t dstsize)
 {
 	size_t	src_len;
 	size_t	i;
