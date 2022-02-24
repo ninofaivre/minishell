@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 18:42:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 18:16:03 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 21:49:53 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,7 @@ int	minishell_error(char *call, char *arg, char *error);
 # define MAXFDSYS "too many file descriptors are open by the system"
 # define WRONGENVVAR "env var should contain only underscore, digits and alphabetics char and not\
 start by a digit"
+# define CORRUPTCWD "the directory hasbeen supressed or it is impossible to read one composant\
+ of the path"
 
 #endif

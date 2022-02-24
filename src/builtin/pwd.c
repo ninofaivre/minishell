@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 10:36:05 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/19 20:26:57 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 21:50:28 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <errno.h>
 
 char	*get_pwd(void)
 {
@@ -27,11 +28,18 @@ char	*get_pwd(void)
 		to_malloc++;
 		buffer = malloc(sizeof(char) * (to_malloc + 1));
 		if (!buffer)
-			return (NULL);
-		else if (!getcwd(buffer, to_malloc))
 		{
-			free (buffer);
-			buffer = NULL;
+			minishell_error("pwd", NULL, ALLOC);
+			return (NULL);
+		}
+		if (getcwd(buffer, to_malloc))
+			break ;
+		free (buffer);
+		buffer = NULL;
+		if (errno == ENOENT || errno == EACCES)
+		{
+			minishell_error("pwd", NULL, CORRUPTCWD);
+			return (NULL);
 		}
 	}
 	return (buffer);
@@ -43,10 +51,7 @@ int	builtin_pwd(void)
 
 	pwd = get_pwd();
 	if (!pwd)
-	{
-		minishell_error("pwd", NULL, ALLOC);
-		return (-1);
-	}
+		return (1);
 	printf("%s\n", pwd);
 	free(pwd);
 	return (0);
