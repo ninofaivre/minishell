@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:26:43 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/24 16:03:20 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 23:00:44 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	take_input(char *content, int fd_input)
 	fd = 0;
 	if (fd_input)
 		close(fd_input);
-	else if (access(content, R_OK) == -1)
+	if (access(content, R_OK) == -1)
 	{
 		if (access(content, F_OK) != -1)
 			minishell_error(NULL, content, RIGHT);
