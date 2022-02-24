@@ -6,20 +6,13 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/22 23:43:32 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:57:15 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 #include "builtin.h"
-#include "parsing.h"
-#include <stdio.h>
-#include <fcntl.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <readline/readline.h>
 
 static bool	dup_pipe_redir(t_list *list,
 int *read_pipe, int *write_pipe)

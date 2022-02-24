@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 09:31:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/24 14:21:11 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:56:32 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include "global.h"
 # include <unistd.h>
-# include <sys/types.h>
 
 int		execution(t_var *var);
 int		call_fork_cmd(t_var *var, int *read_pipe, int *write_pipe);

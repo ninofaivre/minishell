@@ -6,15 +6,12 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 17:46:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/21 21:22:17 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:47:35 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "global.h"
 #include "builtin.h"
 #include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
 
 static void	unset_first_var(t_var *var)
 {

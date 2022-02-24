@@ -6,12 +6,10 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:19:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/21 23:51:34 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:39:08 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "global.h"
-#include "minishell_error.h"
 #include "builtin.h"
 #include <unistd.h>
 #include <errno.h>

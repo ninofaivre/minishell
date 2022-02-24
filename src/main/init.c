@@ -6,11 +6,10 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 23:31:13 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/21 23:40:39 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 16:09:06 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "global.h"
 #include "builtin.h"
 #include <termios.h>
 #include <signal.h>

@@ -6,11 +6,10 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:57:22 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/14 15:25:29 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:40:32 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "global.h"
 #include <unistd.h>
 

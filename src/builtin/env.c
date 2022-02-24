@@ -6,13 +6,11 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 11:12:09 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/21 00:03:14 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:41:18 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_error.h"
 #include "global.h"
-#include <stdlib.h>
 #include <stdio.h>
 
 int	builtin_env(char **argv, t_env *minishell_env)

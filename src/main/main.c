@@ -6,11 +6,10 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/24 12:42:10 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 16:10:22 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "global.h"
 #include "builtin.h"
 #include "execution.h"
 #include "parsing.h"
@@ -19,9 +18,6 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <termios.h>
 
 int	g_status;
 

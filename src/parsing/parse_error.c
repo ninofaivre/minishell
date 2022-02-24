@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:56:05 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/15 20:34:09 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:34:07 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,6 @@ bool	parse_error(t_var *var, char *str)
 	str = skip_space(str);
 	if (!str || !*str)
 		return (true);
-	if (parse_pipe_error(str))
-		return (true);
-	if (parse_guillemet_error(var, str))
-		return (true);
-	if (parse_quote_error(str))
-		return (true);
-	return (false);
+	return (parse_pipe_error(str) || parse_guillemet_error(var, str)
+		|| parse_quote_error(str));
 }

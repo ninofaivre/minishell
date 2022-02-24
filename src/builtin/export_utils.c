@@ -6,13 +6,12 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 00:01:24 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/22 00:09:11 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:45:26 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "global.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 bool	is_arg_existing_in_env(t_env *minishell_env, char *arg)
 {

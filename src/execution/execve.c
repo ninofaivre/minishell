@@ -6,21 +6,14 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/20 23:28:48 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:56:06 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-#include "global.h"
-#include <stdio.h>
-#include <fcntl.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <readline/readline.h>
 #include <sys/stat.h>
-#include <errno.h>
+#include <sys/types.h>
 
 static int	try_exec_x_ok(char *executable, t_var *var)
 {
