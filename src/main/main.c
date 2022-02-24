@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/24 16:10:22 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/24 18:23:37 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,9 @@ static void	parse_execute(t_var *var, char *input, struct sigaction *sa)
 		new_status = execution(var);
 		if (new_status != -2)
 			g_status = new_status;
-		free_list(var->list);
+		free_list(var->ptr_start_list);
 		var->list = NULL;
+		var->ptr_start_list = NULL;
 	}
 }
 

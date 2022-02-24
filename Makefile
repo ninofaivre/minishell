@@ -16,7 +16,7 @@ NAME = minishell
 PROMPT ?= 'minishell $$> '
 
 CC = clang
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 DEFINE_PROMPT = -D PROMPT=\"$(PROMPT)\"
 
 DIR_SRC = src
