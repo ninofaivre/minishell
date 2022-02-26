@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:34:51 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/24 12:40:39 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/25 19:15:02 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	*get_value_arg(char *str);
 void	free_one_minishell_env(t_env *minishell_env);
 
 char	*get_env_var_value(t_env *minishell_env, char *name);
-bool	is_env_var_name_allowed(char c);
+bool	is_env_var_name_allowed(char c, bool is_first_char);
 bool	is_existing_in_env(t_env *minishell_env, char *name);
 char	**convert_env_in_str_tab(t_env *minishell_env);
 

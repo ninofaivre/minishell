@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 23:46:25 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/21 23:49:09 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/25 19:16:57 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ bool	is_same_name(char *minishell_name, char *name)
 		minishell_name++;
 		name++;
 	}
-	if (!*minishell_name && (!*name || !is_env_var_name_allowed(*name)))
+	if (!*minishell_name && (!*name || !is_env_var_name_allowed(*name, false)))
 		return (true);
 	else
 		return (false);

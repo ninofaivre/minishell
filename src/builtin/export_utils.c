@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 00:01:24 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/24 14:45:26 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/25 19:16:41 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ bool	is_arg_existing_in_env(t_env *minishell_env, char *arg)
 
 bool	parse_export_arg(char *arg)
 {
-	if (is_charset(*arg, "0123456789"))
+	if (!is_env_var_name_allowed(*arg, true))
 		return (true);
 	while (*arg && *arg != '=')
 	{
-		if (!is_env_var_name_allowed(*arg))
+		if (!is_env_var_name_allowed(*arg, false))
 			return (true);
 		arg++;
 	}

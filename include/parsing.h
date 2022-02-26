@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:20:46 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/24 12:41:25 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/25 19:23:29 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@
 
 t_list			*parse(t_var *var, char *input);
 
-bool			parse_error(t_var *var, char *str);
+bool			parse_error(char *str, t_env *minishell_env);
 
 t_redirection	*free_redirection(t_redirection *redirection);
 t_list			*free_list(t_list *list);
-t_list			*build_list(t_var *var, char *input);
+t_list			*build_list(char *input);
 
-t_redirection	*get_redirection(t_var *var, char *input);
-char			**get_argv(t_var *var, char *input);
+t_redirection	*get_redirection(char *input);
+char			**get_argv(char *input);
 bool			get_heredoc(t_redirection *redirection, char ***heredoc);
 
 int				add_int_word(char *word, int status);
@@ -36,7 +36,9 @@ char			*skip_var(char *str);
 char			*skip_word(char *str);
 char			*get_next_pipe(char *str);
 
-unsigned int	word_len(t_var *var, char *str);
+unsigned int	word_len(char *str);
 char			update_quote_status(char quote, char c);
+
+char			*expand_doll(char *str, int status, t_env *minishell_env);
 
 #endif

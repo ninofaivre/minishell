@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:56:05 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/24 14:34:07 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/25 19:23:04 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,26 +39,43 @@ static bool	parse_pipe_error(char *str)
 	return (false);
 }
 
-static bool	parse_guillemet_error(t_var *var, char *str)
+static bool	does_redirection_content_exist(char *str, t_env *minishell_env)
 {
+	str = skip_space(str);
+	if (!*str || is_charset(*str, "|><"))
+		return (false);
+	else if (*str == '$' && is_env_var_name_allowed(str[1], false))
+	{
+		if (str_len(get_env_var_value(minishell_env, &str[1])) == 0)
+			return (false);
+		else
+			return (true);
+	}
+	else
+		return (true);
+}
+
+static bool	parse_guillemet_error(char *str, t_env *minishell_env)
+{
+	char	quote;
+
+	quote = '\0';
 	while (*str)
 	{
-		str += (*str == '|');
-		if (is_charset(*str, "><"))
+		quote = update_quote_status(quote, *str);
+		if (is_charset(*str, "><") && quote != '\0')
 		{
 			str += 1 + (str[1] == *str);
-			if (!word_len(var, str) && str[-1] == '<')
+			if (!does_redirection_content_exist(str, minishell_env))
 			{
-				minishell_error("parsing", NULL, VOIDINPUT);
-				return (true);
-			}
-			else if (!word_len(var, str) && str[-1] == '>')
-			{
-				minishell_error("parsing", NULL, VOIDOUTPUT);
+				if (str[-1] == '<')
+					minishell_error("parsing", NULL, VOIDINPUT);
+				else if (str[-1] == '>')
+					minishell_error("parsing", NULL, VOIDOUTPUT);
 				return (true);
 			}
 		}
-		str = skip_word(str);
+		str++;
 	}
 	return (false);
 }
@@ -88,11 +105,11 @@ static bool	parse_quote_error(char *str)
 		return (false);
 }
 
-bool	parse_error(t_var *var, char *str)
+bool	parse_error(char *str, t_env *minishell_env)
 {
 	str = skip_space(str);
 	if (!str || !*str)
 		return (true);
-	return (parse_pipe_error(str) || parse_guillemet_error(var, str)
+	return (parse_pipe_error(str) || parse_guillemet_error(str, minishell_env)
 		|| parse_quote_error(str));
 }

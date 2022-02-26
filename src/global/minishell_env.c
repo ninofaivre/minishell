@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 13:49:36 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/21 23:47:07 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/25 17:57:02 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,13 @@ char	*get_env_var_value(t_env *minishell_env, char *name)
 	return (value);
 }
 
-bool	is_env_var_name_allowed(char c)
+bool	is_env_var_name_allowed(char c, bool is_first_char)
 {
 	if (!c)
 		return (false);
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
-		|| (c >= '0' && c <= '9') || c == '_')
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_')
+		return (true);
+	else if (is_first_char == false && (c >= '0' && c <= '9'))
 		return (true);
 	else
 		return (false);
