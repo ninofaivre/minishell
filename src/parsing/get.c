@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 13:01:29 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/25 18:42:14 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/26 10:46:49 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,23 @@ static char	*get_one_word(char *str)
 		return (NULL);
 	cpy_word(word, str, quote);
 	return (word);
+}
+
+static int	count_redirection(char *str)
+{
+	int	n_redirection;
+
+	n_redirection = 0;
+	while (*str && *str != '|')
+	{
+		if (is_charset(*str, "><"))
+		{
+			n_redirection++;
+			str += (is_charset(*str, "><")) + (is_charset(str[1], "><"));
+		}
+		str = skip_word(str);
+	}
+	return (n_redirection);
 }
 
 t_redirection	*get_redirection(char *input)

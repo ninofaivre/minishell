@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 16:52:55 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/24 18:23:37 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/03/03 20:25:50 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int	main(int argc, char **argv, char **env)
 	sigaction(SIGQUIT, &sa, NULL);
 	while (true)
 	{
+		rl_catch_signals = 1;
 		input = readline(PROMPT);
 		if (!input)
 			exit(builtin_exit(&var, g_status, false));

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 20:09:39 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/24 13:19:33 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/03/03 21:23:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <readline/readline.h>
+
+#include <fcntl.h>
+#include <unistd.h>
+
+static void	sig_handler(int sig)
+{
+	(void)sig;
+}
 
 static char	**init_heredoc(void)
 {
@@ -31,12 +39,14 @@ static char	**get_one_heredoc(char *eof)
 	char	**heredoc;
 	char	*input;
 
+	signal(SIGINT, &sig_handler);
+	rl_catch_signals = 0;
 	heredoc = init_heredoc();
 	if (!heredoc)
 		return (NULL);
 	input = readline(">");
 	while (!is_same_string(input, eof) && input)
-	{	
+	{
 		heredoc = add_str_to_str_tab(heredoc, input);
 		if (!heredoc)
 		{

@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 13:51:18 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/24 14:57:15 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/03/03 22:28:20 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,19 @@ static void	clean_fork(t_var *var)
 	free_pipes(var->pipes);
 }
 
+static void	close_unused_pipes(int **pipes, int *read_pipe, int *write_pipe)
+{
+	if (!pipes)
+		return ;
+	while (*pipes)
+	{
+		if (!((read_pipe && read_pipe[0] == (*pipes)[0])
+			|| (write_pipe && write_pipe[1] == (*pipes)[1])))
+			close_pipe(*pipes);
+		pipes++;
+	}
+}
+
 pid_t	fork_cmd(t_var *var, char **path, int *read_pipe, int *write_pipe)
 {
 	pid_t	pid;
@@ -47,6 +60,7 @@ pid_t	fork_cmd(t_var *var, char **path, int *read_pipe, int *write_pipe)
 	pid = fork();
 	if (pid == 0)
 	{
+		close_unused_pipes(var->pipes, read_pipe, write_pipe);
 		if (dup_pipe_redir(var->list, read_pipe, write_pipe))
 			status = EXIT_FAILURE;
 		else if (!var->list->argv[0])

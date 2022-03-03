@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 15:20:46 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/25 19:23:29 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/26 10:47:09 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,8 @@ bool			get_heredoc(t_redirection *redirection, char ***heredoc);
 
 int				add_int_word(char *word, int status);
 int				add_str_word(char *word, char *str);
-int				count_redirection(char *str);
 
 char			*skip_space(char *str);
-char			*skip_var(char *str);
 char			*skip_word(char *str);
 char			*get_next_pipe(char *str);
 
