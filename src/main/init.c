@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 23:31:13 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/03/05 01:13:57 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/03/05 01:20:48 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <termios.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 static void	echo_ctrl_off(void);
 static bool	init_shlvl(t_env *minishell_env);
@@ -21,7 +22,8 @@ void		sig_handler(int sig, siginfo_t *info, void *context);
 
 void	init(char **env, struct sigaction *sa, t_var *var)
 {
-	echo_ctrl_off();
+	if (isatty(0))
+		echo_ctrl_off();
 	sa->sa_flags = SA_SIGINFO;
 	sa->sa_sigaction = sig_handler;
 	sigemptyset(&sa->sa_mask);
