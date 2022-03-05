@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 10:19:49 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/24 14:39:08 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/03/05 01:13:38 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <errno.h>
 #include <stdlib.h>
 
-bool	update_pwd(t_env *minishell_env)
+bool	update_pwd(t_env *minishell_env, bool init)
 {
 	bool	status;
 	char	*pwd;
@@ -27,7 +27,8 @@ bool	update_pwd(t_env *minishell_env)
 		minishell_error("update_pwd", NULL, ALLOC);
 		return (true);
 	}
-	if (get_env_var_value(minishell_env, "PWD") && manual_export("OLDPWD", \
+	if (get_env_var_value(minishell_env, "PWD") && init == false
+		&& manual_export("OLDPWD", \
 	get_env_var_value(minishell_env, "PWD"), minishell_env))
 	{
 		minishell_error("update_pwd", "OLDPWD", ALLOC);
@@ -73,5 +74,5 @@ int	builtin_cd(char **argv, t_env *minishell_env)
 	}
 	else if (chdir(argv[1]) == -1)
 		return (chdir_error(argv[1]));
-	return (update_pwd(minishell_env));
+	return (update_pwd(minishell_env, false));
 }

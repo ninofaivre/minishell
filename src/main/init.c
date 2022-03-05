@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 23:31:13 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/24 16:09:06 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/03/05 01:13:57 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	init(char **env, struct sigaction *sa, t_var *var)
 		minishell_error("main", "init shlvl", ALLOC);
 		exit(EXIT_FAILURE);
 	}
-	if (update_pwd(var->minishell_env))
+	if (update_pwd(var->minishell_env, true))
 	{
 		free_minishell_env(var->minishell_env);
 		minishell_error("main", "init PWD", ALLOC);

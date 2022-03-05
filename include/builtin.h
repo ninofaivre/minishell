@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 17:04:03 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/22 00:08:48 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/03/05 01:14:06 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int		builtin_pwd(void);
 char	*get_pwd(void);
 
 int		builtin_cd(char **argv, t_env *env);
-bool	update_pwd(t_env *minishell_env);
+bool	update_pwd(t_env *minishell_env, bool init);
 
 int		builtin_echo(char **argv);
 

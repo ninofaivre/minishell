@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 18:19:43 by nfaivre           #+#    #+#             */
-/*   Updated: 2022/02/26 10:39:13 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/03/05 01:17:58 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,34 +68,32 @@ static int	cpy_status(char *expanded_str, int status)
 static bool	put_str_expanded(char *expanded_str, char *str,
 int status, t_env *minishell_env)
 {
-	int		i;
 	char	quote;
 
-	i = 0;
 	quote = update_quote_status('\0', *str);
 	while (*str)
 	{
 		if (*str == '$' && is_env_var_name_allowed(str[1], true)
 			&& quote != '\'')
 		{
-			str_ncpy(&expanded_str[i], get_env_var_value(minishell_env, \
+			str_ncpy(expanded_str, get_env_var_value(minishell_env, \
 			&str[1]), str_len(get_env_var_value(minishell_env, &str[1])));
-			i += str_len(get_env_var_value(minishell_env, &str[1]));
+			expanded_str += str_len(get_env_var_value(minishell_env, &str[1]));
 			str += var_name_size(&str[1]);
 		}
 		else if (*str == '$' && str[1] == '?' && quote != '\'')
 		{
-			if (cpy_status(&expanded_str[i], status))
+			if (cpy_status(expanded_str, status))
 				return (true);
-			i += int_len(status);
+			expanded_str += int_len(status);
 			str++;
 		}
 		else
-			expanded_str[i++] = *str;
+			*expanded_str++ = *str;
 		str++;
 		quote = update_quote_status(quote, *str);
 	}
-	expanded_str[i] = '\0';
+	*expanded_str = '\0';
 	return (false);
 }
 
