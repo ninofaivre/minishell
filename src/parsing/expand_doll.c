@@ -81,17 +81,15 @@ int status, t_env *minishell_env)
 			expanded_str += str_len(get_env_var_value(minishell_env, &str[1]));
 			str += var_name_size(&str[1]);
 		}
-		else if (*str == '$' && str[1] == '?' && quote != '\'')
+		else if (*str == '$' && str[1] == '?' && quote != '\'' && *str++)
 		{
 			if (cpy_status(expanded_str, status))
 				return (true);
 			expanded_str += int_len(status);
-			str++;
 		}
 		else
 			*expanded_str++ = *str;
-		str++;
-		quote = update_quote_status(quote, *str);
+		quote = update_quote_status(quote, str++[1]);
 	}
 	*expanded_str = '\0';
 	return (false);
