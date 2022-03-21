@@ -117,6 +117,7 @@ int	builtin_export(char **argv, t_env *minishell_env)
 		{
 			minishell_error("export", *argv, WRONGENVVAR);
 			status = 1;
+			argv++;
 			continue ;
 		}
 		if (is_arg_existing_in_env(minishell_env, *argv))
